@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Cegah loop redirect jika sudah HTTPS atau jika header forwarded https
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
