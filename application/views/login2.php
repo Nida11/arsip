@@ -25,7 +25,7 @@
   <div class="container position-sticky z-index-sticky top-0">
     <div class="row">
       <div class="col-12">
-       
+
       </div>
     </div>
   </div>
@@ -47,9 +47,9 @@
                       <input type="email" class="form-control form-control-lg" placeholder="Username" aria-label="Username">
                     </div>
                     <div class="mb-3 position-relative">
-  <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Password" aria-label="Password">
-  <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer;"></i>
-</div>
+                      <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Password" aria-label="Password">
+                      <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer;"></i>
+                    </div>
                     <div class="text-center">
                       <button type="button" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
                     </div>
@@ -66,7 +66,7 @@
             <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
               <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg'); background-size: cover;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">"ANJAY"</h4>
+                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Arsiparis Bapenda Jabar"</h4>
                 <p class="text-white position-relative">The more effortless the writing looks, the more effort the writer actually put into the process.</p>
               </div>
             </div>
@@ -76,18 +76,18 @@
     </section>
   </main>
 
-  
-<script>
-  const togglePassword = document.getElementById('togglePassword');
-  const passwordInput = document.getElementById('passwordInput');
 
-  togglePassword.addEventListener('click', function () {
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
-    this.classList.toggle('bi-eye');
-    this.classList.toggle('bi-eye-slash');
-  });
-</script>
+  <script>
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('passwordInput');
+
+    togglePassword.addEventListener('click', function() {
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.classList.toggle('bi-eye');
+      this.classList.toggle('bi-eye-slash');
+    });
+  </script>
 
   <!-- Core JS Files -->
   <script src="<?= base_url('assets/js/core/popper.min.js') ?>"></script>
@@ -98,7 +98,9 @@
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = { damping: '0.5' };
+      var options = {
+        damping: '0.5'
+      };
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
