@@ -14,7 +14,7 @@ redirect('index.php/Guest/login');
 	
 	public function beranda_admin()
 	{
-		$this->load->view('home_admin');
+		$this->load->view('dashboard');
 	}
 	
 	public function beranda_user()

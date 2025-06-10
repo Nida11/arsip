@@ -56,7 +56,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" href="<?= base_url('/index.php/Guest/beranda_admin') ?>">
+          <a class="nav-link active" href="<?= base_url('/index.php/Guest/dashboard') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
             </div>
@@ -73,13 +73,13 @@
           <div class="collapse" id="submenu-penomoron">
             <ul class="nav ms-4 ps-3">
               <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('/index.php/Guest/add_slot') ?>">
+                <a class="nav-link" href="<?= base_url('/index.php/penomoran/Penomoran/data_slot') ?>">
                   <span class="sidenav-mini-icon">A</span>
                   <span class="sidenav-normal"> Data Slot Nomor</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('/index.php/Guest/penomoran') ?>">
+                <a class="nav-link" href="<?= base_url('/index.php/penomoran/Penomoran/data_penomoran') ?>">
                   <span class="sidenav-mini-icon">B</span>
                   <span class="sidenav-normal"> Data Penomoran </span>
                 </a>
