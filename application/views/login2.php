@@ -42,16 +42,16 @@
                   <p class="mb-0">Masukan Username dan Password</p>
                 </div>
                 <div class="card-body">
-                  <form role="form">
-                    <div class="mb-3">
-                      <input type="email" class="form-control form-control-lg" placeholder="Username" aria-label="Username">
+                <form method="POST" action="<?php echo base_url()."index.php/Login/index";?>" accept-charset="UTF-8">
+                <div class="mb-3">
+                      <input type="text" class="form-control form-control-lg" name="username" placeholder="Username" aria-label="Username">
                     </div>
                     <div class="mb-3 position-relative">
-                      <input type="password" class="form-control form-control-lg" id="passwordInput" placeholder="Password" aria-label="Password">
+                      <input type="password" class="form-control form-control-lg" name="password" id="passwordInput" placeholder="Password" aria-label="Password">
                       <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer;"></i>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
+                      <button  type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
                     </div>
                   </form>
                 </div>
@@ -66,7 +66,7 @@
             <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
               <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg'); background-size: cover;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Arsiparis Bapenda Jabar"</h4>
+                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Arsiparis"</h4>
                 <p class="text-white position-relative">The more effortless the writing looks, the more effort the writer actually put into the process.</p>
               </div>
             </div>

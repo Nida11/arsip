@@ -13,9 +13,6 @@ class  Specimen extends CI_Controller
 
         $d['data_specimen'] = $this->db->query("select * from request_specimen");
         $this->load->view('Specimen/data_specimen', $d);
-
-        echo "<pre>";
-        print_r($d->result());
-        echo "</pre>";
+    
     }
 }

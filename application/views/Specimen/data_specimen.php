@@ -132,45 +132,6 @@
                         </div>
                         <div class="card-body px-0 pt-0 pb-2">
                             <div class="table-responsive p-0">
-                                <!-- 
-<table id="demo" border="1" class="dataframe">
-  <tr class="header">
-	    	
-                                        <th>Tanggal</th>
-                                        <th>Sesi</th>
-                                        <th>Kategori</th>
-                                        <th>Nama Lengkap</th>
-                                        <th>Mata Pelajaran</th>
-                                        <th>Materi</th>
-											                  <th>Tutor</th>
-                                        <th>Waktu Absen</th>
-                                        <th colspan = "2" align="center">Aksi</th>
-         
-	  	                    <?php foreach ($data_absen2->result_array() as $d):  ?>
-			
-  </tr>
-  <tbody>
-                                
-                                       <tr class="nowrap">
-                                        <td  class="date"><?php echo $d['tanggal'] ?></td>
-                                        <td><?php echo $d['sesi'] ?></td>
-                                        <td><?php echo $d['categori_nama'] ?></td>
-                                        <td><?php echo $d['nama'] ?></td>
-                                        <td><?php echo $d['mata_pelajaran'] ?></td>
-                                        <td><?php echo $d['materi'] ?></td>
-									                      <td><?php echo $d['nama_guru'] ?></td>
-                                        <td><?php echo $d['current_date'] ?></td>
-								
-			<td>
-      <a href="<?php echo base_url() . "index.php/Dosen/Dosen/edit_absen/" . $d['id']; ?>" ><i class="icon-edit"></i> Edit</a>
-			<a href="<?php echo base_url() . "index.php/Dosen/Dosen/hapus_absen/" . $d['id']; ?>"  onClick="return confirm('Apakah anda ingin menghapus nama murid  : <?php echo $d['nama']; ?> ?');"><i class="icon-trash"></i> Delete</a> -->
-                                <!-- </td> -->
-
-                                <!-- </tr>
-
-                                </tbody>
-                            <?php endforeach ?>
-                            </table> -->
 
                                 <table class="table align-items-center mb-0">
                                     <thead>
@@ -194,26 +155,18 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['jdsfs'] ?></p>
+                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['nama'] ?></p>
                                                 </td>
                                                 <td class="align-middle text-center text-sm">
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['naka'] ?></p>
+                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['jabatan'] ?></p>
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    <p class="text-xs font-weight-bold mb-0">Pengatur</p>
+                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['pangkat'] ?></p>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['file'] ?></p>
+                                                </td>
                                             </tr>
-
-                                            <div style="width: 90%; margin: 20px auto;">
-                                                <a href="<?= base_url('Guest/tambah_spesimen'); ?>" style="
-                                        float: right;
-                                        padding: 4px 10px;
-                                        font-size: 12px;
-                                        background-color: #4CAF50;
-                                        color: white;
-                                        text-decoration: none;
-                                        border-radius: 4px;
-                                        font-weight: bold;
-                                        ">Tambah</a>
 
                                             <?php endforeach ?>
                                 </table>
