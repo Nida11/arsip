@@ -11,6 +11,51 @@ public function data_slot(){
 	}
 
 
+public function get_jenis_surat()
+{
+    $this->load->database();
+    $query = $this->db->get('jenis_surat');
+    echo json_encode($query->result());
+}
+
+
+public function do_input_slot()
+{
+    // Ambil data dari form POST
+    $tanggal = $this->input->post('tanggal');
+    $jenis_ids = $this->input->post('jenis_surat_id'); // array
+    $slots = $this->input->post('slot'); // associative array: slot[ID_SURAT]
+
+    // Cek data valid
+    if (!$tanggal || empty($jenis_ids) || empty($slots)) {
+        $this->session->set_flashdata('error', 'Data tidak lengkap. Silakan isi semua input.');
+        redirect('penomoran/data_slot');
+        return;
+    }
+
+    // Load database (optional jika belum autoload)
+    $this->load->database();
+
+    // Loop dan insert ke DB
+    foreach ($jenis_ids as $id) {
+        if (isset($slots[$id]) && intval($slots[$id]) > 0) {
+            $data = [
+                'jenis_surat_id' => $id,
+                'tanggal'        => $tanggal,
+                'slot'           => intval($slots[$id]),
+                'created_at'     => date('Y-m-d H:i:s'),
+                'updated_at'     => date('Y-m-d H:i:s')
+            ];
+            $this->db->insert('slot_number', $data);
+        }
+    }
+
+    $this->session->set_flashdata('success', 'Data slot berhasil ditambahkan.');
+    redirect('penomoran/data_slot');
+}
+
+
+
 
 public function add_penomoran(){
 		

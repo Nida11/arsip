@@ -1,17 +1,130 @@
-<!--
-=========================================================
-* Argon Dashboard 3 - v2.1.0
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/argon-dashboard
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
-* Licensed under MIT (https://www.creative-tim.com/license)
-* Coded by Creative Tim
+<!-- <?php
+date_default_timezone_set('Asia/Jakarta'); // Tambahin ini supaya jamnya sesuai lokal
+// Paling atas: koneksi database dan proses submit
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "arsiparis";
 
-=========================================================
+$koneksi = new mysqli($host, $user, $password, $database);
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
+}
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
+// Handle form POST
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $jenisSuratId = $_POST['jenisSurat'];
+    $jumlahSlot = $_POST['jumlahSlot'];
+    $tanggalSlot = $_POST['tanggalSlot'];
+    $createdAt = date('Y-m-d H:i:s');
+
+    
+    // Insert ke tabel slot_number
+     $sql = "INSERT INTO slot_number (jenis_surat_id, tanggal, slot, created_at) VALUES (?, ?, ?, ?)";
+    $stmt = $koneksi->prepare($sql);
+    $stmt->bind_param("isis", $jenisSuratId, $tanggalSlot, $jumlahSlot, $createdAt);
+    $stmt->execute();
+    $stmt->close();
+
+    // Redirect supaya tidak submit ulang saat di-refresh
+    header("Location: ".$_SERVER['PHP_SELF']."?success=1");
+    exit();
+}
+// 📊 Ambil Data History Slot (dengan filter tanggal jika ada)
+if (isset($_GET['tanggal']) && is_array($_GET['tanggal']) && count($_GET['tanggal']) > 0) {
+    $placeholders = implode(',', array_fill(0, count($_GET['tanggal']), '?'));
+    $sqlHistory = "SELECT * FROM slot_number WHERE tanggal IN ($placeholders) ORDER BY created_at DESC";
+    $stmt = $koneksi->prepare($sqlHistory);
+    $paramTypes = str_repeat('s', count($_GET['tanggal']));
+    $stmt->bind_param($paramTypes, ...$_GET['tanggal']);
+    $stmt->execute();
+    $resultHistory = $stmt->get_result();
+    $stmt->close();
+
+} else {
+    // $sqlHistory = "SELECT * FROM slot_number ORDER BY created_at DESC";
+        $sqlHistory = "SELECT sn.*, js.nama_jenis 
+                   FROM slot_number sn
+                   JOIN jenis_surat js ON sn.jenis_surat_id = js.id
+                   ORDER BY sn.created_at DESC";
+    $resultHistory = $koneksi->query($sqlHistory);
+}
+?> -->
+<!-- <?php
+
+// Konfigurasi dasar dan koneksi
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "arsiparis";
+
+$koneksi = new mysqli($host, $user, $password, $database);
+if ($koneksi->connect_error) {
+    die("Koneksi gagal: " . $koneksi->connect_error);
+}
+
+date_default_timezone_set('Asia/Jakarta');
+
+// Ambil data jenis surat untuk dropdown
+function getJenisSurat($koneksi) {
+    return $koneksi->query("SELECT * FROM jenis_surat");
+}
+
+$resultJenisSurat = getJenisSurat($koneksi);
+if (!$resultJenisSurat) {
+    die("Gagal mengambil data jenis surat: " . $koneksi->error);
+}
+
+// Handle form tambah slot
+if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['jenisSurat']) && !isset($_POST['updateSlot'])) {
+    $jenisSuratId = $_POST['jenisSurat'];
+    $jumlahSlot = $_POST['jumlahSlot'];
+    $tanggalSlot = $_POST['tanggalSlot'];
+    $createdAt = date('Y-m-d H:i:s');
+
+    $sql = "INSERT INTO slot_number (jenis_surat_id, tanggal, slot, created_at) VALUES (?, ?, ?, ?)";
+    $stmt = $koneksi->prepare($sql);
+    if ($stmt) {
+        $stmt->bind_param("isis", $jenisSuratId, $tanggalSlot, $jumlahSlot, $createdAt);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
+    exit();
+}
+
+// Handle update slot
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateSlot'])) {
+    $editId = $_POST['editId'];
+    $editJenisSuratId = $_POST['editJenisSurat'];
+    $editJumlahSlot = $_POST['editJumlahSlot'];
+    $editTanggalSlot = $_POST['editTanggalSlot'];
+    $updatedAt = date('Y-m-d H:i:s');
+
+    $sqlUpdate = "UPDATE slot_number SET jenis_surat_id = ?, slot = ?, tanggal = ?, updated_at = ? WHERE id = ?";
+    $stmt = $koneksi->prepare($sqlUpdate);
+    if ($stmt) {
+        $stmt->bind_param("iissi", $editJenisSuratId, $editJumlahSlot, $editTanggalSlot, $updatedAt, $editId);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    header("Location: " . $_SERVER['PHP_SELF'] . "?success=2");
+    exit();
+}
+
+// Ambil data slot + join dengan jenis surat
+$sqlHistory = "SELECT sn.*, js.nama_jenis FROM slot_number sn JOIN jenis_surat js ON sn.jenis_surat_id = js.id ORDER BY sn.created_at DESC";
+$resultHistory = $koneksi->query($sqlHistory);
+if (!$resultHistory) {
+    die("Gagal mengambil data histori slot: " . $koneksi->error);
+}
+// ?> -->
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,37 +132,41 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/favicon.png') ?>">
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/bapenda.png') ?>">
   <title>
-    Argon Dashboard 3 by Creative Tim
+    Arsip Penomoran Surat Keluar
   </title>
-  <!--     Fonts and icons     -->
+  <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
   <!-- Nucleo Icons -->
-  <link href="<?= base_url('assets/css/nucleo-icons.css') ?>" rel="stylesheet" />
-  <link href="<?= base_url('assets/css/nucleo-svg.css') ?>" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="https://demos.creative-tim.com/argon-dashboard-pro/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- CSS Files -->
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
+
 
 <body class="g-sidenav-show   bg-gray-100">
   <div class="min-height-300 bg-dark position-absolute w-100"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html " target="_blank">
+      <a class="navbar-brand m-0" href=" https://9a06-114-10-45-240.ngrok-free.app/arsip/index.php/Guest/beranda_admin" target="_blank">
         <img src="<?= base_url('assets/img/bapenda.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold">Bapenda Jabar</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0">
-    <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <!-- Dashboard -->
         <li class="nav-item">
-          <a class="nav-link active" href="<?= base_url('/index.php/Guest/dashboard') ?>">
+          <a class="nav-link active" href="<?= base_url('/index.php/Guest/beranda_admin') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
             </div>
@@ -68,13 +185,13 @@
           <div class="collapse" id="submenu-digital-numbering">
             <ul class="nav ms-4 ps-3">
               <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('/index.php/Guest/tambah_slot') ?>">
+                <a class="nav-link" href="<?= base_url('/index.php/penomoran/Penomoran/data_slot') ?>">
                   <span class="sidenav-mini-icon">A</span>
                   <span class="sidenav-normal">Data Slot Nomor</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('/index.php/Guest/penomoran') ?>">
+                <a class="nav-link" href="<?= base_url('/index.php/penomoran/Penomoran/add_penomoran') ?>">
                   <span class="sidenav-mini-icon">B</span>
                   <span class="sidenav-normal">Data Penomoran</span>
                 </a>
@@ -82,43 +199,27 @@
             </ul>
           </div>
         </li>
-
-        <!-- Billing -->
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/billing') ?>">
+          <a class="nav-link" href="<?= base_url('/index.php/Guest/Penomoran/Specimen/data_specimen') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Billing</span>
+            <span class="nav-link-text ms-1">Specimen</span>
           </a>
         </li>
-
-        <!-- Virtual Reality -->
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/virtual-reality') ?>">
+          <a class="nav-link" href="<?= base_url('/index.php/Guest/') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-app text-dark text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Virtual Reality</span>
+            <span class="nav-link-text ms-1">Virtual Barcode</span>
           </a>
         </li>
-
-        <!-- RTL -->
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/rtl') ?>">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">RTL</span>
-          </a>
-        </li>
-
-        <!-- Account Pages -->
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/profile') ?>">
+          <a class="nav-link " href="../pages/profile.html">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
             </div>
@@ -126,7 +227,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/sign-in') ?>">
+          <a class="nav-link " href="../pages/sign-in.html">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-copy-04 text-dark text-sm opacity-10"></i>
             </div>
@@ -134,7 +235,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/sign-up') ?>">
+          <a class="nav-link " href="../pages/sign-up.html">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-collection text-dark text-sm opacity-10"></i>
             </div>
@@ -143,19 +244,19 @@
         </li>
       </ul>
     </div>
-
     <div class="sidenav-footer mx-3 ">
       <div class="card card-plain shadow-none" id="sidenavCard">
-        <img class="w-50 mx-auto" src="../assets/img/illustrations/icon-documentation.svg" alt="sidebar_illustration">
+        <img class="p-2 w-100 mx-auto" src="<?= base_url('assets/img/illustrations/logobapen.png') ?>" alt="sidebar_illustration">
         <div class="card-body text-center p-3 w-100 pt-0">
-          <div class="docs-info">
+          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah.png') ?>" alt="sidebar_illustration">
+          <!-- <div class="docs-info">
             <h6 class="mb-0">Need help?</h6>
             <p class="text-xs font-weight-bold mb-0">Please check our docs</p>
-          </div>
+          </div> -->
         </div>
       </div>
-      <a href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard" target="_blank" class="btn btn-dark btn-sm w-100 mb-3">Documentation</a>
-      <a class="btn btn-primary btn-sm mb-0 w-100" href="https://www.creative-tim.com/product/argon-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a>
+      <!-- <a href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard" target="_blank" class="btn btn-dark btn-sm w-100 mb-3">Documentation</a>
+      <a class="btn btn-primary btn-sm mb-0 w-100" href="https://www.creative-tim.com/product/argon-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a> -->
     </div>
   </aside>
   <main class="main-content position-relative border-radius-lg ">
@@ -167,7 +268,7 @@
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
             <li class="breadcrumb-item text-sm text-white active" aria-current="page">Tables</li>
           </ol>
-          <h6 class="font-weight-bolder text-white mb-0">Tables</h6>
+          <h6 class="font-weight-bolder text-white mb-0">History Tables</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -206,7 +307,7 @@
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                        <img src="<?= base_url('assets/img/team-2.jpg') ?>" class="avatar avatar-sm me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
@@ -224,7 +325,7 @@
                   <a class="dropdown-item border-radius-md" href="javascript:;">
                     <div class="d-flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                        <img src="<?= base_url('assets/img/small-logos/logo-spotify.svg') ?>" class="avatar avatar-sm bg-gradient-dark me-3">
                       </div>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="text-sm font-weight-normal mb-1">
@@ -276,193 +377,168 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
-            <div class="card-header pb-0">
-              <h6>Authors table</h6>
+
+      <?php if (isset($_GET['success'])): ?>
+        <div id="successAlert" class="alert alert-success">
+          Data slot berhasil ditambahkan!
+        </div>
+        <script>
+          setTimeout(function() {
+            const alert = document.getElementById('successAlert');
+            if (alert) {
+              alert.style.display = 'none';
+            }
+          }, 1000);
+        
+          if (window.location.search.includes('success=1')) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('success');
+            window.history.replaceState({}, document.title, url.pathname);
+          }
+        </script>
+      <?php endif; ?>
+        
+        <div class="row">
+            <div class="col-12">
+              
+                <div class="card mb-4">
+                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                        <h6>History's Table of Slot</h6>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSlotModal">
+                            Tambah Slot
+                        </button>
+                    </div>
+                    <div class="card-body px-0 pt-0 pb-2">
+                        <div class="table-responsive p-0">
+                          
+                            <table class="table table-bordered table-striped align-items-center mb-0">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th> 
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Surat</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Booking Slot</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created At</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Update At</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>                                      
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if ($resultHistory->num_rows > 0): ?>
+                                        <?php while ($row = $resultHistory->fetch_assoc()): ?>
+                                            <tr>
+                                                <td class="text-center"><?= htmlspecialchars($row['tanggal']); ?></td>
+                                                <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
+                                                <td class="text-center"><?= htmlspecialchars($row['slot']); ?></td>
+                                                <td class="text-center"><?= htmlspecialchars($row['created_at']); ?></td>
+                                                <td class="text-center"><?= htmlspecialchars($row['updated_at'] ?? '-') ?></td>
+                                                <td class="text-center">
+                                                  <!-- Pastikan Bootstrap Icons sudah di-load -->
+                                                  <button
+                                                  
+                                                      data-bs-toggle="modal"
+                                                      data-bs-target="#editSlotModal"
+                                                      data-id="<?= htmlspecialchars($row['id']); ?>"
+                                                      data-jenis="<?= htmlspecialchars($row['jenis_surat_id']); ?>"
+                                                      data-slot="<?= htmlspecialchars($row['slot']); ?>"
+                                                      data-tanggal="<?= htmlspecialchars($row['tanggal']); ?>"
+                                                  >
+                                                      <i class="fa fa-pencil fixed-plugin-button-nav cursor-pointer"></i>
+                                                  </button>
+
+                                                </td>
+                                            </tr>
+                                        <?php endwhile; ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center">Belum ada histori slot.</td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Author</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Function</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Employed</th>
-                      <th class="text-secondary opacity-7"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user1">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">John Michael</h6>
-                            <p class="text-xs text-secondary mb-0">john@creative-tim.com</p>
-                          </div>
+        </div>
+<!-- Modal Tambah Slot -->
+<div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_input_slot") ?>">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addSlotModalLabel">Tambah Slot</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Jenis Surat -->
+          <div class="mb-3">
+            <label class="form-label">Pilih Jenis Surat</label>
+            <div id="jenisSuratContainer"></div>
+          </div>
+
+          <!-- Input jumlah slot per jenis -->
+          <div id="slotInputsContainer"></div>
+
+          <!-- Tanggal -->
+          <div class="mb-3 mt-3">
+            <label for="tanggalSlot" class="form-label">Tanggal</label>
+            <input type="date" class="form-control" id="tanggalSlot" name="tanggal" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+                    <!-- END Modal -->
+                    <div class="modal fade" id="editSlotModal" tabindex="-1" aria-labelledby="editSlotModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <form method="POST" > <!--buat manggil controller-->
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="editSlotModalLabel">Edit Slot</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <input type="hidden" id="editId" name="editId">
+                                <div class="mb-3">
+                                  <label class="form-label">Jenis Surat</label>
+                                    <select class="form-select" name="editJenisSurat" id="editJenisSurat" required>
+                                      <option value="">-- Pilih Jenis Surat --</option>
+                                      <?php foreach ($resultJenisSurat as $jenis): ?>
+                                        <option value="<?= $jenis['id'] ?>"><?= htmlspecialchars($jenis['nama_jenis']) ?></option>
+                                      <?php endforeach; ?>
+                                    </select>
+
+                                </div>
+                              <div class="mb-3">
+                                <label for="prevJumlahSlot" class="form-label">Jumlah Slot Sebelumnya</label>
+                                <input type="number" class="form-control" id="prevJumlahSlot" name="prevJumlahSlot" readonly>
+                              </div>
+                              <div class="mb-3">
+                                <label for="editJumlahSlot" class="form-label">Jumlah Slot Baru</label>
+                                <input type="number" class="form-control" id="editJumlahSlot" name="editJumlahSlot" required>
+                              </div>
+                              <div class="mb-3">
+                                <label for="editTanggalSlot" class="form-label">Tanggal Slot</label>
+                                <input type="date" class="form-control" id="editTanggalSlot" name="editTanggalSlot" required>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                              <button type="submit" class="btn btn-primary" name="updateSlot">Update</button>
+                            </div>
+                          </form>
                         </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Manager</p>
-                        <p class="text-xs text-secondary mb-0">Organization</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Online</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">23/04/18</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-3.jpg" class="avatar avatar-sm me-3" alt="user2">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Alexa Liras</h6>
-                            <p class="text-xs text-secondary mb-0">alexa@creative-tim.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Programator</p>
-                        <p class="text-xs text-secondary mb-0">Developer</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">11/01/19</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user3">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Laurent Perrier</h6>
-                            <p class="text-xs text-secondary mb-0">laurent@creative-tim.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Executive</p>
-                        <p class="text-xs text-secondary mb-0">Projects</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Online</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">19/09/17</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-3.jpg" class="avatar avatar-sm me-3" alt="user4">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Michael Levi</h6>
-                            <p class="text-xs text-secondary mb-0">michael@creative-tim.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Programator</p>
-                        <p class="text-xs text-secondary mb-0">Developer</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-success">Online</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">24/12/08</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm me-3" alt="user5">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Richard Gran</h6>
-                            <p class="text-xs text-secondary mb-0">richard@creative-tim.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Manager</p>
-                        <p class="text-xs text-secondary mb-0">Executive</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">04/10/21</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/team-4.jpg" class="avatar avatar-sm me-3" alt="user6">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Miriam Eric</h6>
-                            <p class="text-xs text-secondary mb-0">miriam@creative-tim.com</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-xs font-weight-bold mb-0">Programtor</p>
-                        <p class="text-xs text-secondary mb-0">Developer</p>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="badge badge-sm bg-gradient-secondary">Offline</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <span class="text-secondary text-xs font-weight-bold">14/09/20</span>
-                      </td>
-                      <td class="align-middle">
-                        <a href="javascript:;" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">
-                          Edit
-                        </a>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
+
                   </tbody>
                 </table>
               </div>
@@ -470,230 +546,7 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="card mb-4">
-            <div class="card-header pb-0">
-              <h6>Projects table</h6>
-            </div>
-            <div class="card-body px-0 pt-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center justify-content-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Project</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Budget</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder text-center opacity-7 ps-2">Completion</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm rounded-circle me-2" alt="spotify">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Spotify</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$2,500</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">working</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">60%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0">
-                          <i class="fa fa-ellipsis-v text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-invision.svg" class="avatar avatar-sm rounded-circle me-2" alt="invision">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Invision</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$5,000</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">done</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">100%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-jira.svg" class="avatar avatar-sm rounded-circle me-2" alt="jira">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Jira</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$3,400</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">canceled</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">30%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-danger" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="30" style="width: 30%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm rounded-circle me-2" alt="slack">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Slack</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$1,000</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">canceled</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">0%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-webdev.svg" class="avatar avatar-sm rounded-circle me-2" alt="webdev">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Webdev</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$14,000</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">working</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">80%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-info" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="80" style="width: 80%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm rounded-circle me-2" alt="xd">
-                          </div>
-                          <div class="my-auto">
-                            <h6 class="mb-0 text-sm">Adobe XD</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <p class="text-sm font-weight-bold mb-0">$2,300</p>
-                      </td>
-                      <td>
-                        <span class="text-xs font-weight-bold">done</span>
-                      </td>
-                      <td class="align-middle text-center">
-                        <div class="d-flex align-items-center justify-content-center">
-                          <span class="me-2 text-xs font-weight-bold">100%</span>
-                          <div>
-                            <div class="progress">
-                              <div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <button class="btn btn-link text-secondary mb-0" aria-haspopup="true" aria-expanded="false">
-                          <i class="fa fa-ellipsis-v text-xs"></i>
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
       <footer class="footer pt-3  ">
         <div class="container-fluid">
           <div class="row align-items-center justify-content-lg-between">
@@ -701,25 +554,28 @@
               <div class="copyright text-center text-sm text-muted text-lg-start">
                 © <script>
                   document.write(new Date().getFullYear())
-                </script>,
-                made with <i class="fa fa-heart"></i> by
-                <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-                for a better web.
+                </script>
+                <!-- made with <i class="fa fa-heart"></i> by -->
+                <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
+                <!-- Arsiparis Badan Pendapatan Daerah. -->
               </div>
             </div>
             <div class="col-lg-6">
               <ul class="nav nav-footer justify-content-center justify-content-lg-end">
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                  <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
                 </li>
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+                  <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
                 </li>
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
+                  <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
                 </li>
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                  <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
+                </li>
+                  <li class="nav-item">
+                  <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
                 </li>
               </ul>
             </div>
@@ -735,8 +591,8 @@
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3 ">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Argon Configurator</h5>
-          <p>See our dashboard options.</p>
+          <h5 class="mt-3 mb-0">Setting</h5>
+          <!-- <p>See our dashboard options.</p> -->
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
@@ -785,7 +641,7 @@
             <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
           </div>
         </div>
-        <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free Download</a>
+        <!-- <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free Download</a>
         <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard">View documentation</a>
         <div class="w-100 text-center">
           <a class="github-button" href="https://github.com/creativetimofficial/argon-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/argon-dashboard on GitHub">Star</a>
@@ -796,31 +652,186 @@
           <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
             <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
           </a>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
-<!--   Core JS Files   -->
-<script src="<?= base_url('assets/js/core/popper.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/core/bootstrap.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
-<script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
+  <!--   Core JS Files   -->
+  <script src="<?= base_url('assets/js/core/popper.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/core/bootstrap.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
+  <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 
-<script>
-  var win = navigator.platform.indexOf('Win') > -1;
-  if (win && document.querySelector('#sidenav-scrollbar')) {
-    var options = {
-      damping: '0.5'
+ <script>
+let jenisSuratLoaded = false;
+
+$(document).ready(function () {
+  const $modal = $('#addSlotModal');
+
+  $modal.on('show.bs.modal', function () {
+    console.trace("🔥 Modal show triggered");
+
+    const jenisSuratContainer = document.getElementById('jenisSuratContainer');
+    const slotInputsContainer = document.getElementById('slotInputsContainer');
+
+    // Kosongkan container
+    jenisSuratContainer.innerHTML = '';
+    slotInputsContainer.innerHTML = '';
+
+    if (jenisSuratLoaded) {
+      console.log("⏩ Jenis surat sudah diload, skip fetch");
+      return;
     }
-    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-  }
+
+    console.trace("📡 Fetching jenis_surat...");
+
+    fetch('<?= base_url("index.php/penomoran/Penomoran/get_jenis_surat") ?>')
+      .then(response => response.json())
+      .then(data => {
+        console.log("✅ Data jenis_surat loaded:", data);
+        jenisSuratLoaded = true;
+
+        data.forEach(jenis => {
+          const { id, nama_jenis: nama } = jenis;
+
+          const checkboxWrapper = document.createElement('div');
+          checkboxWrapper.className = 'form-check';
+
+          const input = document.createElement('input');
+          input.className = 'form-check-input jenis-checkbox';
+          input.type = 'checkbox';
+          input.value = id;
+          input.dataset.nama = nama;
+          input.id = `jenisSurat${id}`;
+
+          const label = document.createElement('label');
+          label.className = 'form-check-label';
+          label.htmlFor = `jenisSurat${id}`;
+          label.innerText = nama;
+
+          checkboxWrapper.appendChild(input);
+          checkboxWrapper.appendChild(label);
+          jenisSuratContainer.appendChild(checkboxWrapper);
+
+          input.addEventListener('change', function () {
+            const inputId = 'slotInput' + id;
+            if (this.checked) {
+              const div = document.createElement('div');
+              div.className = 'mb-3';
+              div.id = inputId;
+              div.innerHTML = `
+                <label class="form-label">Jumlah Slot untuk <strong>${nama}</strong></label>
+                <input type="number" name="slot[${id}]" class="form-control" min="1" required>
+                <input type="hidden" name="jenis_surat_id[]" value="${id}">
+              `;
+              slotInputsContainer.appendChild(div);
+            } else {
+              const inputDiv = document.getElementById(inputId);
+              if (inputDiv) inputDiv.remove();
+            }
+          });
+        });
+      })
+      .catch(error => {
+        console.error("❌ AJAX Error:", error);
+        jenisSuratContainer.innerHTML = "<div class='text-danger'>Gagal memuat data jenis surat</div>";
+      });
+  });
+
+  // Reset saat modal ditutup
+  $modal.on('hidden.bs.modal', function () {
+    console.log("🔁 Reset state modal");
+    jenisSuratLoaded = false;
+    document.getElementById('jenisSuratContainer').innerHTML = '';
+    document.getElementById('slotInputsContainer').innerHTML = '';
+  });
+});
 </script>
 
-<!-- Github buttons -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
 
-<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-<script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
+
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
+
+
+
+  
+  <!-- <script>
+    document.getElementById('addSlotForm').addEventListener('submit', function(e) {
+      e.preventDefault(); // prevent default form submission
+
+      const jumlahSlot = document.getElementById('jumlahSlot').value;
+      const tanggalSlot = document.getElementById('tanggalSlot').value;
+    
+      // AJAX/Fetch request (contoh pakai fetch)
+      fetch('/api/slots', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          jumlah_slot: jumlahSlot,
+          tanggal_slot: tanggalSlot
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          // close modal
+          const modal = bootstrap.Modal.getInstance(document.getElementById('addSlotModal'));
+          modal.hide();
+        
+          // show success alert or reload table
+          alert('Slot berhasil ditambahkan!');
+        
+          // OPTIONAL: reload table or fetch latest data
+          location.reload();
+        } else {
+          alert('Gagal menambahkan slot.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Terjadi kesalahan.');
+      });
+    });
+  </script> -->
+<!-- Script Modal (jQuery) -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const editModal = document.getElementById('editSlotModal');
+  editModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
+    const id = button.getAttribute('data-id');
+    const slot = button.getAttribute('data-slot');
+    const tanggal = button.getAttribute('data-tanggal');
+    const jenisId = button.getAttribute('data-jenis');
+
+    document.getElementById('editId').value = id;
+    document.getElementById('prevJumlahSlot').value = slot;
+    document.getElementById('editJumlahSlot').value = slot;
+    document.getElementById('editTanggalSlot').value = tanggal;
+    document.getElementById('editJenisSurat').value = jenisId;
+    
+  });
+});
+
+</script>
+
 
 </body>
 
