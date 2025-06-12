@@ -99,9 +99,9 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Spesimen</li>
+                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Specimen</li>
                     </ol>
-                    <h6 class="font-weight-bolder text-white mb-0">Tambah Daftar Spesimen</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">Tambah Daftar Specimen</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -116,27 +116,30 @@
                     <div class="card">
                         <div class="card-header pb-0">
                             <div class="d-flex align-items-center">
-                                <p class="mb-0">Form Tambah Daftar Spesimen</p>
+                                <p class="mb-0">Form Tambah Daftar Specimen</p>
                             </div>
                             <div class="card p-3">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="nama" class="form-control-label">Nama</label>
-                                                <input class="form-control" type="text" id="nama">
+                                                <select class="form-control" id="nama">
+                                                    <option>-- Pilih Nama --</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="jabatan" class="form-control-label">Jabatan</label>
-                                                <input class="form-control" type="text" id="jabatan">
+                                                <select class="form-control" id="jabatan">
+                                                    <option>-- Pilih Jabatan --</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label for="pangkat" class="form-control-label">Pangkat</label>
-                                                <input class="form-control" type="text" id="pangkat">
+                                                <select class="form-control" id="pangkat">
+                                                    <option>-- Pilih Pangkat --</option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="col-md-1 d-flex align-items-end justify-content-center">
@@ -146,6 +149,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="d-flex justify-content-center mt-3">
                                         <a href="https://www.example.com">
                                             <button type="button" class="btn btn-primary btn-sm px-4">Simpan</button>
@@ -157,3 +161,29 @@
                     </div>
                 </div>
             </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    $.ajax({
+                        url: "<?= base_url('specimen/get_nama') ?>", // ganti dengan URL controller yang benar
+                        method: "GET",
+                        dataType: "json",
+                        success: function(data) {
+                            $('#nama').append(`<option value="">-- Pilih Nama --</option>`);
+                            $.each(data, function(index, item) {
+                                $('#nama').append(`<option value="${item.id}">${item.nama}</option>`);
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            console.log("Gagal ambil data:", error);
+                        }
+                    });
+                });
+            </script>
+
+
+
+</body>
+
+</html>

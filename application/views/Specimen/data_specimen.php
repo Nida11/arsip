@@ -100,17 +100,11 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
                         <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Spesimen</li>
+                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Specimen</li>
                     </ol>
-                    <h6 class="font-weight-bolder text-white mb-0">Daftar Spesimen</h6>
+                    <h6 class="font-weight-bolder text-white mb-0">Daftar Specimen</h6>
                 </nav>
-                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                        <div class="input-group">
-                            <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Type here...">
-                        </div>
-                    </div>
+                <div class="col-6 text-end">
                     </svg>
                 </div>
             </div>
@@ -127,32 +121,77 @@
             <div class="row">
                 <div class="col-12">
                     <div class="card mb-4">
-                        <div class="card-header pb-0">
-                            <h6>Daftar Specimen</h6>
+                        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+                            <h6 class="mb-5">Daftar Specimen</h6>
+                            <a class="btn mb-0 text-white" style="background-color: #66bb6a;"
+                                href="<?php echo base_url() . 'index.php/specimen/Specimen/add_specimen/'; ?>">
+                                <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah
+                            </a>
                         </div>
-                        <div class="card-body px-0 pt-0 pb-2">
+
+                        <div class="card-body px-0 pt-0 pb-0">
                             <div class="table-responsive p-0">
 
-                                <table class="table align-items-center mb-0">
+
+
+                                <table class="table align-items-center mb-0" id="specimenTable">
                                     <thead>
                                         <tr>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">No</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Nama</th>
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Jabatan</th>
                                             <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Pangkat</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Spesimen</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Specimen</th>
                                             <th class="text-secondary opacity-7"></th>
                                         </tr>
+
+
+
+                                        <tr>
+                                            <th></th>
+
+                                            <th>
+                                                <select name="filter_nama" id="filter_nama" class="form-control select">
+                                                    <option value="">Pilih Nama</option>
+                                                    <?php foreach ($data_specimen as $row): ?>
+                                                        <option value="<?= $row->nama ?>"><?= $row->nama ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </th>
+
+
+                                            <th>
+                                                <select name="filter_jabatan" id="filter_jabatan" class="form-control select">
+                                                    <option value="">Pilih Jabatan</option>
+                                                    <?php foreach ($data_specimen as $row): ?>
+                                                        <option value="<?= $row->jabatan ?>"><?= $row->jabatan ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </th>
+
+
+                                            <th>
+                                                <select name="filter_pangkat" id="filter_pangkat" class="form-control select">
+                                                    <option value="">Pilih Pangkat</option>
+                                                    <?php foreach ($data_specimen as $row): ?>
+                                                        <option value="<?= $row->pangkat ?>"><?= $row->pangkat ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </th>
+
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+
+
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($data_specimen->result_array() as $d):  ?>
+
+                                        <?php $no = 1;
+                                        foreach ($data_specimen->result_array() as $d): ?>
                                             <tr>
-                                                <td>
-                                                    <div class="d-flex px-2 py-1">
-                                                        <div class="align-middle text-center text-sm">
-                                                            <p class="text-xs font-weight-bold mb-0">1</p>
-                                                        </div>
-                                                    </div>
+                                                <td class="text-center align-middle" style="width: 50px; font-size: 14px; padding: 4px;">
+                                                    <?php echo $no++; ?>
                                                 </td>
                                                 <td>
                                                     <p class="text-xs font-weight-bold mb-0"><?php echo $d['nama'] ?></p>
@@ -160,16 +199,58 @@
                                                 <td class="align-middle text-center text-sm">
                                                     <p class="text-xs font-weight-bold mb-0"><?php echo $d['jabatan'] ?></p>
                                                 </td>
+                                                <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold"><?php echo $d['pangkat'] ?></span></td>
+
                                                 <td class="align-middle text-center">
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['pangkat'] ?></p>
+                                                    <a href="<?= base_url('index.php/specimen/Specimen/download_blob/' . $d['id']) ?>" class="btn btn-sm btn-primary">
+                                                        Download
+                                                    </a>
                                                 </td>
-                                                <td class="align-middle text-center">
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['file'] ?></p>
+
+
+                                                <td class="align-middle">
+                                                    <a href="<?= base_url('index.php/specimen/Specimen/edit_specimen/' . $d['id']) ?>" class="text-info font-weight-bold text-xs me-3">Edit</a>
+                                                    <a href="<?= base_url('index.php/specimen/Specimen/delete_specimen/' . $d['id']) ?>" onclick="return confirm('Yakin ingin menghapus specimen ini?')" class="text-danger font-weight-bold text-xs">Hapus</a>
                                                 </td>
                                             </tr>
-
-                                            <?php endforeach ?>
+                                        <?php endforeach; ?>
+                                    </tbody>
                                 </table>
+
+                                <script>
+                                    function filterByColumn() {
+                                        let inputNama = document.getElementById("filter_nama").value.toUpperCase();
+                                        let inputJabatan = document.getElementById("filter_jabatan").value.toUpperCase();
+                                        let inputPangkat = document.getElementById("filter_pangkat").value.toUpperCase();
+
+                                        let table = document.getElementById("specimenTable");
+                                        let tr = table.getElementsByTagName("tr");
+
+                                        for (let i = 2; i < tr.length; i++) { // Mulai dari indeks 2 (karena 0 = judul, 1 = filter)
+                                            let tdNama = tr[i].getElementsByTagName("td")[1];
+                                            let tdJabatan = tr[i].getElementsByTagName("td")[2];
+                                            let tdPangkat = tr[i].getElementsByTagName("td")[3];
+
+                                            if (tdNama && tdJabatan && tdPangkat) {
+                                                let nama = tdNama.textContent || tdNama.innerText;
+                                                let jabatan = tdJabatan.textContent || tdJabatan.innerText;
+                                                let pangkat = tdPangkat.textContent || tdPangkat.innerText;
+
+                                                if (
+                                                    nama.toUpperCase().indexOf(inputNama) > -1 &&
+                                                    jabatan.toUpperCase().indexOf(inputJabatan) > -1 &&
+                                                    pangkat.toUpperCase().indexOf(inputPangkat) > -1
+                                                ) {
+                                                    tr[i].style.display = "";
+                                                } else {
+                                                    tr[i].style.display = "none";
+                                                }
+                                            }
+                                        }
+                                    }
+                                </script>
+
+
 </body>
 
 </html>
