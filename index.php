@@ -113,8 +113,12 @@ switch (ENVIRONMENT)
  * https://codeigniter.com/user_guide/general/managing_apps.html
  *
  * NO TRAILING SLASH!
+
  */
-	$application_folder = 'application';
+	
+ require_once __DIR__ . '/vendor/autoload.php';
+
+ $application_folder = 'application';
 
 /*
  *---------------------------------------------------------------

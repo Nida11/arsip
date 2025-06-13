@@ -1,130 +1,4 @@
 
-<!-- <?php
-date_default_timezone_set('Asia/Jakarta'); // Tambahin ini supaya jamnya sesuai lokal
-// Paling atas: koneksi database dan proses submit
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "arsiparis";
-
-$koneksi = new mysqli($host, $user, $password, $database);
-if ($koneksi->connect_error) {
-    die("Koneksi gagal: " . $koneksi->connect_error);
-}
-
-// Handle form POST
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $jenisSuratId = $_POST['jenisSurat'];
-    $jumlahSlot = $_POST['jumlahSlot'];
-    $tanggalSlot = $_POST['tanggalSlot'];
-    $createdAt = date('Y-m-d H:i:s');
-
-    
-    // Insert ke tabel slot_number
-     $sql = "INSERT INTO slot_number (jenis_surat_id, tanggal, slot, created_at) VALUES (?, ?, ?, ?)";
-    $stmt = $koneksi->prepare($sql);
-    $stmt->bind_param("isis", $jenisSuratId, $tanggalSlot, $jumlahSlot, $createdAt);
-    $stmt->execute();
-    $stmt->close();
-
-    // Redirect supaya tidak submit ulang saat di-refresh
-    header("Location: ".$_SERVER['PHP_SELF']."?success=1");
-    exit();
-}
-// 📊 Ambil Data History Slot (dengan filter tanggal jika ada)
-if (isset($_GET['tanggal']) && is_array($_GET['tanggal']) && count($_GET['tanggal']) > 0) {
-    $placeholders = implode(',', array_fill(0, count($_GET['tanggal']), '?'));
-    $sqlHistory = "SELECT * FROM slot_number WHERE tanggal IN ($placeholders) ORDER BY created_at DESC";
-    $stmt = $koneksi->prepare($sqlHistory);
-    $paramTypes = str_repeat('s', count($_GET['tanggal']));
-    $stmt->bind_param($paramTypes, ...$_GET['tanggal']);
-    $stmt->execute();
-    $resultHistory = $stmt->get_result();
-    $stmt->close();
-
-} else {
-    // $sqlHistory = "SELECT * FROM slot_number ORDER BY created_at DESC";
-        $sqlHistory = "SELECT sn.*, js.nama_jenis 
-                   FROM slot_number sn
-                   JOIN jenis_surat js ON sn.jenis_surat_id = js.id
-                   ORDER BY sn.created_at DESC";
-    $resultHistory = $koneksi->query($sqlHistory);
-}
-?> -->
-<!-- <?php
-
-// Konfigurasi dasar dan koneksi
-$host = "localhost";
-$user = "root";
-$password = "";
-$database = "arsiparis";
-
-$koneksi = new mysqli($host, $user, $password, $database);
-if ($koneksi->connect_error) {
-    die("Koneksi gagal: " . $koneksi->connect_error);
-}
-
-date_default_timezone_set('Asia/Jakarta');
-
-// Ambil data jenis surat untuk dropdown
-function getJenisSurat($koneksi) {
-    return $koneksi->query("SELECT * FROM jenis_surat");
-}
-
-$resultJenisSurat = getJenisSurat($koneksi);
-if (!$resultJenisSurat) {
-    die("Gagal mengambil data jenis surat: " . $koneksi->error);
-}
-
-// Handle form tambah slot
-if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['jenisSurat']) && !isset($_POST['updateSlot'])) {
-    $jenisSuratId = $_POST['jenisSurat'];
-    $jumlahSlot = $_POST['jumlahSlot'];
-    $tanggalSlot = $_POST['tanggalSlot'];
-    $createdAt = date('Y-m-d H:i:s');
-
-    $sql = "INSERT INTO slot_number (jenis_surat_id, tanggal, slot, created_at) VALUES (?, ?, ?, ?)";
-    $stmt = $koneksi->prepare($sql);
-    if ($stmt) {
-        $stmt->bind_param("isis", $jenisSuratId, $tanggalSlot, $jumlahSlot, $createdAt);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF'] . "?success=1");
-    exit();
-}
-
-// Handle update slot
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['updateSlot'])) {
-    $editId = $_POST['editId'];
-    $editJenisSuratId = $_POST['editJenisSurat'];
-    $editJumlahSlot = $_POST['editJumlahSlot'];
-    $editTanggalSlot = $_POST['editTanggalSlot'];
-    $updatedAt = date('Y-m-d H:i:s');
-
-    $sqlUpdate = "UPDATE slot_number SET jenis_surat_id = ?, slot = ?, tanggal = ?, updated_at = ? WHERE id = ?";
-    $stmt = $koneksi->prepare($sqlUpdate);
-    if ($stmt) {
-        $stmt->bind_param("iissi", $editJenisSuratId, $editJumlahSlot, $editTanggalSlot, $updatedAt, $editId);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF'] . "?success=2");
-    exit();
-}
-
-// Ambil data slot + join dengan jenis surat
-$sqlHistory = "SELECT sn.*, js.nama_jenis FROM slot_number sn JOIN jenis_surat js ON sn.jenis_surat_id = js.id ORDER BY sn.created_at DESC";
-$resultHistory = $koneksi->query($sqlHistory);
-if (!$resultHistory) {
-    die("Gagal mengambil data histori slot: " . $koneksi->error);
-}
-// ?> -->
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -147,6 +21,13 @@ if (!$resultHistory) {
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
 
 </head>
 
@@ -411,50 +292,55 @@ if (!$resultHistory) {
                     <div class="card-body px-0 pt-0 pb-2">
                         <div class="table-responsive p-0">
                           
-                            <table class="table table-bordered table-striped align-items-center mb-0">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th> 
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Surat</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Booking Slot</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created At</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Update At</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>                                      
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if ($resultHistory->num_rows > 0): ?>
-                                        <?php while ($row = $resultHistory->fetch_assoc()): ?>
-                                            <tr>
-                                                <td class="text-center"><?= htmlspecialchars($row['tanggal']); ?></td>
-                                                <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
-                                                <td class="text-center"><?= htmlspecialchars($row['slot']); ?></td>
-                                                <td class="text-center"><?= htmlspecialchars($row['created_at']); ?></td>
-                                                <td class="text-center"><?= htmlspecialchars($row['updated_at'] ?? '-') ?></td>
-                                                <td class="text-center">
-                                                  <!-- Pastikan Bootstrap Icons sudah di-load -->
-                                                  <button
-                                                  
-                                                      data-bs-toggle="modal"
-                                                      data-bs-target="#editSlotModal"
-                                                      data-id="<?= htmlspecialchars($row['id']); ?>"
-                                                      data-jenis="<?= htmlspecialchars($row['jenis_surat_id']); ?>"
-                                                      data-slot="<?= htmlspecialchars($row['slot']); ?>"
-                                                      data-tanggal="<?= htmlspecialchars($row['tanggal']); ?>"
-                                                  >
-                                                      <i class="fa fa-pencil fixed-plugin-button-nav cursor-pointer"></i>
-                                                  </button>
+                        <table class="table table-bordered table-striped align-items-center mb-0">
+    <thead class="thead-dark">
+        <tr>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal</th> 
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Surat</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Booking Slot</th>
+            <!-- <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Created At</th>
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Updated At</th> -->
+            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>                                      
+        </tr>
+    </thead>
+    <tbody>
+        <?php if (!empty($data_slot)): ?>
+            <?php foreach ($data_slot as $row): ?>
+                <tr>
+                <td><?= date('d F Y', strtotime($row['tanggal'])); ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($row['slot']); ?></td>
+                    <!-- <td class="text-center"><?= htmlspecialchars($row['created_at']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($row['updated_at'] ?? '-'); ?></td> -->
+                    <td class="text-center">
+                      <button class="btn btn-sm btn-primary"
+                      data-bs-toggle="modal"
+                      data-bs-target="#editSlotModal"
+                      data-id="<?= $row['id']; ?>"
+                      data-jenis="<?= $row['jenis_surat_id']; ?>"
+                      data-slot="<?= $row['slot']; ?>"
+                      data-tanggal="<?= $row['tanggal']; ?>"
+                    >
+                      <i class="fa fa-pencil fixed-plugin-button-nav cursor-pointer"></i>
+                    </button>
 
-                                                </td>
-                                            </tr>
-                                        <?php endwhile; ?>
-                                    <?php else: ?>
-                                        <tr>
-                                            <td colspan="6" class="text-center">Belum ada histori slot.</td>
-                                        </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                    <button class="btn btn-sm btn-danger delete-slot"
+  data-id="<?= $row['id']; ?>">
+  Hapus
+</button>
+
+
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="6" class="text-center">Belum ada histori slot.</td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>
+
                         </div>
                     </div>
                 </div>
@@ -489,7 +375,7 @@ if (!$resultHistory) {
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan</button>
+          <button type="submit" class="btn btn-primary" id="submitSlotBtn">Simpan</button>
         </div>
       </form>
     </div>
@@ -498,46 +384,54 @@ if (!$resultHistory) {
 
                     <!-- END Modal -->
                     <div class="modal fade" id="editSlotModal" tabindex="-1" aria-labelledby="editSlotModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <form method="POST" > <!--buat manggil controller-->
-                            <div class="modal-header">
-                              <h5 class="modal-title" id="editSlotModalLabel">Edit Slot</h5>
-                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                              <input type="hidden" id="editId" name="editId">
-                                <div class="mb-3">
-                                  <label class="form-label">Jenis Surat</label>
-                                    <select class="form-select" name="editJenisSurat" id="editJenisSurat" required>
-                                      <option value="">-- Pilih Jenis Surat --</option>
-                                      <?php foreach ($resultJenisSurat as $jenis): ?>
-                                        <option value="<?= $jenis['id'] ?>"><?= htmlspecialchars($jenis['nama_jenis']) ?></option>
-                                      <?php endforeach; ?>
-                                    </select>
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_edit_slot") ?>">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editSlotModalLabel">Edit Slot</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                          </div>
 
-                                </div>
-                              <div class="mb-3">
-                                <label for="prevJumlahSlot" class="form-label">Jumlah Slot Sebelumnya</label>
-                                <input type="number" class="form-control" id="prevJumlahSlot" name="prevJumlahSlot" readonly>
-                              </div>
-                              <div class="mb-3">
-                                <label for="editJumlahSlot" class="form-label">Jumlah Slot Baru</label>
-                                <input type="number" class="form-control" id="editJumlahSlot" name="editJumlahSlot" required>
-                              </div>
-                              <div class="mb-3">
-                                <label for="editTanggalSlot" class="form-label">Tanggal Slot</label>
-                                <input type="date" class="form-control" id="editTanggalSlot" name="editTanggalSlot" required>
-                              </div>
+                          <div class="modal-body">
+                            <!-- Hidden ID -->
+                            <input type="hidden" name="id_slot" id="editIdSlot">
+
+                            <?php 
+               $jenisSurat = $this->db->get('jenis_surat')->result_array();
+               ?>
+
+                            <!-- Jenis Surat -->
+                            <div class="mb-3">
+                              <label for="editJenisSurat" class="form-label">Jenis Surat</label>
+                              <select class="form-select" name="jenis_surat_id" id="editJenisSurat" required>
+                                <?php foreach ($jenisSurat as $jenis): ?>
+                                  <option value="<?= $jenis['id'] ?>"><?= $jenis['nama_jenis'] ?></option>
+                                <?php endforeach; ?>
+                              </select>
                             </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                              <button type="submit" class="btn btn-primary" name="updateSlot">Update</button>
+
+                            <!-- Slot -->
+                            <div class="mb-3">
+                              <label for="editSlotJumlah" class="form-label">Jumlah Slot</label>
+                              <input type="number" class="form-control" name="slot" id="editSlotJumlah" min="1" required>
                             </div>
-                          </form>
-                        </div>
+
+                            <!-- Tanggal -->
+                            <div class="mb-3">
+                              <label for="editTanggalSlot" class="form-label">Tanggal</label>
+                              <input type="date" class="form-control" name="tanggal" id="editTanggalSlot" required>
+                            </div>
+                          </div>
+
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                          </div>
+                        </form>
                       </div>
                     </div>
+</div>
+
 
                   </tbody>
                 </table>
@@ -657,12 +551,85 @@ if (!$resultHistory) {
     </div>
   </div>
   <!--   Core JS Files   -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="<?= base_url('assets/js/core/popper.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/core/bootstrap.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 
- <script>
+  <?php if ($this->session->flashdata('success_slot')): ?>
+<script>
+Swal.fire({
+  icon: 'success',
+  title: 'Berhasil',
+  text: '<?= $this->session->flashdata("success_slot") ?>',
+  timer: 2000,
+  showConfirmButton: false
+});
+</script>
+<?php endif; ?>
+
+
+<?php if ($this->session->flashdata('success_edit')): ?>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil',
+      text: '<?= $this->session->flashdata('success_edit'); ?>',
+      showConfirmButton: false,
+      timer: 2000
+    });
+  </script>
+<?php endif; ?>
+
+<!-- SweetAlert2 CDN (jika belum ada) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  $(document).on('click', '.delete-slot', function () {
+    const slotId = $(this).data('id');
+
+    Swal.fire({
+      title: 'Yakin ingin menghapus slot ini?',
+      text: "Data yang dihapus tidak bisa dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Kirim ke backend
+        $.ajax({
+          url: '<?= base_url("index.php/penomoran/Penomoran/delete_slot") ?>',
+          method: 'POST',
+          data: { id_slot: slotId },
+          success: function (response) {
+            // Tampilkan notifikasi sukses
+            Swal.fire({
+              title: 'Berhasil!',
+              text: 'Slot berhasil dihapus.',
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false
+            }).then(() => {
+              location.reload(); // refresh halaman
+            });
+          },
+          error: function () {
+            Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus slot.', 'error');
+          }
+        });
+      }
+    });
+  });
+</script>
+
+
+
+
+  <script>
 let jenisSuratLoaded = false;
 
 $(document).ready(function () {
@@ -683,13 +650,15 @@ $(document).ready(function () {
       return;
     }
 
+    // Langsung set flag agar fetch tidak dobel jika event show dipicu 2x
+    jenisSuratLoaded = true;
+
     console.trace("📡 Fetching jenis_surat...");
 
     fetch('<?= base_url("index.php/penomoran/Penomoran/get_jenis_surat") ?>')
       .then(response => response.json())
       .then(data => {
         console.log("✅ Data jenis_surat loaded:", data);
-        jenisSuratLoaded = true;
 
         data.forEach(jenis => {
           const { id, nama_jenis: nama } = jenis;
@@ -735,6 +704,7 @@ $(document).ready(function () {
       .catch(error => {
         console.error("❌ AJAX Error:", error);
         jenisSuratContainer.innerHTML = "<div class='text-danger'>Gagal memuat data jenis surat</div>";
+        jenisSuratLoaded = false; // reset flag supaya bisa coba lagi
       });
   });
 
@@ -747,6 +717,31 @@ $(document).ready(function () {
   });
 });
 </script>
+
+<script>
+  $('#editSlotModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+
+    // Ambil data dari button
+    var id = button.data('id');
+    var jenis = button.data('jenis'); // contoh: 2
+    var slot = button.data('slot');
+    var tanggal = button.data('tanggal'); // format: yyyy-mm-dd
+
+    // Referensi ke modal
+    var modal = $(this);
+    modal.find('#editIdSlot').val(id);
+
+    // Atur value select (pastikan valuenya sesuai dengan <option>)
+    modal.find('#editJenisSurat').val(jenis).trigger('change');
+
+    // Isi input slot & tanggal
+    modal.find('#editSlotJumlah').val(slot);
+    modal.find('#editTanggalSlot').val(tanggal);
+  });
+</script>
+
+
 
 
 
@@ -769,47 +764,6 @@ $(document).ready(function () {
 
 
 
-  
-  <!-- <script>
-    document.getElementById('addSlotForm').addEventListener('submit', function(e) {
-      e.preventDefault(); // prevent default form submission
-
-      const jumlahSlot = document.getElementById('jumlahSlot').value;
-      const tanggalSlot = document.getElementById('tanggalSlot').value;
-    
-      // AJAX/Fetch request (contoh pakai fetch)
-      fetch('/api/slots', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          jumlah_slot: jumlahSlot,
-          tanggal_slot: tanggalSlot
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          // close modal
-          const modal = bootstrap.Modal.getInstance(document.getElementById('addSlotModal'));
-          modal.hide();
-        
-          // show success alert or reload table
-          alert('Slot berhasil ditambahkan!');
-        
-          // OPTIONAL: reload table or fetch latest data
-          location.reload();
-        } else {
-          alert('Gagal menambahkan slot.');
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Terjadi kesalahan.');
-      });
-    });
-  </script> -->
 <!-- Script Modal (jQuery) -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {

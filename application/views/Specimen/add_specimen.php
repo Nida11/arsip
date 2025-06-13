@@ -118,7 +118,16 @@
                             <div class="d-flex align-items-center">
                                 <p class="mb-0">Form Tambah Daftar Specimen</p>
                             </div>
-                            <div class="card p-3">
+                            <?php if ($this->session->flashdata('msg')): ?>
+        <p style="color: green;"><?= $this->session->flashdata('msg'); ?></p>
+    <?php endif; ?>
+
+    <form action="<?= base_url('index.php/specimen/Specimen/process_excel') ?>" method="post" enctype="multipart/form-data">
+        <label>Pilih File Excel (.xlsx / .xls):</label><br>
+        <input type="file" name="file" required accept=".xlsx,.xls"><br><br>
+        <button type="submit">Upload & Proses</button>
+    </form>
+                            <!-- <div class="card p-3">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3">
@@ -156,7 +165,7 @@
                                         </a>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>

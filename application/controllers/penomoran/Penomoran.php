@@ -4,11 +4,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Penomoran extends CI_Controller {
 
 
-public function data_slot(){
-		
-		$d['data_slot'] = $this->db->query("select * from slot");
-		$this->load->view('Penomoran/data_slot',$d);
-	}
+    public function data_slot() {
+        $d['data_slot'] = $this->db->query("
+            SELECT a.*, b.nama_jenis 
+            FROM slot_number a 
+            JOIN jenis_surat b ON a.jenis_surat_id = b.id
+            ORDER BY a.tanggal DESC
+        ")->result_array();
+        $d['jenis_surat'] = $this->db->get("jenis_surat")->result_array();
+
+    
+        $this->load->view('Penomoran/data_slot', $d);
+    }
+    
+    
 
 
 public function get_jenis_surat()
@@ -17,6 +26,7 @@ public function get_jenis_surat()
     $query = $this->db->get('jenis_surat');
     echo json_encode($query->result());
 }
+
 
 
 public function do_input_slot()
@@ -43,17 +53,41 @@ public function do_input_slot()
                 'jenis_surat_id' => $id,
                 'tanggal'        => $tanggal,
                 'slot'           => intval($slots[$id]),
-                'created_at'     => date('Y-m-d H:i:s'),
-                'updated_at'     => date('Y-m-d H:i:s')
+                'created_at'     => date('Y-m-d H:i:s')
             ];
             $this->db->insert('slot_number', $data);
         }
     }
 
-    $this->session->set_flashdata('success', 'Data slot berhasil ditambahkan.');
-    redirect('penomoran/data_slot');
+    $this->session->set_flashdata('success_slot', 'Slot berhasil ditambahkan!');
+    redirect('index.php/penomoran/Penomoran/data_slot');
 }
 
+public function do_edit_slot() {
+    $id = $this->input->post('id_slot');
+    $data = [
+      'jenis_surat_id' => $this->input->post('jenis_surat_id'),
+      'slot' => $this->input->post('slot'),
+      'tanggal' => $this->input->post('tanggal'),
+      'updated_at' => date('Y-m-d H:i:s')
+    ];
+  
+    $this->db->where('id', $id);
+    $this->db->update('slot_number', $data);
+  
+    // Kirim flashdata untuk sweetalert
+    $this->session->set_flashdata('success_edit', 'Slot berhasil diubah!');
+    redirect('index.php/penomoran/Penomoran/data_slot');
+  }
+  
+  public function delete_slot()
+{
+    $id = $this->input->post('id_slot');
+    $this->db->where('id', $id);
+    $this->db->delete('slot_number');
+
+    echo json_encode(['status' => 'success']);
+}
 
 
 
