@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>imagettftext Simulator</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    #controls input { width: 60px; margin-right: 10px; }
+    #canvas-container { margin-top: 20px; }
+    canvas { border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h2>imagettftext() Simulator</h2>
+  <div id="controls">
+    Teks: <input type="text" id="text" value="Contoh Text">
+    Font Size: <input type="number" id="fontSize" value="24">
+    X: <input type="number" id="posX" value="50">
+    Y: <input type="number" id="posY" value="100">
+    <button onclick="drawText()">Render</button>
+  </div>
+  <div id="canvas-container">
+    <canvas id="preview" width="600" height="200"></canvas>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('preview');
+    const ctx = canvas.getContext('2d');
+
+    function drawText() {
+      const text = document.getElementById('text').value;
+      const size = parseInt(document.getElementById('fontSize').value);
+      const x = parseInt(document.getElementById('posX').value);
+      const y = parseInt(document.getElementById('posY').value);
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw guideline
+      ctx.strokeStyle = "#ccc";
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+      ctx.stroke();
+
+      ctx.font = `${size}px Arial`;
+      ctx.fillStyle = "black";
+      ctx.fillText(text, x, y);
+
+      // Label posisi
+      ctx.fillStyle = "red";
+      ctx.fillText(`(x=${x}, y=${y})`, x, y - 10);
+    }
+
+    drawText();
+  </script>
+</body>
+</html>
