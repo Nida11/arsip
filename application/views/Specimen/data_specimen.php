@@ -18,10 +18,17 @@
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- CSS Files -->
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+  <style>
+    div.dataTables_filter {
+      display: none;
+    }
+  </style>
+
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
-    <div class="min-height-300 bg-dark position-absolute w-100"></div>
+  <div class="min-height-300 bg-dark position-absolute w-100"></div>
   <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -150,170 +157,169 @@
       <a class="btn btn-primary btn-sm mb-0 w-100" href="https://www.creative-tim.com/product/argon-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a> -->
     </div>
   </aside>
-    <main class="main-content position-relative border-radius-lg ">
-        <!-- Navbar -->
-        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-            <div class="container-fluid py-1 px-3">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Specimen</li>
-                    </ol>
-                    <h6 class="font-weight-bolder text-white mb-0">Daftar Specimen</h6>
-                </nav>
-                <div class="col-6 text-end">
-                    </svg>
-                </div>
-            </div>
-            </a>
-            </li>
-            </ul>
-            </li>
-            </ul>
-            </div>
-            </div>
+  <main class="main-content position-relative border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Specimen</li>
+          </ol>
+          <h6 class="font-weight-bolder text-white mb-0">Daftar Specimen</h6>
         </nav>
-        <!-- End Navbar -->
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                            <h6 class="mb-5">Daftar Specimen</h6>
-                            <a class="btn mb-0 text-white" style="background-color: #66bb6a;"
-                                href="<?php echo base_url() . 'index.php/specimen/Specimen/add_specimen/'; ?>">
-                                <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah
-                            </a>
-                        </div>
+        <div class="col-6 text-end">
+          </svg>
+        </div>
+      </div>
+      </a>
+      </li>
+      </ul>
+      </li>
+      </ul>
+      </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-12">
+          <div class="card mb-4">
+            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+              <h6 class="mb-5">Daftar Specimen</h6>
+              <a class="btn mb-0 text-white" style="background-color: #66bb6a;"
+                href="<?php echo base_url() . 'index.php/specimen/Specimen/add_specimen/'; ?>">
+                <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah
+              </a>
+            </div>
 
-                        <div class="card-body px-0 pt-0 pb-0">
-                            <div class="table-responsive p-0">
-
-
-
-                                <table class="table align-items-center mb-0" id="specimenTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">No</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Nama</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Jabatan</th>
-                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Pangkat</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Specimen</th>
-                                            <th class="text-secondary opacity-7"></th>
-                                        </tr>
-
+            <div class="card-body px-0 pt-0 pb-0">
+              <div class="table-responsive p-0">
 
 
-                                        <tr>
-                                            <th></th>
 
-                                            <th>
-                                                <select name="filter_nama" id="filter_nama" class="form-control select">
-                                                    <option value="">Pilih Nama</option>
-                                                    <?php foreach ($data_specimen as $row): ?>
-                                                        <option value="<?= $row->nama ?>"><?= $row->nama ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </th>
+                <table class="table align-items-center mb-0" id="specimenTable">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">No</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Nama</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Jabatan</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Pangkat</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Specimen</th>
+                      <th class="text-secondary opacity-7"></th>
+                    </tr>
 
+                    <tr>
+                      <th></th>
 
-                                            <th>
-                                                <select name="filter_jabatan" id="filter_jabatan" class="form-control select">
-                                                    <option value="">Pilih Jabatan</option>
-                                                    <?php foreach ($data_specimen as $row): ?>
-                                                        <option value="<?= $row->jabatan ?>"><?= $row->jabatan ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </th>
+                      <?php
+                      $specimen = $this->db->get('request_specimen')->result();
+                      ?>
 
+                      <!-- Filter Kolom Nama -->
+                      <th>
+                        <select name="filter_nama" id="filter_nama" class="form-control select2">
+                          <option value="">Pilih Nama</option>
+                          <?php foreach (array_unique(array_map(fn($r) => $r->nama, $specimen)) as $nama): ?>
+                            <option value="<?= $nama ?>"><?= $nama ?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </th>
+                      <th>
+                        <select name="filter_jabatan" id="filter_jabatan" class="form-control select2">
+                          <option value="">Pilih Jabatan</option>
+                          <?php foreach (array_unique(array_map(fn($r) => $r->jabatan, $specimen)) as $jabatan): ?>
+                            <option value="<?= $jabatan ?>"><?= $jabatan ?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </th>
+                      <th>
+                        <select name="filter_pangkat" id="filter_pangkat" class="form-control select2">
+                          <option value="">Pilih Pangkat</option>
+                          <?php foreach (array_unique(array_map(fn($r) => $r->pangkat, $specimen)) as $pangkat): ?>
+                            <option value="<?= $pangkat ?>"><?= $pangkat ?></option>
+                          <?php endforeach; ?>
+                        </select>
+                      </th>
 
-                                            <th>
-                                                <select name="filter_pangkat" id="filter_pangkat" class="form-control select">
-                                                    <option value="">Pilih Pangkat</option>
-                                                    <?php foreach ($data_specimen as $row): ?>
-                                                        <option value="<?= $row->pangkat ?>"><?= $row->pangkat ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </th>
-
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-
-
-                                    </thead>
-                                    <tbody>
-
-                                        <?php $no = 1;
-                                        foreach ($data_specimen->result_array() as $d): ?>
-                                            <tr>
-                                                <td class="text-center align-middle" style="width: 50px; font-size: 14px; padding: 4px;">
-                                                    <?php echo $no++; ?>
-                                                </td>
-                                                <td>
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['nama'] ?></p>
-                                                </td>
-                                                <td class="align-middle text-center text-sm">
-                                                    <p class="text-xs font-weight-bold mb-0"><?php echo $d['jabatan'] ?></p>
-                                                </td>
-                                                <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold"><?php echo $d['pangkat'] ?></span></td>
-
-                                                <td class="align-middle text-center">
-                                                    <a href="<?= base_url('index.php/specimen/Specimen/download_blob/' . $d['id']) ?>" class="btn btn-sm btn-primary">
-                                                        Download
-                                                    </a>
-                                                </td>
+                      <th></th>
+                      <th></th>
+                    </tr>
 
 
-                                                <td class="align-middle">
-                                                    <a href="<?= base_url('index.php/specimen/Specimen/edit_specimen/' . $d['id']) ?>" class="text-info font-weight-bold text-xs me-3">Edit</a>
-                                                    <a href="<?= base_url('index.php/specimen/Specimen/delete_specimen/' . $d['id']) ?>" onclick="return confirm('Yakin ingin menghapus specimen ini?')" class="text-danger font-weight-bold text-xs">Hapus</a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
+                  </thead>
+                  <tbody>
+
+                    <?php $no = 1;
+                    foreach ($data_specimen->result_array() as $d): ?>
+                      <tr>
+                        <td class="text-center align-middle" style="width: 50px; font-size: 14px; padding: 4px;">
+                          <?php echo $no++; ?>
+                        </td>
+                        <td>
+                          <p class="text-xs font-weight-bold mb-0"><?php echo $d['nama'] ?></p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <p class="text-xs font-weight-bold mb-0"><?php echo $d['jabatan'] ?></p>
+                        </td>
+                        <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold"><?php echo $d['pangkat'] ?></span></td>
+
+                        <td class="align-middle text-center">
+                          <a href="<?= base_url('index.php/specimen/Specimen/download_by_id/' . $d['id']) ?>" class="btn btn-sm btn-primary">
+                            Download
+                          </a>
+                        </td>
+
+
+                        <td class="align-middle">
+                          <a href="<?= base_url('index.php/specimen/Specimen/edit_specimen/' . $d['id']) ?>" class="text-info font-weight-bold text-xs me-3">Edit</a>
+                          <a href="<?= base_url('index.php/specimen/Specimen/delete_specimen/' . $d['id']) ?>" onclick="return confirm('Yakin ingin menghapus specimen ini?')" class="text-danger font-weight-bold text-xs">Hapus</a>
+                        </td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-      <footer class="footer pt-3  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>
-                <!-- made with <i class="fa fa-heart"></i> by -->
-                <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
-                <!-- Arsiparis Badan Pendapatan Daerah. -->
-              </div>
-            </div>
-            <div class="col-lg-6">
-              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                <li class="nav-item">
-                  <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
-                </li>
-                  <li class="nav-item">
-                  <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
-                </li>
-              </ul>
+    <footer class="footer pt-3  ">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              © <script>
+                document.write(new Date().getFullYear())
+              </script>
+              <!-- made with <i class="fa fa-heart"></i> by -->
+              <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
+              <!-- Arsiparis Badan Pendapatan Daerah. -->
             </div>
           </div>
+          <div class="col-lg-6">
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+              <li class="nav-item">
+                <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </footer>
+      </div>
+    </footer>
     </div>
   </main>
   <div class="fixed-plugin">
@@ -394,38 +400,102 @@
   <script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 
-                                <script>
-                                    function filterByColumn() {
-                                        let inputNama = document.getElementById("filter_nama").value.toUpperCase();
-                                        let inputJabatan = document.getElementById("filter_jabatan").value.toUpperCase();
-                                        let inputPangkat = document.getElementById("filter_pangkat").value.toUpperCase();
+  <script>
+    function filterByColumn() {
+      let filterNama = document.getElementById("filter_nama").value.toUpperCase();
+      let searchNama = document.getElementById("search_nama").value.toUpperCase();
 
-                                        let table = document.getElementById("specimenTable");
-                                        let tr = table.getElementsByTagName("tr");
+      let filterJabatan = document.getElementById("filter_jabatan").value.toUpperCase();
+      let searchJabatan = document.getElementById("search_jabatan").value.toUpperCase();
 
-                                        for (let i = 2; i < tr.length; i++) { // Mulai dari indeks 2 (karena 0 = judul, 1 = filter)
-                                            let tdNama = tr[i].getElementsByTagName("td")[1];
-                                            let tdJabatan = tr[i].getElementsByTagName("td")[2];
-                                            let tdPangkat = tr[i].getElementsByTagName("td")[3];
+      let filterPangkat = document.getElementById("filter_pangkat").value.toUpperCase();
+      let searchPangkat = document.getElementById("search_pangkat").value.toUpperCase();
 
-                                            if (tdNama && tdJabatan && tdPangkat) {
-                                                let nama = tdNama.textContent || tdNama.innerText;
-                                                let jabatan = tdJabatan.textContent || tdJabatan.innerText;
-                                                let pangkat = tdPangkat.textContent || tdPangkat.innerText;
+      let table = document.getElementById("specimenTable");
+      let tr = table.getElementsByTagName("tr");
 
-                                                if (
-                                                    nama.toUpperCase().indexOf(inputNama) > -1 &&
-                                                    jabatan.toUpperCase().indexOf(inputJabatan) > -1 &&
-                                                    pangkat.toUpperCase().indexOf(inputPangkat) > -1
-                                                ) {
-                                                    tr[i].style.display = "";
-                                                } else {
-                                                    tr[i].style.display = "none";
-                                                }
-                                            }
-                                        }
-                                    }
-                                </script>
+      for (let i = 2; i < tr.length; i++) { // index ke-2 karena 0 = header, 1 = filter row
+        let tdNama = tr[i].getElementsByTagName("td")[1];
+        let tdJabatan = tr[i].getElementsByTagName("td")[2];
+        let tdPangkat = tr[i].getElementsByTagName("td")[3];
+
+        if (tdNama && tdJabatan && tdPangkat) {
+          let nama = tdNama.textContent.toUpperCase();
+          let jabatan = tdJabatan.textContent.toUpperCase();
+          let pangkat = tdPangkat.textContent.toUpperCase();
+
+          let cocokNama = nama.includes(filterNama) && nama.includes(searchNama);
+          let cocokJabatan = jabatan.includes(filterJabatan) && jabatan.includes(searchJabatan);
+          let cocokPangkat = pangkat.includes(filterPangkat) && pangkat.includes(searchPangkat);
+
+          if (cocokNama && cocokJabatan && cocokPangkat) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+  <script>
+    // $(document).ready(function() {
+    //   $('#specimenTable').DataTable({
+    //     "paging": true,
+    //     "lengthChange": true,
+    //     "searching": false, // karena kamu sudah punya filter manual
+    //     "ordering": true,
+    //     "info": true,
+    //     "autoWidth": false
+    //   });
+    // });
+  </script>
+  <!-- Select2 -->
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // Inisialisasi Select2
+      $('.select2').select2({
+        placeholder: "Pilih...",
+        allowClear: true,
+        width: '100%'
+      });
+
+      if ($.fn.DataTable.isDataTable('#specimenTable')) {
+        $('#specimenTable').DataTable().clear().destroy();
+      }
+
+      let table = $('#specimenTable').DataTable({
+        ordering: true,
+        paging: true,
+        searching: true,
+        autoWidth: false,
+        orderCellsTop: true // ini penting untuk mendukung filter di baris ke-2
+
+      });
+
+
+      // Filter berdasarkan dropdown
+      $('#filter_nama').on('change', function() {
+        table.column(1).search(this.value).draw();
+      });
+
+      $('#filter_jabatan').on('change', function() {
+        table.column(2).search(this.value).draw();
+      });
+
+      $('#filter_pangkat').on('change', function() {
+        table.column(3).search(this.value).draw();
+      });
+    });
+  </script>
+
+
 
 
 </body>

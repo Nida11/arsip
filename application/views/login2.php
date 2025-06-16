@@ -38,20 +38,20 @@
             <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
               <div class="card card-plain">
                 <div class="card-header pb-0 text-start">
-                  <h4 class="font-weight-bolder">Login</h4>
-                  <p class="mb-0">Masukan Username dan Password</p>
+                  <h4 class="font-weight-bolder">LOGIN AKUN</h4>
+                  <p class="mb-0">Masukan Nama Pengguna dan Kata Sandi</p>
                 </div>
                 <div class="card-body">
-                <form method="POST" action="<?php echo base_url()."index.php/Login/index";?>" accept-charset="UTF-8">
-                <div class="mb-3">
-                      <input type="text" class="form-control form-control-lg" name="username" placeholder="Username" aria-label="Username">
+                  <form method="POST" action="<?php echo base_url() . "index.php/Login/index"; ?>" accept-charset="UTF-8">
+                    <div class="mb-3">
+                      <input type="text" class="form-control form-control-lg" name="username" placeholder="Nama Pengguna" aria-label="Username">
                     </div>
                     <div class="mb-3 position-relative">
-                      <input type="password" class="form-control form-control-lg" name="password" id="passwordInput" placeholder="Password" aria-label="Password">
+                      <input type="password" class="form-control form-control-lg" name="password" id="passwordInput" placeholder="Kata Sandi" aria-label="Password">
                       <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer;"></i>
                     </div>
                     <div class="text-center">
-                      <button  type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Sign in</button>
+                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Masuk</button>
                     </div>
                   </form>
                 </div>
@@ -63,15 +63,34 @@
                 </div> -->
               </div>
             </div>
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
-              <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden" style="background-image: url('https://raw.githubusercontent.com/creativetimofficial/public-assets/master/argon-dashboard-pro/assets/img/signin-ill.jpg'); background-size: cover;">
-                <span class="mask bg-gradient-primary opacity-6"></span>
-                <h4 class="mt-5 text-white font-weight-bolder position-relative">"Arsiparis"</h4>
-                <p class="text-white position-relative">The more effortless the writing looks, the more effort the writer actually put into the process.</p>
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 justify-content-center align-items-center">
+              <div class="position-relative border-radius-lg d-flex flex-column justify-content-start align-items-center p-5"
+                style="background-color: rgba(255, 255, 255, 0.9); width: 100%; max-width: 600px; min-height: 500px; box-shadow: 0 0 20px rgba(0,0,0,0.1); text-align: center;">
+
+                <!-- Gambar Logo -->
+                <img src="<?= base_url('assets/images/logo.png') ?>" alt="Logo Bapenda"
+                  style="width: 500px; height: auto; margin-bottom: 20px; z-index: 2;" />
+
+                <!-- Teks -->
+                <div style="z-index: 2; max-width: 90%;">
+                  <h4 class="text-dark font-weight-bolder">"Sistem Penomoran Digital"</h4>
+                  <p class="text-dark" style="word-wrap: break-word;">
+                    Sistem penomoran digital adalah sistem yang digunakan untuk memudahkan pengelolaan dan pencatatan nomor secara elektronik. Semua proses menjadi lebih efisien dan terorganisir.
+                  </p>
+                </div>
+
               </div>
             </div>
+
+
+
+
           </div>
         </div>
+
+
+      </div>
+      </div>
       </div>
     </section>
   </main>
