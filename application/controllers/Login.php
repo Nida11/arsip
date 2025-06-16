@@ -24,7 +24,7 @@ public function index()
 
             if ($user['level'] == 1) {
                 $this->session->set_flashdata('success', 'Login Admin berhasil!');
-                redirect('index.php/Walikelas/Walikelas/index');
+                redirect('index.php/Guest/beranda_admin');
             } else {
                 $this->session->set_flashdata('success', 'Login Tutor berhasil!');
                 redirect('index.php/Dosen/Dosen/index');

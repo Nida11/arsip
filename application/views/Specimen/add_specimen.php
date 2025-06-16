@@ -122,11 +122,70 @@
         <p style="color: green;"><?= $this->session->flashdata('msg'); ?></p>
     <?php endif; ?>
 
-    <form action="<?= base_url('index.php/specimen/Specimen/process_excel') ?>" method="post" enctype="multipart/form-data">
-        <label>Pilih File Excel (.xlsx / .xls):</label><br>
-        <input type="file" name="file" required accept=".xlsx,.xls"><br><br>
-        <button type="submit">Upload & Proses</button>
-    </form>
+    <form id="uploadForm" enctype="multipart/form-data">
+
+    <div class="form-group">
+    <label><strong>Metode Input:</strong></label><br>
+    <div>
+        <input type="radio" id="import_excel" name="input_method" value="excel" checked>
+        <label for="import_excel">Impor dari Excel</label>
+    </div>
+    <div>
+        <input type="radio" id="input_manual" name="input_method" value="manual">
+        <label for="input_manual">Input Manual</label>
+    </div>
+</div>
+
+<div id="form_excel">
+    <label><strong>Pilih File Excel</strong> (.xlsx / .xls):</label>
+    <input type="file" name="file" id="file_excel" class="form-control" required accept=".xlsx,.xls">
+    <button  class="btn btn-success mt-3" type="submit">Upload & Proses</button>
+    <div id="preview-container"></div>
+
+
+</div>
+
+<div id="form_manual" style="display:none;">
+<div class="container">
+    <div id="form_manual_group">
+        <!-- Grup Inputan Pertama -->
+        <div class="form-group row form-entry">
+            <div class="col-md-6">
+                <label>Nama Lengkap:</label>
+                <input type="text" name="nama[]" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label>Jabatan:</label>
+                <input type="text" name="jabatan[]" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label>Pangkat:</label>
+                <input type="text" name="pangkat[]" class="form-control">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <label>Instansi:</label>
+                <div class="d-flex w-100">
+                    <input type="text" name="instansi[]" class="form-control" value="Badan Pendapatan Daerah Provinsi Jawa Barat">
+                    <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry" style="display: none;">X</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol Tambah -->
+    <button type="button" class="btn btn-primary mt-2" id="add-entry">+ Tambah</button>
+</div>
+
+
+<div class="d-flex justify-content-end mt-3">
+    <button type="submit" class="btn btn-success">Simpan</button>
+</div>
+
+
+        
+</form>
+
+
                             <!-- <div class="card p-3">
                                 <div class="card-body">
                                     <div class="row">
@@ -172,6 +231,84 @@
             </div>
 
             <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+            <script>
+$(document).ready(function () {
+    $('#add-entry').on('click', function () {
+        let newEntry = `
+        <div class="form-group row form-entry">
+            <div class="col-md-6">
+                <label>Nama Lengkap:</label>
+                <input type="text" name="nama[]" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label>Jabatan:</label>
+                <input type="text" name="jabatan[]" class="form-control">
+            </div>
+            <div class="col-md-6">
+                <label>Pangkat:</label>
+                <input type="text" name="pangkat[]" class="form-control">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <label>Instansi:</label>
+                <div class="d-flex w-100">
+                    <input type="text" name="instansi[]" class="form-control" value="Badan Pendapatan Daerah Provinsi Jawa Barat">
+                    <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry">X</button>
+                </div>
+            </div>
+        </div>`;
+        $('#form_manual_group').append(newEntry);
+    });
+
+    // Hapus grup inputan jika tombol X diklik
+    $('#form_manual_group').on('click', '.remove-entry', function () {
+        $(this).closest('.form-entry').remove();
+    });
+});
+</script>
+
+
+            <script>
+$(document).ready(function(){
+    $('input[name="input_method"]').change(function(){
+        if ($(this).val() == 'excel') {
+            $('#form_excel').show();
+            $('#form_manual').hide();
+        } else {
+            $('#form_excel').hide();
+            $('#form_manual').show();
+        }
+    });
+});
+</script>
+
+
+            <script>
+                $('#uploadForm').on('submit', function(e) {
+                    e.preventDefault();
+
+                    var formData = new FormData(this);
+
+                    $.ajax({
+                    url: '<?= site_url("index.php/specimen/Specimen/process_excel") ?>',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function() {
+                        $('#preview-container').html('<p>Sedang memproses file...</p>');
+                    },
+                    success: function(response) {
+                        $('#preview-container').html(response);
+                    },
+                    error: function(xhr) {
+                        $('#preview-container').html('<div class="alert alert-danger">Gagal memproses file: ' + xhr.responseText + '</div>');
+                    }
+                    });
+                });
+                </script>
+
+
             <script>
                 $(document).ready(function() {
                     $.ajax({
