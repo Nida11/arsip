@@ -257,7 +257,7 @@
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
                         <h6>Numbering Data's</h6>
                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSlotModal">
-                            Tambah Data Penomoran
+                            Tambah Penomoran
                         </button>
                     </div>
 <div class="px-4 py-2">
