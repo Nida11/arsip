@@ -63,4 +63,40 @@ redirect('index.php/Guest/login');
 	{
 		$this->load->view('login2');
 	}
+
+
+
+
+	public function dashboard() {
+    // Total slot
+    $totalSlot = $this->db->count_all('slot_number');
+
+    // Tahun ini dan tahun lalu
+    $currentYear = date('Y');
+    $lastYear = $currentYear - 1;
+
+    // Slot tahun ini
+    $this->db->where('YEAR(tanggal)', $currentYear);
+    $thisYearCount = $this->db->count_all_results('slot_number');
+
+    // Slot tahun lalu
+    $this->db->where('YEAR(tanggal)', $lastYear);
+    $lastYearCount = $this->db->count_all_results('slot_number');
+
+    // Hitung pertumbuhan
+    $growth = 0;
+    if ($lastYearCount > 0) {
+        $growth = (($thisYearCount - $lastYearCount) / $lastYearCount) * 100;
+    } elseif ($thisYearCount > 0) {
+        $growth = 100;
+    }
+
+    $data = [
+        'totalSlot' => $totalSlot,
+        'growthSlot' => $growth,
+    ];
+
+    $this->load->view('dashboard_guest', $data); // Sesuaikan dengan nama view kamu
+}
+
 }
