@@ -9,7 +9,7 @@ class Penomoran extends CI_Controller {
             SELECT a.*, b.nama_jenis 
             FROM slot_number a 
             JOIN jenis_surat b ON a.jenis_surat_id = b.id
-            ORDER BY a.tanggal DESC
+            ORDER BY a.updated_at DESC
         ")->result_array();
         $d['jenis_surat'] = $this->db->get("jenis_surat")->result_array();
 
@@ -17,8 +17,6 @@ class Penomoran extends CI_Controller {
         $this->load->view('Penomoran/data_slot', $d);
     }
     
-    
-
 
 public function get_jenis_surat()
 {
@@ -69,7 +67,7 @@ public function do_edit_slot() {
       'jenis_surat_id' => $this->input->post('jenis_surat_id'),
       'slot' => $this->input->post('slot'),
       'tanggal' => $this->input->post('tanggal'),
-      'updated_at' => date('Y-m-d H:i:s')
+    //   'updated_at' => date('Y-m-d H:i:s')
     ];
   
     $this->db->where('id', $id);
