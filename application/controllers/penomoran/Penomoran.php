@@ -3,13 +3,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Penomoran extends CI_Controller {
 
+    
+    public function __construct()
+    {
+        parent::__construct();
+        date_default_timezone_set('Asia/Jakarta'); // ✅ Set timezone ke WIB
+    
+    }
 
     public function data_slot() {
         $d['data_slot'] = $this->db->query("
             SELECT a.*, b.nama_jenis 
             FROM slot_number a 
             JOIN jenis_surat b ON a.jenis_surat_id = b.id
-            ORDER BY a.updated_at DESC
+            ORDER BY GREATEST(IFNULL(a.updated_at, a.created_at), a.created_at) DESC
         ")->result_array();
         $d['jenis_surat'] = $this->db->get("jenis_surat")->result_array();
 
@@ -353,6 +360,25 @@ public function delete_penomoran()
 
     echo json_encode(['status' => 'success']);
 }
+
+
+
+
+
+// public function print_surat($id)
+// {
+//     $data = $this->Penomoran_model->get_by_id($id); // sesuaikan method model
+//     if (!$data) show_404();
+//     $this->load->view('penomoran/print_surat', ['data' => $data]);
+// }
+
+
+
+
+
+
+
+
 
 public function dashboard()
 {

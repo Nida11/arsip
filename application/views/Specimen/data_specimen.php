@@ -19,12 +19,68 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
+
   <style>
     div.dataTables_filter {
       display: none;
     }
+    
   </style>
+<style>
+/* Dropdown list (opsi) */
+.select2-container .select2-results__option {
+  font-weight: bold;
+  font-size: 12px;
+}
 
+/* Selected item (tampilan awal sebelum dropdown dibuka) */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+  font-weight: bold;
+  font-size: 12px;
+}
+
+</style>
+<style>
+   /* Pagination DataTables - versi minimalis */
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 6px 10px;
+    margin: 2px;
+    border: none;
+    background-color: transparent;
+    color: #555 !important;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+/* Saat hover - warna lembut, tidak hitam */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #e0e0e0;
+  color:rgb(255, 255, 255) !important;
+  border: 1px solidrgb(255, 3, 3);
+  box-shadow: 0 2px 4px rgb(250, 244, 244);
+}
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+    border-radius: 4px;
+  }
+
+  .dataTables_wrapper .dataTables_length select,
+  .dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    box-shadow: none;
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    font-size: 0.85rem;
+    color: #666;
+  }
+  </style>
 </head>
 
 <body class="g-sidenav-show   bg-gray-100">
@@ -72,12 +128,6 @@
                   <span class="sidenav-normal">Data Penomoran</span>
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('/index.php/penomoran/Penomoran/review_penomoran') ?>">
-                  <span class="sidenav-mini-icon">C</span>
-                  <span class="sidenav-normal">Review Penomoran</span>
-                </a>
-              </li>
             </ul>
           </div>
         </li>
@@ -117,29 +167,12 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/profile') ?>">
+          <a class="nav-link" href="<?= base_url('/index.php/Guest/login') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Profile</span>
+            <span class="nav-link-text ms-1">Logout</span>
           </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/sign-in') ?>">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-single-copy-04 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign In</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/sign-up') ?>">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-collection text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign Up</span>
-          </a>
-        </li>
       </ul>
     </div>
     <div class="sidenav-footer mx-3 ">
@@ -182,24 +215,30 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
+        <?php if ($this->session->flashdata('success')) : ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+      <?= $this->session->flashdata('success') ?>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <?php endif; ?>
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
             <div class="card-header pb-0 d-flex justify-content-between align-items-center">
               <h6 class="mb-5">Daftar Specimen</h6>
-              <a class="btn mb-0 text-white" style="background-color: #66bb6a;"
+              <a class="btn mb-0 text-white" style="background-color:rgb(42, 116, 201);"
                 href="<?php echo base_url() . 'index.php/specimen/Specimen/add_specimen/'; ?>">
-                <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah
+                <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah Specimen
               </a>
             </div>
 
-            <div class="card-body px-0 pt-0 pb-0">
-              <div class="table-responsive p-0">
+            <div class="card-body px-4 pt-0 pb-4">
+              <div class="table-responsive ">
 
 
 
                 <table class="table align-items-center mb-0" id="specimenTable">
-                  <thead>
+                  <thead class="text-center">
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">No</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Nama</th>
@@ -248,7 +287,7 @@
 
 
                   </thead>
-                  <tbody>
+                  <tbody  class="text-center" >
 
                     <?php $no = 1;
                     foreach ($data_specimen->result_array() as $d): ?>
@@ -265,21 +304,67 @@
                         <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold"><?php echo $d['pangkat'] ?></span></td>
 
                         <td class="align-middle text-center">
-                          <a href="<?= base_url('index.php/specimen/Specimen/download_by_id/' . $d['id']) ?>" class="btn btn-sm btn-primary">
-                            Download
+                          <a href="<?= base_url('index.php/specimen/Specimen/download_by_id/' . $d['id']) ?>">
+                  <i class="fas fa-download"></i>
                           </a>
                         </td>
 
 
-                        <td class="align-middle">
-                          <a href="<?= base_url('index.php/specimen/Specimen/edit_specimen/' . $d['id']) ?>" class="text-info font-weight-bold text-xs me-3">Edit</a>
-                          <a href="<?= base_url('index.php/specimen/Specimen/delete_specimen/' . $d['id']) ?>" onclick="return confirm('Yakin ingin menghapus specimen ini?')" class="text-danger font-weight-bold text-xs">Hapus</a>
+                        <td class="align-middle text-center">
+<a href="#" 
+   class="btn-edit text-info font-weight-bold text-xs me-3" 
+   data-id="<?= $d['id'] ?>" 
+   data-nama="<?= htmlspecialchars($d['nama']) ?>" 
+   data-jabatan="<?= htmlspecialchars($d['jabatan']) ?>" 
+   data-pangkat="<?= htmlspecialchars($d['pangkat']) ?>" 
+   data-bs-toggle="modal" 
+   data-bs-target="#editSpecimenModal">
+   Edit
+</a>
+
+<a href="<?= base_url('index.php/specimen/Specimen/delete_specimen/' . $d['id']) ?>"
+   class="text-danger font-weight-bold text-xs"
+   onclick="return confirm('Apakah Anda yakin ingin menghapus specimen ini? Data yang dihapus tidak bisa dikembalikan.')">
+   Hapus
+</a>
                         </td>
                       </tr>
                     <?php endforeach; ?>
                   </tbody>
                 </table>
-              </div>
+                <!-- Modal Edit Specimen -->
+                <div class="modal fade" id="editSpecimenModal" tabindex="-1" aria-labelledby="editSpecimenModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <form method="post" action="<?= base_url('index.php/specimen/Specimen/do_edit_specimen') ?>">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="editSpecimenModalLabel">Edit Data Specimen</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                        </div>
+                        <div class="modal-body">
+                          <input type="hidden" name="id" id="editId">
+
+                          <div class="mb-3">
+                            <label for="editNama" class="form-label">Nama</label>
+                            <input type="text" class="form-control" name="nama" id="editNama" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editJabatan" class="form-label">Jabatan</label>
+                            <input type="text" class="form-control" name="jabatan" id="editJabatan" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="editPangkat" class="form-label">Pangkat</label>
+                            <input type="text" class="form-control" name="pangkat" id="editPangkat" required>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+               </div>
             </div>
           </div>
         </div>
@@ -295,7 +380,7 @@
               </script>
               <!-- made with <i class="fa fa-heart"></i> by -->
               <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
-              <!-- Arsiparis Badan Pendapatan Daerah. -->
+              Arsiparis Badan Pendapatan Daerah.by RND
             </div>
           </div>
           <div class="col-lg-6">
@@ -496,6 +581,20 @@
   </script>
 
 
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const editButtons = document.querySelectorAll(".btn-edit");
+      editButtons.forEach(button => {
+        button.addEventListener("click", function() {
+          document.getElementById("editId").value = this.dataset.id;
+          document.getElementById("editNama").value = this.dataset.nama;
+          document.getElementById("editJabatan").value = this.dataset.jabatan;
+          document.getElementById("editPangkat").value = this.dataset.pangkat;
+        });
+      });
+    });
+  </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </body>

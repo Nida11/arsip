@@ -23,8 +23,7 @@
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-  <!-- Bootstrap -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
   <!-- DataTables -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
@@ -135,7 +134,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/Penomoran/Specimen/data_specimen') ?>">
+          <a class="nav-link" href="<?= base_url('/index.php/specimen/Specimen/data_specimen')?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
             </div>
@@ -154,27 +153,11 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="../pages/profile.html">
+          <a class="nav-link" href="<?= base_url('/index.php/Guest/login') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Profile</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="../pages/sign-in.html">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-single-copy-04 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign In</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="../pages/sign-up.html">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-collection text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign Up</span>
+            <span class="nav-link-text ms-1">Logout</span>
           </a>
         </li>
       </ul>
@@ -298,7 +281,11 @@
                       <td class="text-center"><?= htmlspecialchars($row['slot']); ?></td>
                       <td class="text-center"><?= $row['created_at']; ?></td>
                       <!-- Kolom updated_at yang disembunyikan -->
-                      <td class="text-center"><?= $row['updated_at']; ?></td>
+<td class="text-center">
+  <?= $row['updated_at'] ? $row['updated_at'] : '<em>Belum diubah</em>'; ?>
+</td>
+
+
 
 
                       <td class="text-center">
@@ -309,14 +296,17 @@
                           data-id="<?= $row['id']; ?>"
                           data-jenis="<?= $row['jenis_surat_id']; ?>"
                           data-slot="<?= $row['slot']; ?>"
-                          data-tanggal="<?= $row['tanggal']; ?>">
+                          data-tanggal="<?= $row['tanggal']; ?>"
+                          data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Data Slot">
+                        
                           
                           <i class="fas fa-edit"></i>
                         </button>
 
                           <button class="btn btn-sm btn-danger delete-slot"
                             title="Hapus Slot"
-                            data-id="<?= $row['id']; ?>">
+                            data-id="<?= $row['id']; ?>"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Data Slot">
                             <i class="fas fa-trash-alt"></i>
                           </button>
                       </td>
@@ -441,7 +431,7 @@
                 </script>
                 <!-- made with <i class="fa fa-heart"></i> by -->
                 <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
-                <!-- Arsiparis Badan Pendapatan Daerah. -->
+                Arsiparis Badan Pendapatan Daerah.by RND
               </div>
             </div>
             <div class="col-lg-6">
@@ -853,6 +843,14 @@ $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
       table.draw();
     });
 
+  });
+</script>
+
+
+ <script>
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
   });
 </script>
 

@@ -99,4 +99,8 @@ redirect('index.php/Guest/login');
     $this->load->view('dashboard_guest', $data); // Sesuaikan dengan nama view kamu
 }
 
+
+
+
+
 }

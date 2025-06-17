@@ -17,12 +17,110 @@
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
+
 
   <!-- CSS Files -->
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <link rel="stylesheet" href="<?= base_url('assets/css/custom-slot.css') ?>">
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+
+
+  <!-- DataTables -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+
+
+
+<style>
+  /* Bungkus table wrapper agar tidak overflow keluar */
+#penomoranTable_wrapper {
+  overflow-x: auto;
+}
+
+/* Atur table agar lebar tidak memaksa keluar kontainer */
+#penomoranTable {
+  width: 100% !important;
+  table-layout: auto;
+  white-space: nowrap;
+}
+
+  /* Pagination DataTables - versi minimalis */
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 6px 10px;
+    margin: 2px;
+    border: none;
+    background-color: transparent;
+    color: #555 !important;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+/* Saat hover - warna lembut, tidak hitam */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #e0e0e0;
+  color: #000 !important;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+    border-radius: 4px;
+  }
+
+  .dataTables_wrapper .dataTables_length select,
+  .dataTables_wrapper .dataTables_filter input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    box-shadow: none;
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    font-size: 0.85rem;
+    color: #666;
+  }
+</style>
+
+
+
+
+<style>
+.custom-alert {
+  background-color: #ffffff;
+  color: #e3342f;
+  font-weight: bold;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  border: 1px solid #f5c6cb;
+
+  /* Transisi halus */
+  transition: all 0.3s ease-in-out;
+}
+
+/* Responsive padding */
+@media (max-width: 576px) {
+  .custom-alert {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+</style>
 
 </head>
 
@@ -95,27 +193,11 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="../pages/profile.html">
+          <a class="nav-link" href="<?= base_url('/index.php/Guest/login') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-single-02 text-dark text-sm opacity-10"></i>
             </div>
-            <span class="nav-link-text ms-1">Profile</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="../pages/sign-in.html">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-single-copy-04 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign In</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link " href="../pages/sign-up.html">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-collection text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Sign Up</span>
+            <span class="nav-link-text ms-1">Logout</span>
           </a>
         </li>
       </ul>
@@ -125,133 +207,11 @@
         <img class="p-2 w-100 mx-auto" src="<?= base_url('assets/img/illustrations/logobapen.png') ?>" alt="sidebar_illustration">
         <div class="card-body text-center p-3 w-100 pt-0">
           <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah.png') ?>" alt="sidebar_illustration">
-          <!-- <div class="docs-info">
-            <h6 class="mb-0">Need help?</h6>
-            <p class="text-xs font-weight-bold mb-0">Please check our docs</p>
-          </div> -->
         </div>
       </div>
-      <!-- <a href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard" target="_blank" class="btn btn-dark btn-sm w-100 mb-3">Documentation</a>
-      <a class="btn btn-primary btn-sm mb-0 w-100" href="https://www.creative-tim.com/product/argon-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a> -->
     </div>
   </aside>
   <main class="main-content position-relative border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-      <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Tables</li>
-          </ol>
-          <h6 class="font-weight-bolder text-white mb-0">Digital Numbering Tables</h6>
-        </nav>
-        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-            <div class="input-group">
-              <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" placeholder="Type here...">
-            </div>
-          </div>
-          <ul class="navbar-nav  justify-content-end">
-            <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white font-weight-bold px-0">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign In</span>
-              </a>
-            </li>
-            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0" id="iconNavbarSidenav">
-                <div class="sidenav-toggler-inner">
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                  <i class="sidenav-toggler-line bg-white"></i>
-                </div>
-              </a>
-            </li>
-            <li class="nav-item px-3 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0">
-                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-              </a>
-            </li>
-            <li class="nav-item dropdown pe-2 d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-bell cursor-pointer"></i>
-              </a>
-              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="<?= base_url('assets/img/team-2.jpg') ?>" class="avatar avatar-sm me-3">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New message</span> from Laur
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          13 minutes ago
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li class="mb-2">
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="my-auto">
-                        <img src="<?= base_url('assets/img/small-logos/logo-spotify.svg') ?>" class="avatar avatar-sm bg-gradient-dark me-3">
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          <span class="font-weight-bold">New album</span> by Travis Scott
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          1 day
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="dropdown-item border-radius-md" href="javascript:;">
-                    <div class="d-flex py-1">
-                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                          <title>credit-card</title>
-                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                              <g transform="translate(1716.000000, 291.000000)">
-                                <g transform="translate(453.000000, 454.000000)">
-                                  <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                  <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                                </g>
-                              </g>
-                            </g>
-                          </g>
-                        </svg>
-                      </div>
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-sm font-weight-normal mb-1">
-                          Payment successfully completed
-                        </h6>
-                        <p class="text-xs text-secondary mb-0">
-                          <i class="fa fa-clock me-1"></i>
-                          2 days
-                        </p>
-                      </div>
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-    <!-- End Navbar -->
     <div class="container-fluid py-4">
                 <div class="card mb-4">
                     <div class="card-header pb-0 d-flex justify-content-between align-items-center">
@@ -260,32 +220,32 @@
                             Tambah Penomoran
                         </button>
                     </div>
-<div class="px-4 py-2">
-    <div class="row g-2 align-items-end">
-        <div class="col-md-3">
-            <label for="searchInput" class="form-label">Cari</label>
-            <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
-        </div>
-        <div class="col-md-3">
-            <label for="startDate" class="form-label">Tanggal Awal</label>
-            <input type="date" id="startDate" class="form-control">
-        </div>
-        <div class="col-md-3">
-            <label for="endDate" class="form-label">Tanggal Akhir</label>
-            <input type="date" id="endDate" class="form-control">
-        </div>
-        <div class="col-md-1">
-            <button id="filterBtn" class="btn btn-secondary w-100">Filter</button>
-        </div>
-        <div class="col-md-2">
-            <button id="exportBtn" class="btn btn-success w-100">Export Excel</button>
-        </div>
-    </div>
-</div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <!-- Dropdown Filter Jenis Surat -->
+<div class="px-3 mb-3">
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-3">
+                                <label for="searchInput" class="form-label">Cari</label>
+                                <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="startDate" class="form-label">Tanggal Awal</label>
+                                <input type="date" id="startDate" class="form-control">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="endDate" class="form-label">Tanggal Akhir</label>
+                                <input type="date" id="endDate" class="form-control">
+                            </div>
+                            <!-- <div class="col-md-2">
+                                <button id="exportBtn" class="btn btn-success w-100">Export Excel</button>
+                            </div> -->
+                        </div>
+                    </div>
 
-                    <div class="card-body px-0 pt-0 pb-2">
-                        <div class="table-responsive p-0">                         
-                            <table class="table table-bordered table-striped align-items-center mb-0">
+                    <div class="p-3">
+                                        
+<table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
+
                                 <thead class="thead-dark">
                                     <tr>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Surat</th> 
@@ -301,7 +261,9 @@
                                  <tbody>
                                 <?php foreach ($data_penomoran as $row): ?>
                                 <tr>
-                              <td class="text-center"><?= formatTanggalIndo($row['tanggal']) ?></td>
+<td class="text-center tanggal-surat" data-value="<?= $row['tanggal'] ?>">
+  <?= formatTanggalIndo($row['tanggal']) ?>
+</td>
                               <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
                               <td class="text-center"><?= htmlspecialchars($row['nama_bidang']); ?></td>
                               <td class="text-center"><?= htmlspecialchars($row['kode_surat']); ?></td>
@@ -328,7 +290,7 @@
                               <td class="text-center">
                               <button
                               type="button"
-                              class="btn btn-sm btn-warning btn-edit"
+                              class="btn btn-sm btn-xs btn-primary"
                               data-bs-toggle="modal"
                               data-bs-target="#editSlotModal"
                               data-id="<?= $row['id']; ?>"
@@ -343,16 +305,31 @@
                               data-isi_ringkas="<?= $row['isi_ringkas']; ?>"
                               data-catatan="<?= $row['catatan']; ?>"
                               data-lampiran="<?= $row['lampiran']; ?>"
+                              data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Surat Keluar"
                             >
-                              <i class="fa fa-pencil">edit</i>
+                              <i class="fa fa-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-danger delete-penomoran"
-                            data-id="<?= $row['id']; ?>">
-                            Hapus
+                            <button class="btn btn-sm btn-xs btn-danger delete-penomoran"
+                            data-id="<?= $row['id']; ?>"
+                            data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Surat Keluar"
+                            >
+                            <i class="fa fa-trash"></i>
                           </button>
+
+                            <!-- ✅ Tambah Tombol Print -->
+  <button
+    class="btn btn-sm btn-info btn-xs print-surat"
+    data-id="<?= $row['id']; ?>"
+    data-bs-toggle="tooltip"
+    data-bs-placement="top"
+    title="Print Surat Keluar"
+  >
+    <i class="fa fa-print"></i>
+  </button>
 
                               </td>
                           </tr>
+
                       <?php endforeach; ?>
                       
                                 </tbody>
@@ -428,7 +405,7 @@
 
       <div class="col-md-6 mb-3">
         <label class="form-control-label" for="nomor_surat">Nomor Surat</label>
-        <input type="text" class="form-control" id="nomor_surat" name="nomor_surat">
+        <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" required>
       </div>
 
     
@@ -586,7 +563,7 @@
                 </script>
                 <!-- made with <i class="fa fa-heart"></i> by -->
                 <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
-                <!-- Arsiparis Badan Pendapatan Daerah. -->
+                Arsiparis Badan Pendapatan Daerah.by RND
               </div>
             </div>
             <div class="col-lg-6">
@@ -711,8 +688,8 @@ function generateNomorSurat() {
 
   // Tampilkan loading
   $('#info-nomor-surat')
-    .removeClass('d-none alert-danger alert-warning')
-    .addClass('alert-info')
+    .removeClass('d-none alert-danger alert-warning alert-success')
+    .addClass('alert-primary')
     .html('⏳ Sedang memproses nomor surat...');
 
   $.ajax({
@@ -763,11 +740,13 @@ function generateNomorSurat() {
 
 
       $('#info-nomor-surat')
-        .removeClass('alert-danger alert-warning')
-        .addClass('alert-info')
+        .removeClass('alert-danger alert-warning alert-primary')
+        .addClass('alert-success')
         .html(`
+            <span class="text-success font-weight-bold">
+            ✅ Nomor surat berhasil dibuat!
+            </span>
         
-          ✅ <strong>Nomor berhasil dibuat:</strong><br>
           Nomor Terakhir: <code>${res.nomor_terakhir}</code><br>
           Dibuat pada: <code>${res.created_at}</code><br>
           Pembuat Sebelumnya: <code>${res.pembuat}</code><br>${infoTambahan}
@@ -776,8 +755,8 @@ function generateNomorSurat() {
     },
     error: function(xhr, status, error) {
       $('#info-nomor-surat')
-        .removeClass('alert-info alert-warning')
-        .addClass('alert-danger')
+        .removeClass('alert-primary alert-warning alert-success')
+        .addClass('alert-warning')
         .html('🚨 Gagal memproses data. Silakan coba lagi.');
     }
   });
@@ -1026,7 +1005,109 @@ DataTables + Export Script
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
+<!-- SCRIPT FILTER -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const startDateInput = document.getElementById("startDate");
+    const endDateInput = document.getElementById("endDate");
+    const table = document.getElementById("penomoranTable");
+    const rows = table.querySelectorAll("tbody tr");
 
+    function filterTable() {
+      const searchValue = searchInput.value.toLowerCase();
+      const startDate = startDateInput.value;
+      const endDate = endDateInput.value;
+
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const tanggalCell = row.querySelector(".tanggal-surat");
+        const tanggalSurat = tanggalCell.getAttribute("data-value");
+
+        let matchText = text.includes(searchValue);
+        let matchDate = true;
+
+        if (startDate && tanggalSurat < startDate) matchDate = false;
+        if (endDate && tanggalSurat > endDate) matchDate = false;
+
+        if (matchText && matchDate) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
+        }
+      });
+    }
+
+    searchInput.addEventListener("input", filterTable);
+    startDateInput.addEventListener("change", filterTable);
+    endDateInput.addEventListener("change", filterTable);
+  });
+</script>
+
+
+
+<script>
+$(document).ready(function () {
+    const table = $('#penomoranTable').DataTable({
+            responsive: true,
+      autoWidth: true,
+      pageLength: 10,
+        dom: '<"row mb-3"<"col-sm-12 col-md-6"l>>t<"row mt-3"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7 text-end"p>>',
+        language: {
+        lengthMenu: "Tampilkan _MENU_ entri",
+        info: "Menampilkan _START_ sampai _END_ dari total _TOTAL_ data",
+        zeroRecords: "⚠️ Tidak ada data ditemukan",
+        paginate: {
+           previous: "⭠ Prev",
+           next: "Next ⭢"
+            }
+        },
+    });
+
+    // Search manual
+    $('#searchInput').on('keyup', function () {
+        table.search(this.value).draw();
+    });
+
+    // Filter tanggal
+    $('#startDate, #endDate').on('change', function () {
+        const start = $('#startDate').val();
+        const end = $('#endDate').val();
+
+        $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+            const tanggal = $('#penomoranTable tbody tr').eq(dataIndex).find('.tanggal-surat').data('value');
+            if (!tanggal) return false;
+
+            if ((start === "" || tanggal >= start) && (end === "" || tanggal <= end)) {
+                return true;
+            }
+            return false;
+        });
+
+        table.draw();
+        $.fn.dataTable.ext.search.pop();
+    });
+});
+</script>
+
+
+
+
+
+ <script>
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
+</script>
+
+<script>
+$(document).on('click', '.print-surat', function () {
+  const id = $(this).data('id');
+  const url = `<?= base_url("index.php/penomoran/Penomoran/print_surat/") ?>${id}`;
+  window.open(url, '_blank');
+});
+</script>
 
 
 </body>

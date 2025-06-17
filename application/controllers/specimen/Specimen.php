@@ -316,4 +316,32 @@ class  Specimen extends CI_Controller
     redirect('index.php/specimen/Specimen/data_specimen');
 }
 
+public function do_edit_specimen()
+    {
+        $id = $this->input->post('id');
+        $data = [
+            'nama' => $this->input->post('nama'),
+            'jabatan' => $this->input->post('jabatan'),
+            'pangkat' => $this->input->post('pangkat')
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('request_specimen', $data);
+
+        // Redirect ke halaman data_specimen setelah update
+        $this->session->set_flashdata('success', 'Data berhasil diubah!');
+        redirect('index.php/specimen/Specimen/data_specimen');
+    }
+
+
+public function delete_specimen($id)
+{
+    $this->db->where('id', $id);
+    $this->db->delete('request_specimen');
+
+    $this->session->set_flashdata('success', 'Data specimen berhasil dihapus.');
+    redirect('index.php/specimen/Specimen/data_specimen');
+}
+
+
 }
