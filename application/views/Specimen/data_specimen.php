@@ -20,6 +20,7 @@
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     div.dataTables_filter {
@@ -144,7 +145,7 @@
 
         <!-- Virtual Reality -->
         <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/Guest/') ?>">
+          <a class="nav-link" href="<?= base_url('/index.php/Guest/..') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-app text-dark text-sm opacity-10"></i>
             </div>
@@ -179,7 +180,7 @@
       <div class="card card-plain shadow-none" id="sidenavCard">
         <img class="p-2 w-100 mx-auto" src="<?= base_url('assets/img/illustrations/logobapen.png') ?>" alt="sidebar_illustration">
         <div class="card-body text-center p-3 w-100 pt-0">
-          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah.png') ?>" alt="sidebar_illustration">
+          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah1.png') ?>" alt="sidebar_illustration">
           <!-- <div class="docs-info">
             <h6 class="mb-0">Need help?</h6>
             <p class="text-xs font-weight-bold mb-0">Please check our docs</p>
@@ -215,12 +216,30 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-        <?php if ($this->session->flashdata('success')) : ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?= $this->session->flashdata('success') ?>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-  <?php endif; ?>
+<?php if ($this->session->flashdata('success')) : ?>
+  <script>
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil!',
+      text: '<?= $this->session->flashdata('success') ?>',
+      showConfirmButton: false,
+      timer: 2500
+    });
+  </script>
+<?php endif; ?>
+
+<?php if ($this->session->flashdata('error')) : ?>
+  <script>
+    Swal.fire({
+      icon: 'error',
+      title: 'Gagal!',
+      text: '<?= $this->session->flashdata('error') ?>',
+      showConfirmButton: false,
+      timer: 3000
+    });
+  </script>
+<?php endif; ?>
+
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
@@ -464,18 +483,6 @@
             <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
           </div>
         </div>
-        <!-- <a class="btn bg-gradient-dark w-100" href="https://www.creative-tim.com/product/argon-dashboard">Free Download</a>
-        <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/license/argon-dashboard">View documentation</a>
-        <div class="w-100 text-center">
-          <a class="github-button" href="https://github.com/creativetimofficial/argon-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/argon-dashboard on GitHub">Star</a>
-          <h6 class="mt-3">Thank you for sharing!</h6>
-          <a href="https://twitter.com/intent/tweet?text=Check%20Argon%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fargon-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
-            <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
-          </a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/argon-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
-            <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
-          </a>
-        </div> -->
       </div>
     </div>
   </div>
@@ -594,7 +601,6 @@
       });
     });
   </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 </body>

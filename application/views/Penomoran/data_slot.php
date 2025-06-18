@@ -166,7 +166,7 @@
       <div class="card card-plain shadow-none" id="sidenavCard">
         <img class="p-2 w-100 mx-auto" src="<?= base_url('assets/img/illustrations/logobapen.png') ?>" alt="sidebar_illustration">
         <div class="card-body text-center p-3 w-100 pt-0">
-          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah.png') ?>" alt="sidebar_illustration">
+          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah1.png') ?>" alt="sidebar_illustration">
           <!-- <div class="docs-info">
             <h6 class="mb-0">Need help?</h6>
             <p class="text-xs font-weight-bold mb-0">Please check our docs</p>

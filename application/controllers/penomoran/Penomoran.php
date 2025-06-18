@@ -174,7 +174,7 @@ public function generate_nomor()
     $tahun            = date('Y', strtotime($tanggal));
 
     // Format nomor surat
-    $nomor_surat = "{$nomor_urut_str}/{$kode_klasifikasi}/{$tahun}/{$kode_bidang}";
+    $nomor_surat = "{$nomor_urut_str}/{$kode_klasifikasi}/{$kode_bidang}";
 
     // Cek duplikat
     $exists = $this->db->get_where('request_number', ['nomor_urut' => $nomor_urut])->row();

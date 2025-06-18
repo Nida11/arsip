@@ -98,29 +98,56 @@
 
 
 
-<style>
-.custom-alert {
-  background-color: #ffffff;
-  color: #e3342f;
-  font-weight: bold;
-  padding: 1rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-  border: 1px solid #f5c6cb;
+  <style>
+    .custom-alert {
+      background-color: #ffffff;
+      border-left: 5px solid #28a745;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      color: #333;
+      font-size: 0.8rem; /* Ukuran default untuk tulisan biasa */
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
 
-  /* Transisi halus */
-  transition: all 0.3s ease-in-out;
-}
-
-/* Responsive padding */
-@media (max-width: 576px) {
-  .custom-alert {
-    padding: 0.75rem;
-    font-size: 0.95rem;
+  .custom-alert.success {
+    border-left-color: #28a745;
+    color:rgb(1, 1, 1);
   }
-}
-</style>
+    .custom-alert.warning {
+    border-left-color: #ffc107;
+    color: #856404;
+  }
+
+  .custom-alert.loading {
+    border-left-color: #007bff;
+    color: #004085;
+  }
+
+  .custom-alert.error {
+    border-left-color: #dc3545;
+    color:rgb(255, 0, 25);
+  }
+
+    .highlight-db {
+    color:rgb(255, 0, 0); /* merah elegan */
+    font-weight: 600;
+    font-size: 1rem; /* Lebih besar dari teks biasa */
+    }
+
+    /* Responsive untuk mobile */
+    @media (max-width: 576px) {
+      .custom-alert {
+        font-size: 0.95rem;
+        padding: 0.75rem 1rem;
+      }
+          .highlight-db {
+      font-size: 1rem;
+    }
+    
+    }
+  </style>
 
 </head>
 
@@ -206,7 +233,7 @@
       <div class="card card-plain shadow-none" id="sidenavCard">
         <img class="p-2 w-100 mx-auto" src="<?= base_url('assets/img/illustrations/logobapen.png') ?>" alt="sidebar_illustration">
         <div class="card-body text-center p-3 w-100 pt-0">
-          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah.png') ?>" alt="sidebar_illustration">
+          <img class=" w-100 mx-auto" src="<?= base_url('assets/img/gemahripah1.png') ?>" alt="sidebar_illustration">
         </div>
       </div>
     </div>
@@ -272,14 +299,14 @@
                                   $namaDepan = explode(' ', $row['nama'])[0];
                                   ?>
 
-                                  <div>
+                                  <div class="fw-bold text-dark mb-1">
                                     <strong><?= htmlspecialchars($row['nomor_surat']) ?></strong>
                                   </div>
-                                  <div style="margin-top: -2px;">
-                                  <small style="background-color: #007bff; color: white; font-weight: bold; font-size: 10px; padding: 2px 6px; border-radius: 4px;">
+                                  <div class="d-flex justify-content-center gap-1 flex-wrap">
+                                  <small class="badge bg-success text-white fw-semibold">
                                   <?= htmlspecialchars($namaDepan) ?>
                                     </small>
-                                    <small style="background-color: #dc3545; color: white; font-weight: bold; font-size: 10px; padding: 2px 6px; border-radius: 4px;">
+                                    <small class="badge bg-secondary text-white fw-semibold">
                                       <?= formatTanggalIndoJam($row['created_at']) ?>
                                     </small>
                                   </div>
@@ -352,7 +379,7 @@
     <input type="date" class="form-control" id="tanggal" name="tanggal">
 </div>
 
-<div id="info-nomor-surat" class="alert d-none mt-3" role="alert"></div>
+<div id="info-nomor-surat" class="alert custom-alert d-none"></div>
 
 
       <?php 
@@ -680,16 +707,16 @@ function generateNomorSurat() {
   // Cek input wajib sudah dipilih
   if (!jenis_surat_id || !kode_klasifikasi_id || !pengolah_id || !tanggal) {
     $('#info-nomor-surat')
-      .removeClass('d-none alert-info alert-danger')
-      .addClass('alert-warning')
+      .removeClass()
+      .addClass('custom-alert warning')
       .html('⚠️ Mohon lengkapi semua data untuk generate nomor surat.');
     return;
   }
 
   // Tampilkan loading
   $('#info-nomor-surat')
-    .removeClass('d-none alert-danger alert-warning alert-success')
-    .addClass('alert-primary')
+    .removeClass()
+    .addClass('custom-alert loading')
     .html('⏳ Sedang memproses nomor surat...');
 
   $.ajax({
@@ -705,8 +732,8 @@ function generateNomorSurat() {
     success: function(res) {
       if (res.error) {
         $('#info-nomor-surat')
-          .removeClass('alert-info')
-          .addClass('alert-danger')
+          .removeClass()
+          .addClass('custom-alert error fade-in')
           .html('❌ ' + res.error);
         return;
       }
@@ -733,29 +760,29 @@ function generateNomorSurat() {
 
       const infoTambahan =
   res.sisa_slot !== null
-    ? `<br>Sisa Slot <code>${tanggalFormatted}</code> yaitu <code>${res.sisa_slot}</code>`
+    ? `<br>Sisa Slot <code class="highlight-db">${tanggalFormatted}</code> yaitu <code class="highlight-db">${res.sisa_slot}</code>`
     : res.info_slot
     ? `<br><em>${res.info_slot}</em>`
     : '';
 
 
       $('#info-nomor-surat')
-        .removeClass('alert-danger alert-warning alert-primary')
-        .addClass('alert-success')
+        .removeClass()
+        .addClass('custom-alert success')
         .html(`
-            <span class="text-success font-weight-bold">
+            <strong class="text-success font-weight-bold">
             ✅ Nomor surat berhasil dibuat!
-            </span>
-        
-          Nomor Terakhir: <code>${res.nomor_terakhir}</code><br>
-          Dibuat pada: <code>${res.created_at}</code><br>
-          Pembuat Sebelumnya: <code>${res.pembuat}</code><br>${infoTambahan}
+            </strong>
+        <br></br>
+          Nomor Terakhir: <code class="highlight-db">${res.nomor_terakhir}</code><br>
+          Dibuat pada: <code class="highlight-db">${res.created_at}</code><br>
+          Pembuat Sebelumnya: <code class="highlight-db">${res.pembuat}</code><br>${infoTambahan}
         `);
 
     },
     error: function(xhr, status, error) {
       $('#info-nomor-surat')
-        .removeClass('alert-primary alert-warning alert-success')
+        .removeClass('alert-warning alert-success')
         .addClass('alert-warning')
         .html('🚨 Gagal memproses data. Silakan coba lagi.');
     }
