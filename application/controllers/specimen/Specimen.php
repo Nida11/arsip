@@ -178,6 +178,29 @@ class  Specimen extends CI_Controller
     unlink($zip_path);
 }
 
+public function proses_input_manual()
+{
+    $data_manual = [];
+    $nama     = $this->input->post('nama');
+    $jabatan  = $this->input->post('jabatan');
+    $pangkat  = $this->input->post('pangkat');
+    $instansi = $this->input->post('instansi');
+
+    for ($i = 0; $i < count($nama); $i++) {
+        $data_manual[] = [
+            'nama'     => $nama[$i],
+            'jabatan'  => $jabatan[$i],
+            'pangkat'  => $pangkat[$i],
+            'instansi' => $instansi[$i]
+        ];
+    }
+
+    $this->session->set_userdata('data_import', $data_manual);
+    redirect('index.php/specimen/Specimen/download_all_images');
+}
+
+
+
     
         //import excel ke database
         public function import_excel()
@@ -254,7 +277,7 @@ class  Specimen extends CI_Controller
         $this->session->set_userdata('data_import', $data_import);
 
         // Redirect langsung ke proses download
-        redirect('index.php/specimen/Specimen/download_all_images'); // GANTI sesuai URL kamu
+        redirect('index.php/specimen/Specimen/download_all_images'); 
     }
     
         // Ambil data dari DB

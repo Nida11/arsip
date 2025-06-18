@@ -13,9 +13,51 @@ redirect('index.php/Guest/login');
 	}
 	
 	public function beranda_admin()
-	{
-		$this->load->view('dashboard');
-	}
+{
+    $summary = $this->db->query("SELECT * FROM v_dashboard_summary")->row();
+
+    $d['totalSlot']       = $summary->today_slot;
+    $d['totalNumbering']  = $summary->today_numbering;
+    $d['totalSpecimen']   = $summary->today_specimen;
+    $d['totalBarcode']    = $summary->today_barcode;
+
+    $d['growthSlot']      = $summary->percent_slot;
+    $d['growthNumbering'] = $summary->percent_numbering;
+    $d['growthSpecimen']  = $summary->percent_specimen;
+    $d['growthBarcode']   = $summary->percent_barcode;
+
+    $data = $this->db->get('v_grafik_number')->result_array();
+
+    $labels = [];
+    $dataTahunIni = [];
+    $totalTahunIni = 0;
+    $totalTahunLalu = 0;
+
+    foreach ($data as $row) {
+        $labels[] = date('M', mktime(0, 0, 0, $row['bulan'], 10));
+        $dataTahunIni[] = (int)$row['tahun_ini'];
+        $totalTahunIni += $row['tahun_ini'];
+        $totalTahunLalu += $row['tahun_lalu'];
+    }
+
+    $growth = 0;
+if ($totalTahunLalu > 0) {
+    $growth = (($totalTahunIni - $totalTahunLalu) / $totalTahunLalu) * 100;
+
+    // Batas maksimum 100%
+    if ($growth > 100) {
+        $growth = 100;
+    }
+}
+
+
+    $d['bulanLabel'] = json_encode($labels);
+    $d['dataTahunIni'] = json_encode($dataTahunIni);
+    $d['growthPercent'] = number_format($growth, 2);
+
+    $this->load->view('dashboard', $d);
+}
+
 	
 	public function beranda_user()
 	{

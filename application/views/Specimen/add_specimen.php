@@ -180,51 +180,10 @@
 <div class="d-flex justify-content-end mt-3">
     <button type="submit" class="btn btn-success">Simpan</button>
 </div>
-
-
-        
+       
 </form>
 
 
-                            <!-- <div class="card p-3">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <select class="form-control" id="nama">
-                                                    <option>-- Pilih Nama --</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <select class="form-control" id="jabatan">
-                                                    <option>-- Pilih Jabatan --</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <div class="form-group">
-                                                <select class="form-control" id="pangkat">
-                                                    <option>-- Pilih Pangkat --</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-1 d-flex align-items-end justify-content-center">
-                                            <div class="d-flex gap-1">
-                                                <button type="button" class="btn btn-success btn-sm" style="width: 32px; height: 38px; padding: 0;">+</button>
-                                                <button type="button" class="btn btn-danger btn-sm" style="width: 32px; height: 38px; padding: 0;">x</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex justify-content-center mt-3">
-                                        <a href="https://www.example.com">
-                                            <button type="button" class="btn btn-primary btn-sm px-4">Simpan</button>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -268,45 +227,57 @@ $(document).ready(function () {
 </script>
 
 
-            <script>
-$(document).ready(function(){
-    $('input[name="input_method"]').change(function(){
+<script>
+$(document).ready(function () {
+    $('input[name="input_method"]').change(function () {
         if ($(this).val() == 'excel') {
             $('#form_excel').show();
             $('#form_manual').hide();
+            $('#file_excel').attr('required', true);
         } else {
             $('#form_excel').hide();
             $('#form_manual').show();
+            $('#file_excel').removeAttr('required');
+        }
+    });
+
+    $('#uploadForm').on('submit', function (e) {
+        e.preventDefault();
+
+        var inputMethod = $('input[name="input_method"]:checked').val();
+
+        if (inputMethod === 'excel') {
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '<?= site_url("index.php/specimen/Specimen/process_excel") ?>',
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('#preview-container').html('<p>Sedang memproses file...</p>');
+                },
+                success: function (response) {
+                    $('#preview-container').html(response);
+                },
+                error: function (xhr) {
+                    $('#preview-container').html('<div class="alert alert-danger">Gagal memproses file: ' + xhr.responseText + '</div>');
+                }
+            });
+
+        } else {
+            this.action = '<?= site_url("index.php/specimen/Specimen/proses_input_manual") ?>';
+            this.method = 'POST';
+            $(this).off('submit');
+            this.submit();
         }
     });
 });
+
 </script>
 
 
-            <script>
-                $('#uploadForm').on('submit', function(e) {
-                    e.preventDefault();
-
-                    var formData = new FormData(this);
-
-                    $.ajax({
-                    url: '<?= site_url("index.php/specimen/Specimen/process_excel") ?>',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    beforeSend: function() {
-                        $('#preview-container').html('<p>Sedang memproses file...</p>');
-                    },
-                    success: function(response) {
-                        $('#preview-container').html(response);
-                    },
-                    error: function(xhr) {
-                        $('#preview-container').html('<div class="alert alert-danger">Gagal memproses file: ' + xhr.responseText + '</div>');
-                    }
-                    });
-                });
-                </script>
 
 
             <script>
