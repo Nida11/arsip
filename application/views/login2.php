@@ -1,133 +1,252 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/favicon.png') ?>">
-  <title>Arsiparis</title>
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/bapenda.png') ?>">
+  <title>Login - Sistem Penomoran Digital</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
-  <!-- Fonts and icons -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-  <!-- Nucleo Icons -->
-  <link href="<?= base_url('assets/css/nucleo-icons.css') ?>" rel="stylesheet" />
-  <link href="<?= base_url('assets/css/nucleo-svg.css') ?>" rel="stylesheet" />
-  <!-- Font Awesome Icons -->
-  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
-  <!-- CSS Files -->
-  <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: rgba(63, 157, 244, 0.33);
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
+    .floating-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      z-index: -1;
+    }
+
+    .floating-bg img {
+      position: absolute;
+      width: 150px;
+      opacity: 0.85;
+      filter: drop-shadow(0 0 7px rgba(4, 131, 17, 0.81)) brightness(1.3) contrast(1.5);
+    }
+
+    @keyframes floatRotateRight {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(180deg);
+      }
+
+      100% {
+        transform: translateY(0) rotate(360deg);
+      }
+    }
+
+    @keyframes floatRotateLeft {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(-180deg);
+      }
+
+      100% {
+        transform: translateY(0) rotate(-360deg);
+      }
+    }
+
+    .rotate-right {
+      animation: floatRotateRight 25s linear infinite;
+    }
+
+    .rotate-left {
+      animation: floatRotateLeft 25s linear infinite;
+    }
+
+    .login-container {
+      display: flex;
+      width: 650px;
+      max-width: 100%;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .login-left {
+      background: transparent;
+      color: white;
+      padding: 40px;
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .login-left img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .login-right {
+      background: transparent;
+      width: 50%;
+      padding: 30px;
+    }
+
+    .login-right h3 {
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: black;
+    }
+
+    .form-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #999;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #999;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 12px 40px 12px 40px;
+    }
+
+    .btn-login {
+      background-color: rgb(16, 11, 145);
+      color: white;
+      padding: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      width: 100%;
+      transition: 0.3s;
+    }
+
+    .btn-login:hover {
+      background-color: rgb(72, 122, 222);
+    }
+
+    .small-links {
+      font-size: 14px;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .small-links a {
+      color: #7c4dff;
+      text-decoration: none;
+    }
+
+    .small-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+      }
+
+      .login-left,
+      .login-right {
+        width: 100%;
+      }
+
+      .login-left {
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 
-<body class="">
-  <div class="container position-sticky z-index-sticky top-0">
-    <div class="row">
-      <div class="col-12">
+<body>
+  <div class="floating-bg">
+    <?php
+    $positions = [
+      ['5%', '5%'],
+      ['-5%', '30%'],
+      ['10%', '80%'],
+      ['20%', '50%'],
+      ['45%', '-1%'],
+      ['35%', '65%'],
+      ['45%', '30%'],
+      ['50%', '80%'],
+      ['60%', '25%'],
+      ['70%', '60%'],
+      ['80%', '15%'],
+      ['90%', '45%']
+    ];
+    foreach ($positions as $pos):
+      $rotateClass = rand(0, 1) ? 'rotate-left' : 'rotate-right';
+    ?>
+      <img src="<?= base_url('assets/img/bapenda1.png') ?>" alt="floating-logo"
+        class="<?= $rotateClass ?>" style="top: <?= $pos[0] ?>; left: <?= $pos[1] ?>;">
+    <?php endforeach; ?>
+  </div>
 
-      </div>
+  <div class="login-container">
+    <div class="login-left">
+      <img src="<?= base_url('assets/img/ilustrasi.png') ?>" alt="Ilustrasi Login">
+    </div>
+
+    <div class="login-right">
+      <h3 class="text-center">Login Akun</h3>
+      <form method="POST" action="<?= base_url('index.php/Login/index'); ?>">
+        <div class="form-group">
+          <i class="fas fa-user input-icon"></i>
+          <input type="text" name="username" class="form-control" placeholder="Nama Pengguna" required>
+        </div>
+        <div class="form-group">
+          <i class="fas fa-lock input-icon"></i>
+          <input type="password" id="password" name="password" class="form-control" placeholder="Kata Sandi" required>
+          <i class="fas fa-eye toggle-password" id="togglePassword"></i>
+        </div>
+        <button type="submit" class="btn btn-login">Masuk</button>
+      </form>
     </div>
   </div>
 
-  <main class="main-content mt-0">
-    <section>
-      <div class="page-header min-vh-100">
-        <div class="container">
-          <div class="row">
-            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
-              <div class="card card-plain">
-                <div class="card-header pb-0 text-start">
-                  <h4 class="font-weight-bolder">LOGIN AKUN</h4>
-                  <p class="mb-0">Masukan Nama Pengguna dan Kata Sandi</p>
-                </div>
-                <div class="card-body">
-                  <form method="POST" action="<?php echo base_url() . "index.php/Login/index"; ?>" accept-charset="UTF-8">
-                    <div class="mb-3">
-                      <input type="text" class="form-control form-control-lg" name="username" placeholder="Nama Pengguna" aria-label="Username">
-                    </div>
-                    <div class="mb-3 position-relative">
-                      <input type="password" class="form-control form-control-lg" name="password" id="passwordInput" placeholder="Kata Sandi" aria-label="Password">
-                      <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3" id="togglePassword" style="cursor: pointer;"></i>
-                    </div>
-                    <div class="text-center">
-                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Masuk</button>
-                    </div>
-                  </form>
-                </div>
-                <!-- <div class="card-footer text-center pt-0 px-lg-2 px-1">
-                  <p class="mb-4 text-sm mx-auto">
-                    Don't have an account?
-                    <a href="javascript:;" class="text-primary text-gradient font-weight-bold">Sign up</a>
-                  </p>
-                </div> -->
-              </div>
-            </div>
-            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 justify-content-center align-items-center">
-              <div class="position-relative border-radius-lg d-flex flex-column justify-content-start align-items-center p-5"
-                style="background-color: rgba(255, 255, 255, 0.9); width: 100%; max-width: 600px; min-height: 500px; box-shadow: 0 0 20px rgba(0,0,0,0.1); text-align: center;">
-
-                <!-- Gambar Logo -->
-                <img src="<?= base_url('assets/images/logo.png') ?>" alt="Logo Bapenda"
-                  style="width: 500px; height: auto; margin-bottom: 20px; z-index: 2;" />
-
-                <!-- Teks -->
-                <div style="z-index: 2; max-width: 90%;">
-                  <h4 class="text-dark font-weight-bolder">"Sistem Penomoran Digital"</h4>
-                  <p class="text-dark" style="word-wrap: break-word;">
-                    Sistem penomoran digital adalah sistem yang digunakan untuk memudahkan pengelolaan dan pencatatan nomor secara elektronik. Semua proses menjadi lebih efisien dan terorganisir.
-                  </p>
-                </div>
-
-              </div>
-            </div>
-
-
-
-
-          </div>
-        </div>
-
-
-      </div>
-      </div>
-      </div>
-    </section>
-  </main>
-
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('passwordInput');
+    const passwordInput = document.getElementById('password');
 
     togglePassword.addEventListener('click', function() {
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
-      this.classList.toggle('bi-eye');
-      this.classList.toggle('bi-eye-slash');
+      this.classList.toggle('fa-eye');
+      this.classList.toggle('fa-eye-slash');
     });
   </script>
-
-  <!-- Core JS Files -->
-  <script src="<?= base_url('assets/js/core/popper.min.js') ?>"></script>
-  <script src="<?= base_url('assets/js/core/bootstrap.min.js') ?>"></script>
-  <script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
-  <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
-
-  <script>
-    var win = navigator.platform.indexOf('Win') > -1;
-    if (win && document.querySelector('#sidenav-scrollbar')) {
-      var options = {
-        damping: '0.5'
-      };
-      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-    }
-  </script>
-
-  <!-- Github buttons -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!-- Control Center -->
-  <script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
 </body>
 
 </html>
