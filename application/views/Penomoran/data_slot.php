@@ -349,7 +349,7 @@
           <!-- Tanggal -->
           <div class="mb-3 mt-3">
             <label for="tanggalSlot" class="form-label">Tanggal</label>
-            <input type="date" class="form-control" id="tanggalSlot" name="tanggal" required>
+            <input type="date" class="form-control" id="tanggalSlot" name="tanggal" max="" required>
           </div>
         </div>
 
@@ -399,7 +399,7 @@
                             <!-- Tanggal -->
                             <div class="mb-3">
                               <label for="editTanggalSlot" class="form-label">Tanggal</label>
-                              <input type="date" class="form-control" name="tanggal" id="editTanggalSlot" required>
+                              <input type="date" class="form-control" name="tanggal" id="editTanggalSlot" max="" required>
                             </div>
                           </div>
 
@@ -853,6 +853,26 @@ $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
     return new bootstrap.Tooltip(tooltipTriggerEl);
   });
 </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const today = new Date().toISOString().split('T')[0];
+
+    // Untuk form tambah
+    const tanggalSlot = document.getElementById("tanggalSlot");
+    if (tanggalSlot) {
+      tanggalSlot.setAttribute("max", today);
+    }
+
+    // Untuk form edit
+    const editTanggalSlot = document.getElementById("editTanggalSlot");
+    if (editTanggalSlot) {
+      editTanggalSlot.setAttribute("max", today);
+    }
+  });
+</script>
+
+
+
 
 </body>
 
