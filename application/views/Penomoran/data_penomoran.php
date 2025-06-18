@@ -33,6 +33,7 @@
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
   <!-- DataTables -->
@@ -344,15 +345,18 @@
                           </button>
 
                             <!-- ✅ Tambah Tombol Print -->
-  <button
-    class="btn btn-sm btn-info btn-xs print-surat"
-    data-id="<?= $row['id']; ?>"
-    data-bs-toggle="tooltip"
-    data-bs-placement="top"
-    title="Print Surat Keluar"
-  >
-    <i class="fa fa-print"></i>
-  </button>
+                            <button
+  type="button"
+  class="btn btn-sm btn-info print-surat"
+  data-id="<?= $row['id'] ?>"
+  data-nomor="<?= $row['nomor_surat'] ?>"
+  data-tanggal="<?= $row['tanggal'] ?>"
+  data-jenis="<?= $row['nama_jenis'] ?>"
+>
+  <i class="fa fa-print"></i>
+</button>
+
+
 
                               </td>
                           </tr>
@@ -376,7 +380,7 @@
 
     <div class="form-group">
     <label for="tanggal">Tanggal</label>
-    <input type="date" class="form-control" id="tanggal" name="tanggal">
+    <input type="date" max="" class="form-control" id="tanggal" name="tanggal">
 </div>
 
 <div id="info-nomor-surat" class="alert custom-alert d-none"></div>
@@ -689,6 +693,39 @@
       </div>
     </div>
   </div>
+
+  <div id="printArea" style="display:none;">
+  <h3>Data Penomoran</h3>
+  <p><strong>Nomor Urut:</strong> <span id="print_nomor_urut"></span></p>
+  <p><strong>Nomor Surat:</strong> <span id="print_nomor_surat"></span></p>
+  <p><strong>Tanggal:</strong> <span id="print_tanggal"></span></p>
+  <p><strong>Jenis Surat:</strong> <span id="print_jenis"></span></p>
+  <p><strong>Perihal:</strong> <span id="print_perihal"></span></p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  $(document).on('click', '.print-surat', function (e) {
+    e.preventDefault(); // ⛔ Hindari redirect
+
+    const nomor = $(this).data('nomor');
+    const tanggal = $(this).data('tanggal');
+    const jenis = $(this).data('jenis');
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(12);
+    doc.text("Surat Keluar", 10, 10);
+    doc.text(`Nomor: ${nomor}`, 10, 20);
+    doc.text(`Tanggal: ${tanggal}`, 10, 30);
+    doc.text(`Jenis: ${jenis}`, 10, 40);
+
+    doc.save(`Surat_${nomor}.pdf`);
+  });
+</script>
+
+
   <!--   Core JS Files   -->
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="<?= base_url('assets/js/core/popper.min.js') ?>"></script>
@@ -923,6 +960,22 @@ $(document).ready(function () {
 });
 </script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const today = new Date().toISOString().split('T')[0];
+
+    // Untuk form tambah
+    const tanggal = document.getElementById("tanggal");
+    if (tanggal) {
+      tanggal.setAttribute("max", today);
+    }
+
+   
+  });
+</script> 
+
+
+DATA_SLOT
 
 <?php if ($this->session->flashdata('success_penomoran')): ?>
 <script>
@@ -1128,13 +1181,6 @@ $(document).ready(function () {
   });
 </script>
 
-<script>
-$(document).on('click', '.print-surat', function () {
-  const id = $(this).data('id');
-  const url = `<?= base_url("index.php/penomoran/Penomoran/print_surat/") ?>${id}`;
-  window.open(url, '_blank');
-});
-</script>
 
 
 </body>

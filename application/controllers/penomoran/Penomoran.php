@@ -372,14 +372,6 @@ public function delete_penomoran()
 //     $this->load->view('penomoran/print_surat', ['data' => $data]);
 // }
 
-
-
-
-
-
-
-
-
 public function dashboard()
 {
   $this->load->model('Slot_model');
