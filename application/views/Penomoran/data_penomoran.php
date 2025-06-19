@@ -33,7 +33,7 @@
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.legacy.min.js"></script>
 
 
   <!-- DataTables -->
@@ -344,14 +344,18 @@
                             <i class="fa fa-trash"></i>
                           </button>
 
-                            <!-- ✅ Tambah Tombol Print -->
-                            <button
-  type="button"
-  class="btn btn-sm btn-info print-surat"
-  data-id="<?= $row['id'] ?>"
+           <!-- ✅ Tambah Tombol Print -->
+<button class="print-surat btn btn-sm btn-primary"
   data-nomor="<?= $row['nomor_surat'] ?>"
+  data-urut="<?= $row['nomor_urut'] ?>"
   data-tanggal="<?= $row['tanggal'] ?>"
   data-jenis="<?= $row['nama_jenis'] ?>"
+  data-kode="<?= $row['kode_klasifikasi'] ?>"
+  data-perihal="<?= $row['perihal'] ?>"
+  data-isi="<?= $row['isi_ringkas'] ?>"
+  data-kepada="<?= $row['kepada'] ?>"
+  data-bidang="<?= $row['nama_pengolah'] ?>"
+  data-lampiran="<?= $row['lampiran'] ?>"
 >
   <i class="fa fa-print"></i>
 </button>
@@ -377,6 +381,18 @@
     <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_input_penomoran") ?>">
     <div class="modal-body">
     <div class="row">
+
+    <div class="col-md-6 mb-3">
+  <label class="form-control-label">Jenis Penomoran</label><br>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="is_multiple" id="single" value="0" checked>
+    <label class="form-check-label" for="single">Single</label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="radio" name="is_multiple" id="multiple" value="1">
+    <label class="form-check-label" for="multiple">Multiple</label>
+  </div>
+</div>
 
     <div class="form-group">
     <label for="tanggal">Tanggal</label>
@@ -432,6 +448,16 @@
       <div class="col-md-6 mb-3">
         <label class="form-control-label" for="nomor_surat">Nomor Urut</label>
         <input type="text" class="form-control" id="nomor_urut" name="nomor_urut">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-control-label" for="nomor_surat">Nomor Awal</label>
+        <input type="text" class="form-control" id="nomor_awal" name="nomor_awal">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label class="form-control-label" for="nomor_surat">Nomor Akhir</label>
+        <input type="text" class="form-control" id="nomor_akhir" name="nomor_akhir">
       </div>
 
       <div class="col-md-6 mb-3">
@@ -694,36 +720,70 @@
     </div>
   </div>
 
-  <div id="printArea" style="display:none;">
-  <h3>Data Penomoran</h3>
-  <p><strong>Nomor Urut:</strong> <span id="print_nomor_urut"></span></p>
-  <p><strong>Nomor Surat:</strong> <span id="print_nomor_surat"></span></p>
-  <p><strong>Tanggal:</strong> <span id="print_tanggal"></span></p>
-  <p><strong>Jenis Surat:</strong> <span id="print_jenis"></span></p>
-  <p><strong>Perihal:</strong> <span id="print_perihal"></span></p>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  $(document).on('click', '.print-surat', function (e) {
-    e.preventDefault(); // ⛔ Hindari redirect
+function updateNomorSurat() {
+    const awal = document.getElementById('nomor_awal').value.padStart(3, '0');
+    const akhir = document.getElementById('nomor_akhir').value.padStart(3, '0');
+    const klasifikasi = document.getElementById('kode_klasifikasi_id').selectedOptions[0]?.text.split(' - ')[0] || '';
+    const bidang = document.getElementById('pengolah_id').selectedOptions[0]?.text.split(' - ')[1] || '';
 
-    const nomor = $(this).data('nomor');
-    const tanggal = $(this).data('tanggal');
-    const jenis = $(this).data('jenis');
+    let nomor_surat = '';
 
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    if (awal && akhir && awal !== akhir) {
+        nomor_surat = `${awal} - ${akhir}/${klasifikasi}/${bidang}`;
+    } else {
+        nomor_surat = `${awal}/${klasifikasi}/${bidang}`;
+    }
 
-    doc.setFontSize(12);
-    doc.text("Surat Keluar", 10, 10);
-    doc.text(`Nomor: ${nomor}`, 10, 20);
-    doc.text(`Tanggal: ${tanggal}`, 10, 30);
-    doc.text(`Jenis: ${jenis}`, 10, 40);
+    document.getElementById('nomor_surat').value = nomor_surat;
+}
 
-    doc.save(`Surat_${nomor}.pdf`);
-  });
+function handleMultipleAutoFill() {
+    const awal = parseInt(document.getElementById('nomor_awal').value);
+    const isMultiple = document.querySelector('input[name="is_multiple"]:checked')?.value === '1';
+
+    if (!isNaN(awal)) {
+        const akhir = isMultiple ? awal + 1 : awal;
+        document.getElementById('nomor_akhir').value = akhir.toString().padStart(3, '0');
+        updateNomorSurat();
+    }
+}
+
+// Saat halaman selesai dimuat
+window.addEventListener('DOMContentLoaded', function () {
+    const nomorAwalInput = document.getElementById('nomor_awal');
+    const nomorAkhirInput = document.getElementById('nomor_akhir');
+
+    // Jika nomor_awal sudah terisi (misalnya dari JS lain), langsung proses
+    if (nomorAwalInput.value) {
+        handleMultipleAutoFill();
+    }
+
+    // Event saat nomor_awal diubah (manual atau programmatically dengan dispatchEvent)
+    nomorAwalInput.addEventListener('input', handleMultipleAutoFill);
+
+    // Event saat nomor_akhir diubah manual
+    nomorAkhirInput.addEventListener('input', function () {
+        const awal = parseInt(document.getElementById('nomor_awal').value);
+        const akhir = parseInt(this.value);
+
+
+        updateNomorSurat();
+    });
+
+    // Event saat radio multiple/single diubah
+    document.querySelectorAll('input[name="is_multiple"]').forEach(function (radio) {
+        radio.addEventListener('change', handleMultipleAutoFill);
+    });
+
+    // Jika klasifikasi atau bidang diubah, update nomor surat juga
+    document.getElementById('kode_klasifikasi_id').addEventListener('change', updateNomorSurat);
+    document.getElementById('pengolah_id').addEventListener('change', updateNomorSurat);
+});
 </script>
+
+
 
 
   <!--   Core JS Files   -->
@@ -733,6 +793,32 @@
   <script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 
+
+  <script>
+$(document).ready(function () {
+  function toggleNomorFields() {
+    const isMultiple = $('input[name="is_multiple"]:checked').val() === '1';
+
+    if (isMultiple) {
+      $('#nomor_awal').closest('.mb-3').show();
+      $('#nomor_akhir').closest('.mb-3').show();
+      $('#nomor_urut').closest('.mb-3').hide();
+    } else {
+      $('#nomor_awal').closest('.mb-3').hide();
+      $('#nomor_akhir').closest('.mb-3').hide();
+      $('#nomor_urut').closest('.mb-3').show();
+    }
+  }
+
+  // Jalankan saat perubahan radio button
+  $('input[name="is_multiple"]').on('change', toggleNomorFields);
+
+  // Jalankan sekali saat halaman dimuat
+  toggleNomorFields();
+});
+
+  </script>
+
  
   <script>
 function generateNomorSurat() {
@@ -740,8 +826,8 @@ function generateNomorSurat() {
   const kode_klasifikasi_id = $('#kode_klasifikasi_id').val();
   const pengolah_id = $('#pengolah_id').val();
   const tanggal = $('#tanggal').val();
+  const is_multiple = $('input[name="is_multiple"]:checked').val(); // ambil dari radio button
 
-  // Cek input wajib sudah dipilih
   if (!jenis_surat_id || !kode_klasifikasi_id || !pengolah_id || !tanggal) {
     $('#info-nomor-surat')
       .removeClass()
@@ -750,7 +836,6 @@ function generateNomorSurat() {
     return;
   }
 
-  // Tampilkan loading
   $('#info-nomor-surat')
     .removeClass()
     .addClass('custom-alert loading')
@@ -763,7 +848,8 @@ function generateNomorSurat() {
       jenis_surat_id,
       kode_klasifikasi_id,
       pengolah_id,
-      tanggal
+      tanggal,
+      is_multiple
     },
     dataType: 'json',
     success: function(res) {
@@ -775,81 +861,87 @@ function generateNomorSurat() {
         return;
       }
 
-       // Formatter tanggal Indonesia
-  function formatTanggalIndo(tanggalStr) {
-    const bulanIndo = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    
-    if (!tanggalStr) return '-';
+      function formatTanggalIndo(tanggalStr) {
+        const bulanIndo = [
+          "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+          "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+        ];
+        if (!tanggalStr) return '-';
+        const [tahun, bulan, hari] = tanggalStr.split("-");
+        return `${parseInt(hari)} ${bulanIndo[parseInt(bulan) - 1]} ${tahun}`;
+      }
 
-    const [tahun, bulan, hari] = tanggalStr.split("-");
-    return `${parseInt(hari)} ${bulanIndo[parseInt(bulan) - 1]} ${tahun}`;
-  }
+      const tanggalFormatted = formatTanggalIndo(res.tanggal);
 
-  const tanggalFormatted = formatTanggalIndo(res.tanggal);
-
-
-      // Jika berhasil, tampilkan datanya
-      $('#nomor_urut').val(res.nomor_urut);
-      $('#nomor_surat').val(res.nomor_surat);
+      // Set nilai input berdasarkan multiple atau tidak
+      if (is_multiple == '1') {
+        $('#nomor_awal').val(res.nomor_awal);
+        $('#nomor_akhir').val(res.nomor_akhir);
+        $('#nomor_urut').val(''); // clear kalau ada
+        $('#nomor_surat').val(res.nomor_surat);
+      } else {
+        $('#nomor_awal').val('');
+        $('#nomor_akhir').val('');
+        $('#nomor_urut').val(res.nomor_urut);
+        $('#nomor_surat').val(res.nomor_surat);
+      }
 
       const infoTambahan =
-  res.sisa_slot !== null
-    ? `<br>Sisa Slot <code class="highlight-db">${tanggalFormatted}</code> yaitu <code class="highlight-db">${res.sisa_slot}</code>`
-    : res.info_slot
-    ? `<br><em>${res.info_slot}</em>`
-    : '';
-
+        res.sisa_slot !== null
+          ? `<br>Sisa Slot <code class="highlight-db">${tanggalFormatted}</code> yaitu <code class="highlight-db">${res.sisa_slot}</code>`
+          : res.info_slot
+          ? `<br><em>${res.info_slot}</em>`
+          : '';
 
       $('#info-nomor-surat')
         .removeClass()
         .addClass('custom-alert success')
         .html(`
-            <strong class="text-success font-weight-bold">
-            ✅ Nomor surat berhasil dibuat!
-            </strong>
-        <br></br>
+          <strong class="text-success font-weight-bold">
+          ✅ Nomor surat berhasil dibuat!
+          </strong>
+          <br><br>
           Nomor Terakhir: <code class="highlight-db">${res.nomor_terakhir}</code><br>
           Dibuat pada: <code class="highlight-db">${res.created_at}</code><br>
           Pembuat Sebelumnya: <code class="highlight-db">${res.pembuat}</code><br>${infoTambahan}
         `);
-
     },
     error: function(xhr, status, error) {
       $('#info-nomor-surat')
-        .removeClass('alert-warning alert-success')
-        .addClass('alert-warning')
+        .removeClass()
+        .addClass('custom-alert error')
         .html('🚨 Gagal memproses data. Silakan coba lagi.');
     }
   });
 }
 
 // Trigger otomatis jika semua input sudah terisi
-$('#jenis_surat_id, #kode_klasifikasi_id, #pengolah_id, #tanggal').on('change', function () {
+$('#jenis_surat_id, #kode_klasifikasi_id, #pengolah_id, #tanggal, input[name="is_multiple"]').on('change', function () {
   const allFilled =
     $('#jenis_surat_id').val() &&
     $('#kode_klasifikasi_id').val() &&
     $('#pengolah_id').val() &&
-    $('#tanggal').val();
+    $('#tanggal').val() &&
+    $('input[name="is_multiple"]:checked').val() !== undefined;
 
   if (allFilled) {
     generateNomorSurat();
   }
 });
 
-// Bersihkan info saat modal ditutup
+// Reset saat modal ditutup
 $('#modalNomorSurat').on('hidden.bs.modal', function () {
   $('#info-nomor-surat')
-    .removeClass('alert-info alert-warning alert-danger')
+    .removeClass()
     .addClass('d-none')
     .html('');
 
-  // Optional: reset isian form juga kalau mau
   $('#nomor_urut').val('');
+  $('#nomor_awal').val('');
+  $('#nomor_akhir').val('');
   $('#nomor_surat').val('');
 });
+
 
 
   </script>
@@ -974,8 +1066,6 @@ $(document).ready(function () {
   });
 </script> 
 
-
-DATA_SLOT
 
 <?php if ($this->session->flashdata('success_penomoran')): ?>
 <script>
@@ -1181,7 +1271,115 @@ $(document).ready(function () {
   });
 </script>
 
+<!-- PRINT TEMPLATE -->
+<!-- PRINT TEMPLATE -->
+<!-- PRINT TEMPLATE -->
+<!-- PRINT TEMPLATE -->
+<div id="printArea" style="display: none;">
+  <div style="width: 595px; height: 420px; display: flex; border: 1px solid black; background: white; position: relative;">
+    <!-- Red Bar -->
+<div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
+      <div style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-90deg);
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        line-height: 1.5;
+        font-family: 'Times New Roman', serif;
+        text-align: center;
+        white-space: nowrap;
+      ">
+        <div>PEMERINTAH DAERAH PROVINSI JAWA BARAT</div>
+        <div>BADAN PENDAPATAN DAERAH</div>
+        <div>KARTU SURAT KELUAR</div>
+      </div>
+    </div> <!-- yang benar -->
 
+    <!-- Content -->
+    <div style="flex: 1; padding: 0.75rem; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black;">
+      
+      <!-- Kode & Nomor Urut -->
+      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; height: 2.5rem;">
+        <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
+          Kode: <strong id="print_nomor_kode" style="margin-left: 0.25rem;"></strong>
+        </div>
+        <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
+          Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;"></strong>
+        </div>
+      </div>
+
+      <!-- Perihal -->
+      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem; height: 2.5rem; display: flex; align-items: center;">
+        Perihal: <strong id="print_perihal" style="margin-left: 0.25rem;"></strong>
+      </div>
+
+      <!-- Isi Ringkas -->
+      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; height: 4.5rem; display: flex; align-items: center;">
+        Isi Ringkas: <strong id="print_isi_ringkas" style="margin-left: 0.25rem;"></strong>
+      </div>
+
+      <!-- Kepada -->
+      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; height: 4.5rem; display: flex; align-items: center;">
+        Kepada: <strong id="print_kepada" style="margin-left: 0.25rem;"></strong>
+      </div>
+
+      <!-- Pengolah / Tanggal / Lampiran -->
+      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; height: 2.5rem;">
+        <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
+          Pengolah: <strong id="print_bidang" style="margin-left: 0.25rem;"></strong>
+        </div>
+        <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
+          Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem;"></strong>
+        </div>
+        <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
+          Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem;"></strong>
+        </div>
+      </div>
+
+      <!-- Jenis Surat -->
+      <div style="padding-left: 0.25rem; height: 2.5rem; display: flex; align-items: center;">
+        Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem;"></strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  $(document).on('click', '.print-surat', function (e) {
+    e.preventDefault();
+
+    const nomor = $(this).data('nomor');
+    $('#print_nomor_urut').text($(this).data('urut'));
+    $('#print_nomor_kode').text($(this).data('kode'));
+    $('#print_tanggal').text($(this).data('tanggal'));
+    $('#print_jenis').text($(this).data('jenis'));
+    $('#print_perihal').text($(this).data('perihal'));
+    $('#print_isi_ringkas').text($(this).data('isi'));
+    $('#print_kepada').text($(this).data('kepada'));
+    $('#print_bidang').text($(this).data('bidang'));
+    $('#print_lampiran').text($(this).data('lampiran'));
+
+    const printElement = document.getElementById('printArea');
+    printElement.style.display = 'block';
+
+    html2canvas(printElement, { scale: 2 }).then(canvas => {
+      const imgData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [595, 420] });
+
+      pdf.addImage(imgData, 'PNG', 0, 0, 595, 420);
+      pdf.save(`Surat_${nomor}.pdf`);
+
+      printElement.style.display = 'none';
+    });
+  });
+</script> print
 
 </body>
 

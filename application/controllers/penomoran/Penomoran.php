@@ -111,134 +111,97 @@ public function add_penomoran(){
 }
 public function generate_nomor()
 {
+    $is_multiple = $this->input->post('is_multiple') == '1';
+    $nomor_akhir_input = (int) $this->input->post('nomor_akhir_input');
     $jenis_surat_id      = $this->input->post('jenis_surat_id');
     $kode_klasifikasi_id = $this->input->post('kode_klasifikasi_id');
     $pengolah_id         = $this->input->post('pengolah_id');
     $tanggal             = $this->input->post('tanggal');
     $today = date('Y-m-d');
 
-
     if (!$jenis_surat_id || !$kode_klasifikasi_id || !$pengolah_id || !$tanggal) {
         echo json_encode(['error' => 'Data tidak lengkap']);
         return;
     }
 
-    // Apakah tanggal ini sudah pernah dipakai di request_number?
-    $this->db->where('tanggal', $tanggal);
-    $this->db->where('jenis_surat_id', $jenis_surat_id);
-    $this->db->order_by('nomor_urut', 'DESC');
-    $last_today = $this->db->get('request_number')->row();
+    // Cek apakah tanggal sudah pernah dipakai
+    $existing = $this->db->get_where('request_number', ['tanggal' => $tanggal, 'jenis_surat_id' => $jenis_surat_id])->row();
 
-    if ($last_today) {
-        // Tanggal sudah pernah dipakai, tinggal lanjutkan nomor
-        $nomor_urut_selanjutnya = $last_today->nomor_urut + 1;
+    if ($existing) {
+        $this->db->where('tanggal', $tanggal);
+        $this->db->where('jenis_surat_id', $jenis_surat_id);
+        $this->db->order_by('CAST(COALESCE(nomor_akhir, nomor_urut) AS UNSIGNED)', 'DESC', false);
+        $this->db->order_by('created_at', 'DESC');
+        $last_record = $this->db->get('request_number', 1)->row();
+
+        $nomor_sebelumnya = $last_record ? ($last_record->is_multiple ? (int)$last_record->nomor_akhir : (int)$last_record->nomor_urut) : 0;
     } else {
-        // Tanggal belum pernah muncul di request_number
-        $today = date('Y-m-d');
-
-        if ($tanggal < $today) {
-            // Cek apakah ada slot untuk tanggal yang diminta?
-            $this->db->where('tanggal', $tanggal);
-            $cek_slot = $this->db->get('slot_number')->row();
-
-            if (!$cek_slot) {
-                echo json_encode([
-                    'error' => 'Tidak bisa menambahkan nomor karena hari terlewat, tidak ada slot, dan tidak ada nomor di tanggal itu.'
-                ]);
-                return;
-            }
-        }
-
-        // Ambil nomor urut terakhir global
-        $this->db->select_max('nomor_urut');
-        $this->db->where('jenis_surat_id', $jenis_surat_id);
-        $last_nomor = $this->db->get('request_number')->row();
-        $nomor_urut_terakhir = $last_nomor ? (int)$last_nomor->nomor_urut : 0;
-
-        // Ambil slot dari hari kemarin saja
+        // Ambil nomor terakhir dari tanggal sebelumnya
         $tanggal_kemarin = date('Y-m-d', strtotime($tanggal . ' -1 day'));
-        $this->db->where('tanggal', $tanggal_kemarin);
-        $this->db->where('jenis_surat_id', $jenis_surat_id);
-        $slot_kemarin = $this->db->get('slot_number')->row();
-        $jumlah_slot_kemarin = $slot_kemarin ? (int)$slot_kemarin->slot : 0;
 
-        $nomor_urut_selanjutnya = $nomor_urut_terakhir + $jumlah_slot_kemarin + 1;
+        $this->db->where('jenis_surat_id', $jenis_surat_id);
+        $this->db->where('tanggal <=', $tanggal_kemarin);
+        $this->db->order_by('CAST(COALESCE(nomor_akhir, nomor_urut) AS UNSIGNED)', 'DESC', false);
+        $this->db->order_by('tanggal', 'DESC');
+        $last_record = $this->db->get('request_number', 1)->row();
+
+        $nomor_terakhir = $last_record ? ($last_record->is_multiple ? (int)$last_record->nomor_akhir : (int)$last_record->nomor_urut) : 0;
+
+        // Ambil slot dari tanggal kemarin
+        $slot_kemarin = $this->db->get_where('slot_number', ['tanggal' => $tanggal_kemarin, 'jenis_surat_id' => $jenis_surat_id])->row();
+        $jumlah_slot = $slot_kemarin ? (int)$slot_kemarin->slot : 0;
+
+        $nomor_sebelumnya = $nomor_terakhir + $jumlah_slot;
     }
 
-    // Format nomor urut 3 digit
-    $nomor_urut_str = str_pad($nomor_urut_selanjutnya, 3, '0', STR_PAD_LEFT);
+    if ($is_multiple) {
+        $nomor_awal = $nomor_sebelumnya + 1;
+        $nomor_akhir = $nomor_awal + $nomor_akhir_input + 1;
+        $nomor_awal_str = str_pad($nomor_awal, 3, '0', STR_PAD_LEFT);
+        $nomor_akhir_str = str_pad($nomor_akhir, 3, '0', STR_PAD_LEFT);
+    } else {
+        $nomor_urut_selanjutnya = $nomor_sebelumnya + 1;
+        $nomor_urut_str = str_pad($nomor_urut_selanjutnya, 3, '0', STR_PAD_LEFT);
+    }
 
-    // Ambil kode klasifikasi dan kode bidang
     $kode_klasifikasi = $this->db->get_where('kode_klasifikasi', ['id' => $kode_klasifikasi_id])->row()->kode_surat;
     $kode_bidang      = $this->db->get_where('bidang', ['id' => $pengolah_id])->row()->kode_bidang;
     $tahun            = date('Y', strtotime($tanggal));
 
-    // Format nomor surat
-    $nomor_surat = "{$nomor_urut_str}/{$kode_klasifikasi}/{$kode_bidang}";
-
-    // Cek duplikat
-    $exists = $this->db->get_where('request_number', ['nomor_urut' => $nomor_urut])->row();
-    while ($exists) {
-        $nomor_urut_selanjutnya++;
-        $nomor_urut_str = str_pad($nomor_urut_selanjutnya, 3, '0', STR_PAD_LEFT);
-        $nomor_surat = "{$nomor_urut_str}/{$kode_klasifikasi}/{$tahun}/{$kode_bidang}";
-        $exists = $this->db->get_where('request_number', ['nomor_surat' => $nomor_surat])->row();
+    if ($is_multiple) {
+        $nomor_surat = "$nomor_awal_str - $nomor_akhir_str/$kode_klasifikasi/$kode_bidang";
+    } else {
+        $nomor_surat = "$nomor_urut_str/$kode_klasifikasi/$kode_bidang";
     }
 
-    // Ambil sisa slot tanggal itu (hanya informasi)
     $info_slot = '';
     $sisa_slot = 0;
+    $slot_data = $this->db->get_where('slot_number', ['tanggal' => $tanggal, 'jenis_surat_id' => $jenis_surat_id])->row();
 
-// Ambil sisa slot tanggal itu (hanya informasi)
-$info_slot = '';
-$sisa_slot = 0;
+    if ($tanggal < $today) {
+        $this->db->where('jenis_surat_id', $jenis_surat_id);
+        $this->db->where('tanggal', $tanggal);
+        $this->db->where('DATE(created_at) >', $tanggal);
+        $jumlah_dipakai = $this->db->count_all_results('request_number');
 
-// Ambil data slot
-$this->db->where('tanggal', $tanggal);
-$this->db->where('jenis_surat_id', $jenis_surat_id);
-$slot_data = $this->db->get('slot_number')->row();
+        $sisa_slot = ($slot_data ? (int)$slot_data->slot : 0) - $jumlah_dipakai;
+        if ($sisa_slot < 0) $sisa_slot = 0;
+        $info_slot = "Sisa Slot $tanggal yaitu $sisa_slot";
+    } elseif ($tanggal == $today) {
+        $slot_today = $slot_data ? (int)$slot_data->slot : 0;
+        $info_slot = "$slot_today nomor disiapkan untuk permintaan susulan.";
+    }
 
-if ($tanggal < $today) {
-    // Hitung berapa yang sudah dipakai secara mundur
-    $this->db->where('jenis_surat_id', $jenis_surat_id);
-    $this->db->where('tanggal', $tanggal);
-    $this->db->where('DATE(created_at) >', $tanggal);
-    $this->db->where('DATE(created_at) <>', $tanggal); // jaga-jaga
-    $jumlah_dipakai = $this->db->count_all_results('request_number');
+    $nomor_terakhir = $last_record ? $last_record->nomor_surat : '-';
 
-    $sisa_slot = ($slot_data ? (int)$slot_data->slot : 0) - $jumlah_dipakai;
-    if ($sisa_slot < 0) $sisa_slot = 0;
-    $info_slot = "Sisa Slot $tanggal yaitu $sisa_slot";
-} elseif ($tanggal == $today) {
-    $slot_today = $slot_data ? (int)$slot_data->slot : 0;
-    $info_slot = "$slot_today nomor disiapkan untuk permintaan susulan.";
-} else {
-    $info_slot = ""; // Kosongkan jika tanggal > hari ini
-}
+    $created_at_terakhir = '-';
+    if ($last_record && $last_record->created_at) {
+        $timestamp = strtotime($last_record->created_at);
+        $bulanIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+            "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+        $created_at_terakhir = date('j', $timestamp) . ' ' . $bulanIndo[date('n', $timestamp) - 1] . ' ' . date('Y H:i', $timestamp);
+    }
 
-
-    // Ambil nomor terakhir
-    $this->db->where('jenis_surat_id', $jenis_surat_id);
-$this->db->select('*');
-$this->db->order_by('CAST(nomor_urut AS UNSIGNED)', 'DESC'); // urutkan berdasarkan nilai numerik
-$this->db->order_by('tanggal', 'DESC'); // sebagai pengurutan sekunder
-$last_record = $this->db->get('request_number', 1)->row();
-
-$nomor_terakhir = $last_record ? $last_record->nomor_surat : '-';
-
-// Tambahkan created_at (format Indo: 13 Juni 2025 09:10)
-$created_at_terakhir = '-';
-if ($last_record && $last_record->created_at) {
-    $timestamp = strtotime($last_record->created_at);
-    $bulanIndo = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    $created_at_terakhir = date('j', $timestamp) . ' ' . $bulanIndo[date('n', $timestamp) - 1] . ' ' . date('Y H:i', $timestamp);
-}
-
-
-    // Ambil nama pembuat
     $pembuat = '-';
     if ($last_record) {
         $user = $this->db->get_where('user', ['id' => $last_record->created_by])->row();
@@ -248,16 +211,19 @@ if ($last_record && $last_record->created_at) {
     }
 
     echo json_encode([
-        'nomor_urut'    => $nomor_urut_str,
-        'nomor_surat'    => $nomor_surat,
+        'nomor_urut'    => $is_multiple ? null : $nomor_urut_str,
+        'nomor_awal'    => $is_multiple ? $nomor_awal_str : null,
+        'nomor_akhir'   => $is_multiple ? $nomor_akhir_str : null,
+        'nomor_surat'   => $nomor_surat,
         'nomor_terakhir' => $nomor_terakhir,
-        'created_at' => $created_at_terakhir,
-        'pembuat'        => $pembuat,
-        'tanggal'        => $tanggal,
-        'sisa_slot' => $tanggal < $today ? $sisa_slot : null,
-    'info_slot' => $tanggal == $today ? $info_slot : null
+        'created_at'    => $created_at_terakhir,
+        'pembuat'       => $pembuat,
+        'tanggal'       => $tanggal,
+        'sisa_slot'     => $tanggal < $today ? $sisa_slot : null,
+        'info_slot'     => $tanggal == $today ? $info_slot : null
     ]);
 }
+
 
 public function cek_duplikat_nomor()
 {
@@ -277,56 +243,87 @@ public function do_input_penomoran()
     $kode_klasifikasi_id = $this->input->post('kode_klasifikasi_id');
     $pengolah_id         = $this->input->post('pengolah_id');
     $tanggal             = $this->input->post('tanggal');
-    $nomor_surat = $this->input->post('nomor_surat');
+    $nomor_surat         = $this->input->post('nomor_surat');
+
+    $is_multiple         = $this->input->post('is_multiple') == '1';
     $nomor_urut          = $this->input->post('nomor_urut');
-    $perihal         = $this->input->post('perihal');
+    $nomor_awal          = $this->input->post('nomor_awal');
+    $nomor_akhir         = $this->input->post('nomor_akhir');
+
+    $perihal             = $this->input->post('perihal');
     $isi_ringkas         = $this->input->post('isi_ringkas');
-    $catatan         = $this->input->post('catatan');
-    $lampiran         = $this->input->post('lampiran');
-    $kepada         = $this->input->post('kepada');
+    $catatan             = $this->input->post('catatan');
+    $lampiran            = $this->input->post('lampiran');
+    $kepada              = $this->input->post('kepada');
 
-
-
-
-    if (!$jenis_surat_id || !$kode_klasifikasi_id || !$pengolah_id || !$tanggal || !$nomor_urut || !$nomor_surat) {
+    // Validasi dasar
+    if (!$jenis_surat_id || !$kode_klasifikasi_id || !$pengolah_id || !$tanggal || !$nomor_surat) {
         $this->session->set_flashdata('error', 'Data tidak lengkap. Harap isi semua kolom.');
-        redirect('index.php/penomoran/Penomoran/data_penomoran'); // ganti dengan URL form kamu
+        redirect('index.php/penomoran/Penomoran/data_penomoran');
         return;
     }
 
-    // Cek apakah nomor urut sudah pernah dipakai di tanggal itu dan jenis surat yang sama
-    $exists = $this->db->get_where('request_number', [
-        'jenis_surat_id' => $jenis_surat_id,
-        'nomor_urut'     => $nomor_urut
-    ])->row();
+    // Validasi nomor
+    if ($is_multiple) {
+        if (!$nomor_awal || !$nomor_akhir) {
+            $this->session->set_flashdata('error', 'Nomor awal dan akhir harus diisi.');
+            redirect('index.php/penomoran/Penomoran/data_penomoran');
+            return;
+        }
+    } else {
+        if (!$nomor_urut) {
+            $this->session->set_flashdata('error', 'Nomor urut harus diisi.');
+            redirect('index.php/penomoran/Penomoran/data_penomoran');
+            return;
+        }
 
-    if ($exists) {
-        $this->session->set_flashdata('error', 'Nomor urut sudah pernah digunakan.');
-        redirect('index.php/penomoran/Penomoran/data_penomoran'); // ganti dengan URL form kamu
-        return;
+        // Cek duplikat nomor urut
+        $exists = $this->db->get_where('request_number', [
+            'jenis_surat_id' => $jenis_surat_id,
+            'nomor_urut'     => $nomor_urut
+        ])->row();
+
+        if ($exists) {
+            $this->session->set_flashdata('error', 'Nomor urut sudah pernah digunakan.');
+            redirect('index.php/penomoran/Penomoran/data_penomoran');
+            return;
+        }
     }
 
-    // Simpan ke database
+    // Data yang akan disimpan
     $data = [
         'jenis_surat_id'      => $jenis_surat_id,
         'kode_klasifikasi_id' => $kode_klasifikasi_id,
         'pengolah_id'         => $pengolah_id,
         'tanggal'             => $tanggal,
-        'nomor_urut'          => $nomor_urut,
         'nomor_surat'         => $nomor_surat,
-        'lampiran'         => $lampiran,
-        'kepada'         => $kepada,
-        'catatan'         => $catatan,
+        'lampiran'            => $lampiran,
+        'kepada'              => $kepada,
+        'catatan'             => $catatan,
         'isi_ringkas'         => $isi_ringkas,
-        'perihal'         => $perihal,
+        'perihal'             => $perihal,
         'created_by'          => $this->session->userdata('id'),
-        'created_at'          => date('Y-m-d H:i:s')
+        'created_at'          => date('Y-m-d H:i:s'),
+        'is_multiple'         => $is_multiple ? 1 : 0
     ];
 
+    if ($is_multiple) {
+        $data['nomor_awal']  = (int)$nomor_awal;
+        $data['nomor_akhir'] = (int)$nomor_akhir;
+        $data['nomor_urut']  = null; // untuk consistency
+    } else {
+        $data['nomor_urut'] = (int)$nomor_urut;
+        $data['nomor_awal'] = null;
+        $data['nomor_akhir'] = null;
+    }
+
+    // Simpan ke database
     $this->db->insert('request_number', $data);
+
     $this->session->set_flashdata('success_penomoran', 'Nomor berhasil ditambahkan!');
-    redirect('index.php/penomoran/Penomoran/data_penomoran'); // arahkan ke mana pun kamu mau
+    redirect('index.php/penomoran/Penomoran/data_penomoran');
 }
+
 
 public function do_edit_penomoran()
 {
