@@ -318,9 +318,7 @@
                               <td class="text-center">
                               <button
                               type="button"
-                              class="btn btn-sm btn-xs btn-primary"
-                              data-bs-toggle="modal"
-                              data-bs-target="#editSlotModal"
+                              class="btn btn-sm btn-xs btn-primary btn-edit"
                               data-id="<?= $row['id']; ?>"
                               data-tanggal="<?= $row['tanggal']; ?>"
                               data-jenis="<?= $row['jenis_surat_id']; ?>"
@@ -337,6 +335,7 @@
                             >
                               <i class="fa fa-pencil"></i>
                             </button>
+
                             <button class="btn btn-sm btn-xs btn-danger delete-penomoran"
                             data-id="<?= $row['id']; ?>"
                             data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Surat Keluar"
@@ -518,53 +517,7 @@
 
             <input type="hidden" id="edit_id" name="id">
 
-            <!-- <div class="form-group">
-              <label for="edit_tanggal">Tanggal</label>
-              <input type="date" class="form-control" id="edit_tanggal" name="tanggal" readonly>
-            </div>
-
-            <div id="edit-info-nomor-surat" class="alert d-none mt-3" role="alert"></div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_jenis_surat_id">Jenis Surat</label>
-              <select name="jenis_surat_id" id="edit_jenis_surat_id" class="form-control select2" style="width: 100%;" readonly>
-                <option></option>
-                <?php foreach ($nama_jenis as $g): ?>
-                  <option value="<?= $g->id ?>"><?= $g->nama_jenis ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_pengolah_id">Bidang</label>
-              <select name="pengolah_id" id="edit_pengolah_id" class="form-control select2" style="width: 100%;" readonly>
-                <option></option>
-                <?php foreach ($bid as $b): ?>
-                  <option value="<?= $b->id ?>"><?= $b->kode_bidang ?> - <?= $b->nama_bidang ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_kode_klasifikasi_id">Kode Klasifikasi</label>
-              <select name="kode_klasifikasi_id" id="edit_kode_klasifikasi_id" class="form-control select2" style="width: 100%;" readonly>
-                <option></option>
-                <?php foreach ($kode as $k): ?>
-                  <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_nomor_urut">Nomor Urut</label>
-              <input type="text" class="form-control" id="edit_nomor_urut" name="nomor_urut" readonly>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_nomor_surat">Nomor Surat</label>
-              <input type="text" class="form-control" id="edit_nomor_surat" name="nomor_surat" readonly>
-            </div> -->
-
+           
             <div class="col-md-6 mb-3">
               <label class="form-control-label" for="edit_perihal">Perihal</label>
               <input type="text" class="form-control" id="edit_perihal" name="perihal">
@@ -719,14 +672,52 @@
       </div>
     </div>
   </div>
+  <script>
+$(document).ready(function () {
+  $('.btn-edit').on('click', function () {
+    const modal = $('#editSlotModal');
 
+    // ambil data
+    const id = $(this).data('id');
+    const tanggal = $(this).data('tanggal');
+    const jenis = $(this).data('jenis');
+    const pengolah = $(this).data('pengolah');
+    const klasifikasi = $(this).data('klasifikasi');
+    const nomorUrut = $(this).data('nomor_urut');
+    const nomorSurat = $(this).data('nomor_surat');
+    const perihal = $(this).data('perihal');
+    const kepada = $(this).data('kepada');
+    const isiRingkas = $(this).data('isi_ringkas');
+    const catatan = $(this).data('catatan');
+    const lampiran = $(this).data('lampiran');
+
+    // isi field
+    modal.find('#edit_id').val(id);
+    modal.find('#edit_tanggal').val(tanggal);
+    modal.find('#edit_jenis_surat_id').val(jenis).trigger('change');
+    modal.find('#edit_pengolah_id').val(pengolah).trigger('change');
+    modal.find('#edit_kode_klasifikasi_id').val(klasifikasi).trigger('change');
+    modal.find('#edit_nomor_urut').val(nomorUrut);
+    modal.find('#edit_nomor_surat').val(nomorSurat);
+    modal.find('#edit_perihal').val(perihal);
+    modal.find('#edit_kepada').val(kepada);
+    modal.find('#edit_isi_ringkas').val(isiRingkas);
+    modal.find('#edit_catatan').val(catatan);
+    modal.find('#edit_lampiran').val(lampiran);
+
+    // tampilkan modal setelah semua field diisi
+    $('#editSlotModal').modal('show'); // untuk Bootstrap 4
+  });
+});
+
+</script>
 
 <script>
 function updateNomorSurat() {
     const awal = document.getElementById('nomor_awal').value.padStart(3, '0');
     const akhir = document.getElementById('nomor_akhir').value.padStart(3, '0');
     const klasifikasi = document.getElementById('kode_klasifikasi_id').selectedOptions[0]?.text.split(' - ')[0] || '';
-    const bidang = document.getElementById('pengolah_id').selectedOptions[0]?.text.split(' - ')[1] || '';
+    const bidang = document.getElementById('pengolah_id').selectedOptions[0].text.split(' - ')[0] || '';
 
     let nomor_surat = '';
 
@@ -1015,42 +1006,7 @@ $('#nomor_urut, #tanggal, #jenis_surat_id').on('change keyup', cekDuplikatNomor)
 
   </script>
 
-<script>
-$(document).ready(function () {
-    $('.btn-edit').on('click', function () {
-        // Ambil modal
-        const modal = $('#editSlotModal');
 
-        // Ambil data dari tombol
-        const id = $(this).data('id');
-        const tanggal = $(this).data('tanggal');
-        const jenis = $(this).data('jenis');
-        const pengolah = $(this).data('pengolah');
-        const klasifikasi = $(this).data('klasifikasi');
-        const nomorUrut = $(this).data('nomor_urut');
-        const nomorSurat = $(this).data('nomor_surat');
-        const perihal = $(this).data('perihal');
-        const kepada = $(this).data('kepada');
-        const isiRingkas = $(this).data('isi_ringkas');
-        const catatan = $(this).data('catatan');
-        const lampiran = $(this).data('lampiran');
-
-        // Set ke input form di modal edit
-        modal.find('#edit_id').val(id);
-        modal.find('#edit_tanggal').val(tanggal);
-        modal.find('#edit_jenis_surat_id').val(jenis).trigger('change');
-        modal.find('#edit_pengolah_id').val(pengolah).trigger('change');
-        modal.find('#edit_kode_klasifikasi_id').val(klasifikasi).trigger('change');
-        modal.find('#edit_nomor_urut').val(nomorUrut);
-        modal.find('#edit_nomor_surat').val(nomorSurat);
-        modal.find('#edit_perihal').val(perihal);
-        modal.find('#edit_kepada').val(kepada);
-        modal.find('#edit_isi_ringkas').val(isiRingkas);
-        modal.find('#edit_catatan').val(catatan);
-        modal.find('#edit_lampiran').val(lampiran);
-    });
-});
-</script>
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {
