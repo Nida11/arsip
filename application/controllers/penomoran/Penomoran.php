@@ -329,12 +329,7 @@ public function do_edit_penomoran()
 {
     $id = $this->input->post('id');
     $data = [
-        // 'tanggal'              => $this->input->post('tanggal'),
-        // 'jenis_surat_id'       => $this->input->post('jenis_surat_id'),
-        // 'pengolah_id'          => $this->input->post('pengolah_id'),
-        // 'kode_klasifikasi_id'  => $this->input->post('kode_klasifikasi_id'),
-        // 'nomor_urut'           => $this->input->post('nomor_urut'),
-        // 'nomor_surat'          => $this->input->post('nomor_surat'),
+
         'perihal'              => $this->input->post('perihal'),
         'kepada'               => $this->input->post('kepada'),
         'isi_ringkas'          => $this->input->post('isi_ringkas'),

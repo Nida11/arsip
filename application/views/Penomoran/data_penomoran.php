@@ -148,7 +148,33 @@
     }
     
     }
+
+
   </style>
+
+  <style>
+@media print {
+  @page {
+    size: A5 landscape;
+    margin: 0;
+  }
+
+  #printArea {
+    width: 210mm;
+    height: 148mm;
+  }
+    * {
+  box-sizing: border-box;
+}
+
+body {
+  background: white;
+  margin: 0;
+  padding: 0;
+}
+
+}
+</style>
 
 </head>
 
@@ -349,12 +375,13 @@
   data-urut="<?= $row['nomor_urut'] ?>"
   data-tanggal="<?= $row['tanggal'] ?>"
   data-jenis="<?= $row['nama_jenis'] ?>"
-  data-kode="<?= $row['kode_klasifikasi'] ?>"
+data-kode_klasifikasi="<?= $row['kode_surat'] ?>"   
   data-perihal="<?= $row['perihal'] ?>"
   data-isi="<?= $row['isi_ringkas'] ?>"
   data-kepada="<?= $row['kepada'] ?>"
-  data-bidang="<?= $row['nama_pengolah'] ?>"
+data-pengolah="<?= $row['nama_bidang'] ?>"
   data-lampiran="<?= $row['lampiran'] ?>"
+  data-catatan="<?= $row['catatan'] ?>"
 >
   <i class="fa fa-print"></i>
 </button>
@@ -1230,11 +1257,13 @@ $(document).ready(function () {
 <!-- PRINT TEMPLATE -->
 <!-- PRINT TEMPLATE -->
 <!-- PRINT TEMPLATE -->
+
 <!-- PRINT TEMPLATE -->
-<div id="printArea" style="display: none;">
-  <div style="width: 595px; height: 420px; display: flex; border: 1px solid black; background: white; position: relative;">
+<div id="printArea" style="width: 210mm; height: 148mm; display: none;">
+  <div style="width: 100%; height: 100%; display: flex; border: none; background: white; box-sizing: border-box;">
+    
     <!-- Red Bar -->
-<div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
+    <div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
       <div style="
         position: absolute;
         top: 50%;
@@ -1246,21 +1275,23 @@ $(document).ready(function () {
         line-height: 1.5;
         font-family: 'Times New Roman', serif;
         text-align: center;
-        white-space: nowrap;
-      ">
+        white-space: nowrap;">
         <div>PEMERINTAH DAERAH PROVINSI JAWA BARAT</div>
         <div>BADAN PENDAPATAN DAERAH</div>
         <div>KARTU SURAT KELUAR</div>
       </div>
-    </div> <!-- yang benar -->
+    </div>
 
     <!-- Content -->
-    <div style="flex: 1; padding: 0.75rem; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black;">
+    <div style="flex: 1; padding: 12px; box-sizing: border-box; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black; display: flex; flex-direction: column; justify-content: space-between;">
       
       <!-- Kode & Nomor Urut -->
-      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; height: 2.5rem;">
+      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.75rem;">
         <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Kode: <strong id="print_nomor_kode" style="margin-left: 0.25rem;"></strong>
+          Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem;"></strong>
+        </div>
+        <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
+          Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem;"></strong>
         </div>
         <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
           Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;"></strong>
@@ -1268,24 +1299,24 @@ $(document).ready(function () {
       </div>
 
       <!-- Perihal -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem; height: 2.5rem; display: flex; align-items: center;">
+      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
         Perihal: <strong id="print_perihal" style="margin-left: 0.25rem;"></strong>
       </div>
 
       <!-- Isi Ringkas -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; height: 4.5rem; display: flex; align-items: center;">
+      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
         Isi Ringkas: <strong id="print_isi_ringkas" style="margin-left: 0.25rem;"></strong>
       </div>
 
       <!-- Kepada -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; height: 4.5rem; display: flex; align-items: center;">
+      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
         Kepada: <strong id="print_kepada" style="margin-left: 0.25rem;"></strong>
       </div>
 
       <!-- Pengolah / Tanggal / Lampiran -->
-      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; height: 2.5rem;">
+      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.5rem;">
         <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
-          Pengolah: <strong id="print_bidang" style="margin-left: 0.25rem;"></strong>
+          Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem;"></strong>
         </div>
         <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
           Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem;"></strong>
@@ -1295,13 +1326,16 @@ $(document).ready(function () {
         </div>
       </div>
 
-      <!-- Jenis Surat -->
-      <div style="padding-left: 0.25rem; height: 2.5rem; display: flex; align-items: center;">
-        Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem;"></strong>
+      <!-- Catatan -->
+      <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
+        Catatan: <strong id="print_catatan" style="margin-left: 0.25rem;"></strong>
       </div>
+
     </div>
   </div>
 </div>
+
+
 
 <!-- JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1312,30 +1346,31 @@ $(document).ready(function () {
 
     const nomor = $(this).data('nomor');
     $('#print_nomor_urut').text($(this).data('urut'));
-    $('#print_nomor_kode').text($(this).data('kode'));
+$('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
     $('#print_tanggal').text($(this).data('tanggal'));
     $('#print_jenis').text($(this).data('jenis'));
     $('#print_perihal').text($(this).data('perihal'));
     $('#print_isi_ringkas').text($(this).data('isi'));
     $('#print_kepada').text($(this).data('kepada'));
-    $('#print_bidang').text($(this).data('bidang'));
+$('#print_nama_pengolah').text($(this).data('pengolah'));
     $('#print_lampiran').text($(this).data('lampiran'));
+    $('#print_catatan').text($(this).data('catatan'));
 
     const printElement = document.getElementById('printArea');
     printElement.style.display = 'block';
 
-    html2canvas(printElement, { scale: 2 }).then(canvas => {
+    html2canvas(printElement, { scale: 2, useCORS: true }).then(canvas => {
       const imgData = canvas.toDataURL('image/png');
       const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF({ orientation: 'landscape', unit: 'px', format: [595, 420] });
+ const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a5' });
 
-      pdf.addImage(imgData, 'PNG', 0, 0, 595, 420);
+      pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
       pdf.save(`Surat_${nomor}.pdf`);
 
       printElement.style.display = 'none';
     });
   });
-</script> print
+</script> 
 
 </body>
 
