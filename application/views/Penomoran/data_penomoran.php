@@ -1123,30 +1123,26 @@ Swal.fire({
 
 
   <script>
-  $(document).ready(function() {
-    $('#jenis_surat_id').select2({
-      placeholder: "Pilih jenis surat",
-      allowClear: true
-    });
+ $(document).ready(function() {
+  $('#jenis_surat_id').select2({
+    placeholder: "Pilih jenis surat",
+    allowClear: true,
+    dropdownParent: $('#addSlotModal') // Ganti dengan ID modalmu
   });
-</script>
 
-<script>
-  $(document).ready(function() {
-    $('#kode_klasifikasi_id').select2({
-      placeholder: "Pilih Kode Klasifikasi",
-      allowClear: true
-    });
+  $('#kode_klasifikasi_id').select2({
+    placeholder: "Pilih Kode Klasifikasi",
+    allowClear: true,
+    dropdownParent: $('#addSlotModal') // Ganti juga di sini
   });
-</script>
 
-<script>
-  $(document).ready(function() {
-    $('#pengolah_id').select2({
-      placeholder: "Pilih Unit Pengolah",
-      allowClear: true
-    });
+  $('#pengolah_id').select2({
+    placeholder: "Pilih Unit Pengolah",
+    allowClear: true,
+    dropdownParent: $('#addSlotModal') // Ganti juga di sini
   });
+});
+
 </script>
 
 
