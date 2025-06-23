@@ -32,9 +32,9 @@ class  Specimen extends CI_Controller
             return;
         }
     
-        $config['upload_path'] = './uploads/';
+        $config['upload_path']   = './uploads/';
         $config['allowed_types'] = 'xls|xlsx';
-        $config['max_size'] = 2048;
+        $config['max_size']      = 2048;
     
         $this->load->library('upload', $config);
     
@@ -43,15 +43,18 @@ class  Specimen extends CI_Controller
             return;
         }
     
-        $file_data = $this->upload->data();
-        $file_path = './uploads/' . $file_data['file_name'];
+        $file_data  = $this->upload->data();
+        $file_path  = './uploads/' . $file_data['file_name'];
+    
+        // ✅ Simpan nama file excel ke session (tanpa path)
+        $this->session->set_userdata('uploaded_excel_name', $file_data['client_name']);
     
         require_once(APPPATH . '../vendor/autoload.php');
     
         try {
             $spreadsheet = \PhpOffice\PhpSpreadsheet\IOFactory::load($file_path);
-            $sheet = $spreadsheet->getActiveSheet();
-            $rows = $sheet->toArray();
+            $sheet       = $spreadsheet->getActiveSheet();
+            $rows        = $sheet->toArray();
     
             $data_import = [];
     
@@ -74,8 +77,8 @@ class  Specimen extends CI_Controller
             }
     
             $this->session->set_userdata('data_import', $data_import);
-            $data['data_import'] = $data_import;
     
+            $data['data_import'] = $data_import;
             echo $this->load->view('specimen/specimen_preview', $data, true);
     
         } catch (Exception $e) {
@@ -92,112 +95,97 @@ class  Specimen extends CI_Controller
     }
 
     public function download_all_images()
-{
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-    $data_import = $this->session->userdata('data_import');
-
-    if (empty($data_import)) {
-        show_error('Data import tidak ditemukan.');
-    }
-
-    $template_path = FCPATH . 'assets/images/template_specimen.jpg';
-    $font_path     = FCPATH . 'assets/fonts/arial.ttf';
-
-    if (!file_exists($template_path)) show_error('Template tidak ditemukan.');
-    if (!file_exists($font_path))     show_error('Font tidak ditemukan.');
-
-    $output_dir = realpath(FCPATH) . '/generated_specimen/';
-    if (!is_dir($output_dir)) {
-        mkdir($output_dir, 0777, true);
-    }
-
-    $file_list = [];
-
-    foreach ($data_import as $index => $data) {
-        $image = imagecreatefromjpeg($template_path);
-        $black = imagecolorallocate($image, 0, 0, 0);
-
-        $jabatan  = $data['jabatan'];
-        $instansi = $data['instansi'];
-        $nama     = $data['nama'];
-        $pangkat  = $data['pangkat'];
-
-        // Buat nama file yang aman
-        $slug_nama = url_title($nama, '_', true); // CI3 helper
-        $filename = 'specimen_' . $slug_nama . '.jpeg';
-        $filepath = $output_dir . $filename;
-
-        // Tulis teks ke gambar
-        imagettftext($image, 75, 0, 990, 340, $black, $font_path, $jabatan);
-        imagettftext($image, 75, 0, 990, 440, $black, $font_path, $instansi);
-        imagettftext($image, 75, 0, 990, 970, $black, $font_path, $nama);
-        imagettftext($image, 75, 0, 990, 1070, $black, $font_path, $pangkat);
-
-        imagejpeg($image, $filepath, 100);
-        imagedestroy($image);
-
-        // Simpan ke DB
-        $this->db->insert('request_specimen', [
-            'nama'     => $nama,
-            'jabatan'  => $jabatan,
-            'instansi' => $instansi,
-            'pangkat'  => $pangkat,
-            'file'     => 'generated_specimen/' . $filename  // <= path public
-        ]);
-
-        $file_list[] = $filepath;
-    }
-
-    // Buat ZIP
-    $zip_path = $output_dir . 'specimen_all.zip';
-    $zip = new ZipArchive();
-
-    if ($zip->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
-        foreach ($file_list as $file) {
-            $zip->addFile($file, basename($file));
+    {
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
+    
+        $data_import = $this->session->userdata('data_import');
+    
+        if (empty($data_import)) {
+            show_error('Data import tidak ditemukan.');
         }
-        $zip->close();
-    } else {
-        show_error('Gagal membuat ZIP file.');
+    
+        $template_path = FCPATH . 'assets/images/template_specimen.jpg';
+        $font_path     = FCPATH . 'assets/fonts/arial.ttf';
+    
+        if (!file_exists($template_path)) show_error('Template tidak ditemukan.');
+        if (!file_exists($font_path))     show_error('Font tidak ditemukan.');
+    
+        $output_dir = realpath(FCPATH) . '/generated_specimen/';
+        if (!is_dir($output_dir)) {
+            mkdir($output_dir, 0777, true);
+        }
+    
+        $file_list = [];
+    
+        foreach ($data_import as $index => $data) {
+            $image = imagecreatefromjpeg($template_path);
+            $black = imagecolorallocate($image, 0, 0, 0);
+    
+            $jabatan  = $data['jabatan'];
+            $instansi = $data['instansi'];
+            $nama     = $data['nama'];
+            $pangkat  = $data['pangkat'];
+    
+            $slug_nama = url_title($nama, '_', true);
+            $filename  = 'specimen_' . $slug_nama . '.jpeg';
+            $filepath  = $output_dir . $filename;
+    
+            imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
+            imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
+            imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
+            imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
+            imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+    
+            imagejpeg($image, $filepath, 100);
+            imagedestroy($image);
+    
+            $this->db->insert('request_specimen', [
+                'nama'     => $nama,
+                'jabatan'  => $jabatan,
+                'instansi' => $instansi,
+                'pangkat'  => $pangkat,
+                'file'     => 'generated_specimen/' . $filename
+            ]);
+    
+            $file_list[] = $filepath;
+        }
+    
+        // ✅ Ambil nama file Excel dari session
+        $original_filename = $this->session->userdata('uploaded_excel_name') ?? 'specimen_all.xlsx';
+        $zip_basename      = pathinfo($original_filename, PATHINFO_FILENAME);
+        $zip_name          = $zip_basename . '.zip';
+        $zip_path          = $output_dir . $zip_name;
+    
+        $zip = new ZipArchive();
+    
+        if ($zip->open($zip_path, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
+            foreach ($file_list as $file) {
+                $zip->addFile($file, basename($file));
+            }
+            $zip->close();
+        } else {
+            show_error('Gagal membuat ZIP file.');
+        }
+    
+        // Hapus file gambar satuan
+        foreach ($file_list as $file) {
+            unlink($file);
+        }
+    
+        // Download file zip
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . $zip_name . '"');
+        header('Content-Length: ' . filesize($zip_path));
+        readfile($zip_path);
+    
+        // Hapus file zip setelah dikirim
+        unlink($zip_path);
+    
+        // ✅ Hapus session nama file excel
+        $this->session->unset_userdata('uploaded_excel_name');
     }
-
-    // Hapus file gambar satuan
-    foreach ($file_list as $file) {
-        unlink($file);
-    }
-
-    // Download file zip
-    header('Content-Type: application/zip');
-    header('Content-Disposition: attachment; filename="specimen_all.zip"');
-    header('Content-Length: ' . filesize($zip_path));
-    readfile($zip_path);
-
-    // Hapus file zip setelah dikirim
-    unlink($zip_path);
-}
-
-public function proses_input_manual()
-{
-    $data_manual = [];
-    $nama     = $this->input->post('nama');
-    $jabatan  = $this->input->post('jabatan');
-    $pangkat  = $this->input->post('pangkat');
-    $instansi = $this->input->post('instansi');
-
-    for ($i = 0; $i < count($nama); $i++) {
-        $data_manual[] = [
-            'nama'     => $nama[$i],
-            'jabatan'  => $jabatan[$i],
-            'pangkat'  => $pangkat[$i],
-            'instansi' => $instansi[$i]
-        ];
-    }
-
-    $this->session->set_userdata('data_import', $data_manual);
-    redirect('index.php/specimen/Specimen/download_all_images');
-}
+    
 
 
 
@@ -296,12 +284,18 @@ public function proses_input_manual()
         // Buat gambar dari template
         $image = imagecreatefromjpeg($template_path);
         $black = imagecolorallocate($image, 0, 0, 0);
-    
-        // Tulis teks ke gambar (atur posisi sesuai kebutuhan)
-        imagettftext($image, 75, 0, 990, 340, $black, $font_path, $data['jabatan']);
-        imagettftext($image, 75, 0, 990, 440, $black, $font_path, $data['instansi']);
-        imagettftext($image, 75, 0, 990, 970, $black, $font_path, $data['nama']);
-        imagettftext($image, 75, 0, 990, 1070, $black, $font_path, $data['pangkat']);
+
+        
+// Tulisan lainnya
+imagettftext($image, 65, 0, 990, 340, $black, $font_path, $data['jabatan']);   // Jabatan
+imagettftext($image, 65, 0, 990, 440, $black, $font_path, $data['instansi']);  // Instansi
+imagettftext($image, 65, 0, 990, 970, $black, $font_path, $data['nama']);      // Nama
+imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $data['pangkat']);  // Pangkat
+
+
+// BAPENDA (tulisan hardcode di bawah instansi)
+imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+
     
         // Nama file download
         $slug_nama = url_title($data['nama'], '_', true);

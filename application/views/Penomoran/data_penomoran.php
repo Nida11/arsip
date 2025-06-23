@@ -371,6 +371,7 @@ body {
 
            <!-- ✅ Tambah Tombol Print -->
 <button class="print-surat btn btn-sm btn-primary"
+data-is_multiple="<?= $row['is_multiple'] ?>"
   data-nomor="<?= $row['nomor_surat'] ?>"
   data-urut="<?= $row['nomor_urut'] ?>"
   data-tanggal="<?= $row['tanggal'] ?>"
@@ -382,6 +383,9 @@ data-kode_klasifikasi="<?= $row['kode_surat'] ?>"
 data-pengolah="<?= $row['nama_bidang'] ?>"
   data-lampiran="<?= $row['lampiran'] ?>"
   data-catatan="<?= $row['catatan'] ?>"
+ data-noawal="<?= $row['no_awal'] ?>"
+data-noakhir="<?= $row['no_akhir'] ?>"
+
 >
   <i class="fa fa-print"></i>
 </button>
@@ -1254,9 +1258,6 @@ $(document).ready(function () {
   });
 </script>
 
-<!-- PRINT TEMPLATE -->
-<!-- PRINT TEMPLATE -->
-<!-- PRINT TEMPLATE -->
 
 <!-- PRINT TEMPLATE -->
 <div id="printArea" style="width: 210mm; height: 148mm; display: none;">
@@ -1341,36 +1342,49 @@ $(document).ready(function () {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  $(document).on('click', '.print-surat', function (e) {
-    e.preventDefault();
+$(document).on('click', '.print-surat', function (e) {
+  e.preventDefault();
 
-    const nomor = $(this).data('nomor');
-    $('#print_nomor_urut').text($(this).data('urut'));
-$('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
-    $('#print_tanggal').text($(this).data('tanggal'));
-    $('#print_jenis').text($(this).data('jenis'));
-    $('#print_perihal').text($(this).data('perihal'));
-    $('#print_isi_ringkas').text($(this).data('isi'));
-    $('#print_kepada').text($(this).data('kepada'));
-$('#print_nama_pengolah').text($(this).data('pengolah'));
-    $('#print_lampiran').text($(this).data('lampiran'));
-    $('#print_catatan').text($(this).data('catatan'));
+  const nomor = $(this).data('nomor');
+  const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
+  const nomorAwal = $(this).data('noawal') || '';
+  const nomorAkhir = $(this).data('noakhir') || '';
+  const nomorUrut = $(this).data('urut') || '';
 
-    const printElement = document.getElementById('printArea');
-    printElement.style.display = 'block';
+  const nomorTampil = isMultiple && nomorAwal && nomorAkhir
+    ? `${nomorAwal} - ${nomorAkhir}`
+    : nomorUrut;
 
-    html2canvas(printElement, { scale: 2, useCORS: true }).then(canvas => {
-      const imgData = canvas.toDataURL('image/png');
-      const { jsPDF } = window.jspdf;
- const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a5' });
+  $('#print_nomor_urut').text(nomorTampil);
+  $('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
+  $('#print_tanggal').text($(this).data('tanggal'));
+  $('#print_jenis').text($(this).data('jenis'));
+  $('#print_perihal').text($(this).data('perihal'));
+  $('#print_isi_ringkas').text($(this).data('isi'));
+  $('#print_kepada').text($(this).data('kepada'));
+  $('#print_nama_pengolah').text($(this).data('pengolah'));
+  $('#print_lampiran').text($(this).data('lampiran'));
+  $('#print_catatan').text($(this).data('catatan'));
+  $('#print_noawal').text(nomorAwal);
+  $('#print_noakhir').text(nomorAkhir);
 
-      pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
-      pdf.save(`Surat_${nomor}.pdf`);
+  const printElement = document.getElementById('printArea');
+  printElement.style.display = 'block';
 
-      printElement.style.display = 'none';
-    });
+  html2canvas(printElement, { scale: 2, useCORS: true }).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a5' });
+
+    pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
+    pdf.save(`Surat_${nomor}.pdf`);
+
+    printElement.style.display = 'none';
   });
-</script> 
+});
+
+</script>
+
 
 </body>
 
