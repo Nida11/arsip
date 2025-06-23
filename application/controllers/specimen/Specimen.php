@@ -131,11 +131,21 @@ class  Specimen extends CI_Controller
             $filename  = 'specimen_' . $slug_nama . '.jpeg';
             $filepath  = $output_dir . $filename;
     
-            imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
-            imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
-            imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
-            imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
-            imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+            if (strcasecmp(trim($instansi), 'Badan Pendapatan Daerah Provinsi Jawa Barat') !== 0) {
+                // Jika instansi BUKAN BPPD Provinsi Jawa Barat (mengandung kata tambahan)
+                imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
+                imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
+                imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
+                imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
+                imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+            } else {
+                // Jika instansi hanya BPPD Provinsi Jawa Barat
+                imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
+                imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
+                imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
+                imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
+            }
+            
     
             imagejpeg($image, $filepath, 100);
             imagedestroy($image);
@@ -286,16 +296,20 @@ class  Specimen extends CI_Controller
         $black = imagecolorallocate($image, 0, 0, 0);
 
         
-// Tulisan lainnya
-imagettftext($image, 65, 0, 990, 340, $black, $font_path, $data['jabatan']);   // Jabatan
-imagettftext($image, 65, 0, 990, 440, $black, $font_path, $data['instansi']);  // Instansi
-imagettftext($image, 65, 0, 990, 970, $black, $font_path, $data['nama']);      // Nama
-imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $data['pangkat']);  // Pangkat
-
-
-// BAPENDA (tulisan hardcode di bawah instansi)
-imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
-
+        if (strcasecmp(trim($instansi), 'Badan Pendapatan Daerah Provinsi Jawa Barat') !== 0) {
+            // Jika instansi BUKAN BPPD Provinsi Jawa Barat (mengandung kata tambahan)
+            imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
+            imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
+            imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
+            imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
+            imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+        } else {
+            // Jika instansi hanya BPPD Provinsi Jawa Barat
+            imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
+            imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
+            imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
+            imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
+        }
     
         // Nama file download
         $slug_nama = url_title($data['nama'], '_', true);
