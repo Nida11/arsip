@@ -131,15 +131,13 @@ class  Specimen extends CI_Controller
             $filename  = 'specimen_' . $slug_nama . '.jpeg';
             $filepath  = $output_dir . $filename;
     
-            if (strcasecmp(trim($instansi), 'Badan Pendapatan Daerah Provinsi Jawa Barat') !== 0) {
-                // Jika instansi BUKAN BPPD Provinsi Jawa Barat (mengandung kata tambahan)
+            if (stripos($instansi, 'Badan Pendapatan Daerah Provinsi Jawa Barat') === false) {
                 imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
                 imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
                 imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
                 imagettftext($image, 65, 0, 990, 1070, $black, $font_path, $pangkat);
                 imagettftext($image, 65, 0, 990, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
             } else {
-                // Jika instansi hanya BPPD Provinsi Jawa Barat
                 imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
                 imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
                 imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
@@ -196,9 +194,6 @@ class  Specimen extends CI_Controller
         $this->session->unset_userdata('uploaded_excel_name');
     }
     
-
-
-
     
         //import excel ke database
         public function import_excel()
@@ -296,8 +291,8 @@ class  Specimen extends CI_Controller
         $black = imagecolorallocate($image, 0, 0, 0);
 
         
-        if (strcasecmp(trim($instansi), 'Badan Pendapatan Daerah Provinsi Jawa Barat') !== 0) {
-            // Jika instansi BUKAN BPPD Provinsi Jawa Barat (mengandung kata tambahan)
+        if (stripos($instansi, 'Badan Pendapatan Daerah Provinsi Jawa Barat') === false) {
+        // Jika instansi BUKAN BPPD Provinsi Jawa Barat (mengandung kata tambahan)
             imagettftext($image, 65, 0, 990, 340, $black, $font_path, $jabatan);
             imagettftext($image, 65, 0, 990, 440, $black, $font_path, $instansi);
             imagettftext($image, 65, 0, 990, 970, $black, $font_path, $nama);
@@ -321,6 +316,28 @@ class  Specimen extends CI_Controller
         imagejpeg($image); // Output gambar ke browser
         imagedestroy($image);
     }
+
+    public function proses_input_manual()
+{
+    $data_manual = [];
+    $nama     = $this->input->post('nama');
+    $jabatan  = $this->input->post('jabatan');
+    $pangkat  = $this->input->post('pangkat');
+    $instansi = $this->input->post('instansi');
+
+    for ($i = 0; $i < count($nama); $i++) {
+        $data_manual[] = [
+            'nama'     => $nama[$i],
+            'jabatan'  => $jabatan[$i],
+            'pangkat'  => $pangkat[$i],
+            'instansi' => $instansi[$i]
+        ];
+    }
+
+    $this->session->set_userdata('data_import', $data_manual);
+    $this->session->set_userdata('uploaded_excel_name', 'input_manual.xlsx');
+    redirect('index.php/specimen/Specimen/download_all_images');
+}
     
 
     public function simpan_dari_excel()
