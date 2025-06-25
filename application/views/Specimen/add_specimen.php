@@ -20,7 +20,35 @@
     <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
+    <style>
+@media (max-width: 991.98px) {
+  body.g-sidenav-hidden #sidenav-main {
+    transform: translateX(-110%); /* lebih jauh agar benar-benar keluar */
+    box-shadow: none !important;
+    border: none !important;
+  }
 
+  body.g-sidenav-pinned #sidenav-main {
+    transform: translateX(0);
+    transition: all 0.3s ease-in-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1050;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* opsional */
+  }
+
+  /* Hilangkan margin-left konten utama agar full width di layar kecil */
+  main.main-content {
+    margin-left: 0 !important;
+    transition: all 0.3s ease-in-out;
+  }
+}
+</style>
+</head>
     <body class="g-sidenav-show   bg-gray-100">
     <div class="min-height-300 bg-dark position-absolute w-100"></div>
     <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
@@ -130,7 +158,24 @@
     </aside>
 
     <main class="main-content position-relative border-radius-lg ">
-        <!-- Navbar -->
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarMain">
+  <div class="container-fluid py-1 px-3 d-flex align-items-center">
+    <!-- Tombol hamburger -->
+    <button class="navbar-toggler d-lg-none me-3" type="button" id="toggleSidebar" aria-label="Toggle sidebar">
+      <i class="fas fa-bars text-white"></i>
+    </button>
+
+    <!-- Breadcrumb (opsional) -->
+    <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+        <li class="breadcrumb-item text-sm"><a href="#">Histori of Booking Slot</a></li>
+        <li class="breadcrumb-item text-sm active" aria-current="page">Dashboard</li>
+      </ol>
+      <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+    </nav> -->
+  </div>
+</nav>
+<!-- End Navbar -->
         
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
             <div class="container-fluid py-1 px-3">
@@ -446,6 +491,37 @@ $(document).ready(function () {
                 });
             </script>
 
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidenav-main');
+
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation(); // cegah event merembet
+    document.body.classList.toggle('g-sidenav-pinned');
+    document.body.classList.toggle('g-sidenav-hidden');
+  });
+
+  // Klik di luar sidebar akan menutupnya
+  document.addEventListener('click', function(e) {
+    const isMobile = window.innerWidth < 992;
+    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
+      // Jika klik bukan di sidebar dan bukan di hamburger
+      if (!sidebar.contains(e.target) && e.target !== btn) {
+        document.body.classList.remove('g-sidenav-pinned');
+        document.body.classList.add('g-sidenav-hidden');
+      }
+    }
+  });
+
+  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 992) {
+      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
+    }
+  });
+});
+</script>
 
 
 </body>

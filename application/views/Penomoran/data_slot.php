@@ -80,6 +80,35 @@
   }
 </style>
 
+<style>
+@media (max-width: 991.98px) {
+  body.g-sidenav-hidden #sidenav-main {
+    transform: translateX(-110%); /* lebih jauh agar benar-benar keluar */
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  body.g-sidenav-pinned #sidenav-main {
+    transform: translateX(0);
+    transition: all 0.3s ease-in-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1050;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* opsional */
+  }
+
+  /* Hilangkan margin-left konten utama agar full width di layar kecil */
+  main.main-content {
+    margin-left: 0 !important;
+    transition: all 0.3s ease-in-out;
+  }
+}
+</style>
+
 
 </head>
 
@@ -179,17 +208,26 @@
   </aside>
   <main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
-    <!-- <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
-      <div class="container-fluid py-1 px-3">
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-white active" aria-current="page">Tables</li>
-          </ol>
-          <h6 class="font-weight-bolder text-white mb-0">History Tables</h6>
-        </nav>
-      </div>
+<!-- Navbar -->
+<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarMain">
+  <div class="container-fluid py-1 px-3 d-flex align-items-center">
+    <!-- Tombol hamburger -->
+    <button class="navbar-toggler d-lg-none me-3" type="button" id="toggleSidebar" aria-label="Toggle sidebar">
+      <i class="fas fa-bars text-white"></i>
+    </button>
+
+    <!-- Breadcrumb (opsional) -->
+    <!-- <nav aria-label="breadcrumb">
+      <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+        <li class="breadcrumb-item text-sm"><a href="#">Histori of Booking Slot</a></li>
+        <li class="breadcrumb-item text-sm active" aria-current="page">Dashboard</li>
+      </ol>
+      <h6 class="font-weight-bolder mb-0">Dashboard</h6>
     </nav> -->
+  </div>
+</nav>
+<!-- End Navbar -->
+
     <!-- End Navbar -->
 <div class="container-fluid py-4">
   
@@ -257,7 +295,7 @@
   </div> <!-- end .row -->
 </div>
 
-<div class="p-3">
+<div class="p-3 table-responsive">
 <table id="slotTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
 
               <thead class="thead-dark">
@@ -871,6 +909,38 @@ $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
   });
 </script>
 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidenav-main');
+
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation(); // cegah event merembet
+    document.body.classList.toggle('g-sidenav-pinned');
+    document.body.classList.toggle('g-sidenav-hidden');
+  });
+
+  // Klik di luar sidebar akan menutupnya
+  document.addEventListener('click', function(e) {
+    const isMobile = window.innerWidth < 992;
+    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
+      // Jika klik bukan di sidebar dan bukan di hamburger
+      if (!sidebar.contains(e.target) && e.target !== btn) {
+        document.body.classList.remove('g-sidenav-pinned');
+        document.body.classList.add('g-sidenav-hidden');
+      }
+    }
+  });
+
+  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 992) {
+      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
+    }
+  });
+});
+</script>
 
 
 

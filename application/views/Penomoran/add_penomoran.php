@@ -33,7 +33,34 @@
   <!-- CSS Files -->
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+@media (max-width: 991.98px) {
+  body.g-sidenav-hidden #sidenav-main {
+    transform: translateX(-110%); /* lebih jauh agar benar-benar keluar */
+    box-shadow: none !important;
+    border: none !important;
+  }
 
+  body.g-sidenav-pinned #sidenav-main {
+    transform: translateX(0);
+    transition: all 0.3s ease-in-out;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 250px;
+    z-index: 1050;
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* opsional */
+  }
+
+  /* Hilangkan margin-left konten utama agar full width di layar kecil */
+  main.main-content {
+    margin-left: 0 !important;
+    transition: all 0.3s ease-in-out;
+  }
+}
+</style>
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
@@ -440,6 +467,40 @@ document.getElementById('btnTambah').addEventListener('click', function () {
 
 <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
 <script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
+
+
+  <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidenav-main');
+
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation(); // cegah event merembet
+    document.body.classList.toggle('g-sidenav-pinned');
+    document.body.classList.toggle('g-sidenav-hidden');
+  });
+
+  // Klik di luar sidebar akan menutupnya
+  document.addEventListener('click', function(e) {
+    const isMobile = window.innerWidth < 992;
+    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
+      // Jika klik bukan di sidebar dan bukan di hamburger
+      if (!sidebar.contains(e.target) && e.target !== btn) {
+        document.body.classList.remove('g-sidenav-pinned');
+        document.body.classList.add('g-sidenav-hidden');
+      }
+    }
+  });
+
+  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 992) {
+      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
+    }
+  });
+});
+</script>
+
 </body>
 
 </html>
