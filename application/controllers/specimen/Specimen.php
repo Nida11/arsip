@@ -285,6 +285,12 @@ class  Specimen extends CI_Controller
     
         if (!file_exists($template_path)) show_error('Template tidak ditemukan.');
         if (!file_exists($font_path))     show_error('Font tidak ditemukan.');
+
+        $jabatan  = $data['jabatan'];
+        $instansi = $data['instansi'];
+        $nama     = $data['nama'];
+        $pangkat  = $data['pangkat'];
+
     
         // Buat gambar dari template
         $image = imagecreatefromjpeg($template_path);
@@ -315,6 +321,7 @@ class  Specimen extends CI_Controller
         header('Content-Disposition: attachment; filename="' . $nama_file . '"');
         imagejpeg($image); // Output gambar ke browser
         imagedestroy($image);
+        exit;
     }
 
     public function proses_input_manual()
