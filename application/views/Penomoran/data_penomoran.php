@@ -439,8 +439,8 @@ data-kode_klasifikasi="<?= $row['kode_surat'] ?>"
 data-pengolah="<?= $row['nama_bidang'] ?>"
   data-lampiran="<?= $row['lampiran'] ?>"
   data-catatan="<?= $row['catatan'] ?>"
- data-noawal="<?= $row['no_awal'] ?>"
-data-noakhir="<?= $row['no_akhir'] ?>"
+ data-noawal="<?= $row['nomor_awal'] ?>"
+data-noakhir="<?= $row['nomor_akhir'] ?>"
 
 >
   <i class="fa fa-print"></i>
@@ -1398,7 +1398,9 @@ $(document).on('click', '.print-surat', function (e) {
   e.preventDefault();
 
   const nomor = $(this).data('nomor');
-  const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
+  const isMultipleRaw = $(this).data('is_multiple');
+  const isMultiple = isMultipleRaw === true || isMultipleRaw === 1 || isMultipleRaw === '1' || isMultipleRaw === 'true';
+
   const nomorAwal = $(this).data('noawal') || '';
   const nomorAkhir = $(this).data('noakhir') || '';
   const nomorUrut = $(this).data('urut') || '';
@@ -1420,6 +1422,15 @@ $(document).on('click', '.print-surat', function (e) {
   $('#print_noawal').text(nomorAwal);
   $('#print_noakhir').text(nomorAkhir);
 
+  console.log({
+  isMultipleRaw,
+  isMultiple,
+  nomorAwal,
+  nomorAkhir,
+  nomorUrut,
+  nomorTampil
+});
+
   const printElement = document.getElementById('printArea');
   printElement.style.display = 'block';
 
@@ -1435,43 +1446,12 @@ $(document).on('click', '.print-surat', function (e) {
   });
 });
 
+
+
 </script>
 
 
 
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const btn = document.getElementById('toggleSidebar');
-  const sidebar = document.getElementById('sidenav-main');
-
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation(); // cegah event merembet
-    document.body.classList.toggle('g-sidenav-pinned');
-    document.body.classList.toggle('g-sidenav-hidden');
-  });
-
-  // Klik di luar sidebar akan menutupnya
-  document.addEventListener('click', function(e) {
-    const isMobile = window.innerWidth < 992;
-    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
-      // Jika klik bukan di sidebar dan bukan di hamburger
-      if (!sidebar.contains(e.target) && e.target !== btn) {
-        document.body.classList.remove('g-sidenav-pinned');
-        document.body.classList.add('g-sidenav-hidden');
-      }
-    }
-  });
-
-  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
-  window.addEventListener('resize', function() {
-    if (window.innerWidth >= 992) {
-      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
-    }
-  });
-});
-</script>
 
 
 </body>
