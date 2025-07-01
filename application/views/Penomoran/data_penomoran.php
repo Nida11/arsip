@@ -1216,9 +1216,96 @@ DataTables + Export Script
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
 
 
-
-
 <script>
+  $(document).ready(function () {
+    
+      // Hancurkan DataTable jika sudah ada
+  if ($.fn.DataTable.isDataTable('#penomoranTable')) {
+    $('#penomoranTable').DataTable().destroy();
+  }
+
+    // Fungsi konversi nama bulan ke angka
+    function convertBulan(bulan) {
+      const map = {
+        Januari: '01', Februari: '02', Maret: '03', April: '04',
+        Mei: '05', Juni: '06', Juli: '07', Agustus: '08',
+        September: '09', Oktober: '10', November: '11', Desember: '12'
+      };
+      return map[bulan] || '01';
+    }
+
+// Tambahkan fungsi filter tanggal
+  $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+    const startDate = $('#startDate').val();
+    const endDate = $('#endDate').val();
+
+    const tanggalElement = settings.aoData[dataIndex].anCells[0];
+    const dataTanggal = tanggalElement.getAttribute('data-value'); // Perbaikan di sini
+
+    if (!dataTanggal) return true; // biarkan lewat kalau kosong
+
+    const tglParsed = new Date(dataTanggal);
+    const start = startDate ? new Date(startDate) : null;
+    const end = endDate ? new Date(endDate) : null;
+
+    if (isNaN(tglParsed)) return false;
+
+    if ((start && tglParsed < start) || (end && tglParsed > end)) {
+      return false;
+    }
+
+    return true;
+  });
+
+  // Trigger redraw saat filter berubah
+  $('#startDate, #endDate').on('change', function () {
+    table.draw();
+  });
+
+  // Filter pencarian umum
+  $('#searchInput').on('keyup', function () {
+    table.search(this.value).draw();
+  });
+
+
+     // Inisialisasi DataTable
+    var table = $('#penomoranTable').DataTable({
+      responsive: true,
+      autoWidth: true,
+      pageLength: 10,
+      order: [[5, 'desc']], // updated_at index ke-5
+      language: {
+        search: "Search:",
+        lengthMenu: "Tampilkan _MENU_ entri",
+        info: "Menampilkan _START_ sampai _END_ dari total _TOTAL_ data",
+        zeroRecords: "⚠️ Tidak ada data ditemukan",
+        paginate: {
+           previous: "⭠ Prev",
+           next: "Next ⭢"
+        }
+      }
+
+    });
+
+    $('#jenisFilter').on('change', function () {
+      var selected = $(this).val();
+      if (selected) {
+        table.column(1).search('^' + selected + '$', true, false).draw();
+      } else {
+        table.column(1).search('').draw();
+      }
+    });
+
+    // Filter tanggal mulai dan selesai
+    $('#startDate, #endDate').on('change', function () {
+      table.draw();
+    });
+
+  });
+</script>
+
+
+<!-- <script>
 $(document).ready(function () {
     const table = $('#penomoranTable').DataTable({
             responsive: true,
@@ -1260,7 +1347,7 @@ $(document).ready(function () {
         $.fn.dataTable.ext.search.pop();
     });
 });
-</script>
+</script> -->
 
 
 
