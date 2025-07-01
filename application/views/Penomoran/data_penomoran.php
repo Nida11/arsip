@@ -1214,44 +1214,7 @@ DataTables + Export Script
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
-<!-- SCRIPT FILTER -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const startDateInput = document.getElementById("startDate");
-    const endDateInput = document.getElementById("endDate");
-    const table = document.getElementById("penomoranTable");
-    const rows = table.querySelectorAll("tbody tr");
 
-    function filterTable() {
-      const searchValue = searchInput.value.toLowerCase();
-      const startDate = startDateInput.value;
-      const endDate = endDateInput.value;
-
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const tanggalCell = row.querySelector(".tanggal-surat");
-        const tanggalSurat = tanggalCell.getAttribute("data-value");
-
-        let matchText = text.includes(searchValue);
-        let matchDate = true;
-
-        if (startDate && tanggalSurat < startDate) matchDate = false;
-        if (endDate && tanggalSurat > endDate) matchDate = false;
-
-        if (matchText && matchDate) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
-
-    searchInput.addEventListener("input", filterTable);
-    startDateInput.addEventListener("change", filterTable);
-    endDateInput.addEventListener("change", filterTable);
-  });
-</script>
 
 
 
