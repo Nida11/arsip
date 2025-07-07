@@ -1391,48 +1391,73 @@ $(document).ready(function () {
       <!-- Kode & Nomor Urut -->
       <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.75rem;">
         <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem;"></strong>
+          Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
         </div>
         <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem;"></strong>
+          Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
         </div>
         <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-          Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;"></strong>
+          Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;font-size: 0.9rem; "></strong>
         </div>
       </div>
 
-      <!-- Perihal -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
-        Perihal: <strong id="print_perihal" style="margin-left: 0.25rem;"></strong>
-      </div>
+<!-- PERIHAL -->
+<div style="border-bottom: 1px solid black; margin-bottom: 0.1rem; padding-left: 0.25rem;">
+  <div style="font-size: 0.7rem; margin: 0; line-height: 1;">Perihal:</div>
+  <div style="text-align: left; padding-left: 2rem; ">
+    <strong id="print_perihal" style="font-size: 1.2rem;"></strong>
+  </div>
+</div>
 
-      <!-- Isi Ringkas -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
-        Isi Ringkas: <strong id="print_isi_ringkas" style="margin-left: 0.25rem;"></strong>
-      </div>
+
+<!-- ISI RINGKAS -->
+<!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding: 0.25rem 0 0.25rem 0.25rem; min-height: 4.5rem;">
+  <div style="font-size: 0.7rem;">Isi Ringkas:</div>
+  <div><strong id="print_isi_ringkas" style="font-size: 0.9rem;"></strong></div>
+</div> -->
+<div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
+  <div style="font-size: 0.7rem;">Isi Ringkas:</div>
+  <div style="text-align: left; padding-left: 2rem;">
+    <strong id="print_isi_ringkas" style="font-size: 1.2rem;"></strong>
+  </div>
+</div>
 
       <!-- Kepada -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
-        Kepada: <strong id="print_kepada" style="margin-left: 0.25rem;"></strong>
-      </div>
+      <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
+        Kepada: <strong id="print_kepada" style="margin-left: 0.25rem; font-size: 1.5rem; "></strong>
+      </div> -->
+      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
+  <div style="font-size: 0.7rem;">Kepada:</div>
+  <div style="text-align: left; padding-left: 2rem;">
+    <strong id="print_kepada" style="font-size: 1.2rem;"></strong>
+  </div>
+</div>
+
 
       <!-- Pengolah / Tanggal / Lampiran -->
       <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.5rem;">
         <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
-          Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem;"></strong>
+          Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem; font-size: 1.2rem; "></strong>
         </div>
         <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem;"></strong>
+          Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
         </div>
         <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-          Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem;"></strong>
+          Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
         </div>
       </div>
 
       <!-- Catatan -->
-      <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
-        Catatan: <strong id="print_catatan" style="margin-left: 0.25rem;"></strong>
-      </div>
+      <!-- <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
+        Catatan: <strong id="print_catatan" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
+      </div> -->
+      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
+  <div style="font-size: 0.7rem;">Catatan:</div>
+  <div style="text-align: left; padding-left: 2rem;">
+    <strong id="print_catatan" style="font-size: 1.2rem;"></strong>
+  </div>
+</div>
+
 
     </div>
   </div>
