@@ -21,35 +21,38 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
     <style>
-@media (max-width: 991.98px) {
-  body.g-sidenav-hidden #sidenav-main {
-    transform: translateX(-110%); /* lebih jauh agar benar-benar keluar */
-    box-shadow: none !important;
-    border: none !important;
-  }
+        @media (max-width: 991.98px) {
+            body.g-sidenav-hidden #sidenav-main {
+                transform: translateX(-110%);
+                /* lebih jauh agar benar-benar keluar */
+                box-shadow: none !important;
+                border: none !important;
+            }
 
-  body.g-sidenav-pinned #sidenav-main {
-    transform: translateX(0);
-    transition: all 0.3s ease-in-out;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 250px;
-    z-index: 1050;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* opsional */
-  }
+            body.g-sidenav-pinned #sidenav-main {
+                transform: translateX(0);
+                transition: all 0.3s ease-in-out;
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 250px;
+                z-index: 1050;
+                background-color: white;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                /* opsional */
+            }
 
-  /* Hilangkan margin-left konten utama agar full width di layar kecil */
-  main.main-content {
-    margin-left: 0 !important;
-    transition: all 0.3s ease-in-out;
-  }
-}
-</style>
+            /* Hilangkan margin-left konten utama agar full width di layar kecil */
+            main.main-content {
+                margin-left: 0 !important;
+                transition: all 0.3s ease-in-out;
+            }
+        }
+    </style>
 </head>
-    <body class="g-sidenav-show   bg-gray-100">
+
+<body class="g-sidenav-show   bg-gray-100">
     <div class="min-height-300 bg-dark position-absolute w-100"></div>
     <aside class="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 " id="sidenav-main">
         <div class="sidenav-header">
@@ -159,24 +162,24 @@
 
     <main class="main-content position-relative border-radius-lg ">
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarMain">
-  <div class="container-fluid py-1 px-3 d-flex align-items-center">
-    <!-- Tombol hamburger -->
-    <button class="navbar-toggler d-lg-none me-3" type="button" id="toggleSidebar" aria-label="Toggle sidebar">
-      <i class="fas fa-bars text-white"></i>
-    </button>
+            <div class="container-fluid py-1 px-3 d-flex align-items-center">
+                <!-- Tombol hamburger -->
+                <button class="navbar-toggler d-lg-none me-3" type="button" id="toggleSidebar" aria-label="Toggle sidebar">
+                    <i class="fas fa-bars text-white"></i>
+                </button>
 
-    <!-- Breadcrumb (opsional) -->
-    <!-- <nav aria-label="breadcrumb">
+                <!-- Breadcrumb (opsional) -->
+                <!-- <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
         <li class="breadcrumb-item text-sm"><a href="#">Histori of Booking Slot</a></li>
         <li class="breadcrumb-item text-sm active" aria-current="page">Dashboard</li>
       </ol>
       <h6 class="font-weight-bolder mb-0">Dashboard</h6>
     </nav> -->
-  </div>
-</nav>
-<!-- End Navbar -->
-        
+            </div>
+        </nav>
+        <!-- End Navbar -->
+
         <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
             <div class="container-fluid py-1 px-3">
                 <nav aria-label="breadcrumb">
@@ -202,106 +205,106 @@
                                 <p class="mb-0">Form Tambah Daftar Specimen</p>
                             </div>
                             <?php if ($this->session->flashdata('msg')): ?>
-        <p style="color: green;"><?= $this->session->flashdata('msg'); ?></p>
-    <?php endif; ?>
+                                <p style="color: green;"><?= $this->session->flashdata('msg'); ?></p>
+                            <?php endif; ?>
 
-    <form id="uploadForm" enctype="multipart/form-data">
+                            <form id="uploadForm" enctype="multipart/form-data">
 
-    <div class="form-group">
-    <label><strong>Metode Input:</strong></label><br>
-    <div>
-        <input type="radio" id="import_excel" name="input_method" value="excel" checked>
-        <label for="import_excel">Impor dari Excel</label>
-    </div>
-    <div>
-        <input type="radio" id="input_manual" name="input_method" value="manual">
-        <label for="input_manual">Input Manual</label>
-    </div>
-</div>
+                                <div class="form-group">
+                                    <label><strong>Metode Input:</strong></label><br>
+                                    <div>
+                                        <input type="radio" id="import_excel" name="input_method" value="excel" checked>
+                                        <label for="import_excel">Impor dari Excel</label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="input_manual" name="input_method" value="manual">
+                                        <label for="input_manual">Input Manual</label>
+                                    </div>
+                                </div>
 
-<div id="form_excel">
-    <label><strong>Pilih File Excel</strong> (.xlsx / .xls):</label>
-    <input type="file" name="file" id="file_excel" class="form-control" required accept=".xlsx,.xls">
-    <button  class="btn btn-success mt-3" type="submit">Upload & Proses</button>
-    <div id="preview-container"></div>
-
-
-</div>
-
-<div id="form_manual" style="display:none;">
-<div class="container">
-    <div id="form_manual_group">
-        <!-- Grup Inputan Pertama -->
-        <div class="form-group row form-entry">
-            <div class="col-md-6">
-                <label>Nama Lengkap:</label>
-                <input type="text" name="nama[]" class="form-control">
-            </div>
-            <div class="col-md-6">
-                <label>Jabatan:</label>
-                <input type="text" name="jabatan[]" class="form-control">
-            </div>
-            <div class="col-md-6">
-                <label>Pangkat:</label>
-                <input type="text" name="pangkat[]" class="form-control">
-            </div>
-            <div class="col-md-6 d-flex align-items-end">
-                <label>Instansi:</label>
-                <div class="d-flex w-100">
-                    <input type="text" name="instansi[]" class="form-control" value="Badan Pendapatan Daerah Provinsi Jawa Barat">
-                    <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry" style="display: none;">X</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tombol Tambah -->
-    <button type="button" class="btn btn-primary mt-2" id="add-entry">+ Tambah</button>
-</div>
+                                <div id="form_excel">
+                                    <label><strong>Pilih File Excel</strong> (.xlsx / .xls):</label>
+                                    <input type="file" name="file" id="file_excel" class="form-control" required accept=".xlsx,.xls">
+                                    <button class="btn btn-success mt-3" type="submit">Upload & Proses</button>
+                                    <div id="preview-container"></div>
 
 
-<div class="d-flex justify-content-end mt-3">
-    <button type="submit" class="btn btn-success">Simpan</button>
-</div>
-       
-</form>
+                                </div>
 
-<footer class="footer pt-3  ">
-                <div class="container-fluid">
-                    <div class="row align-items-center justify-content-lg-between">
-                        <div class="col-lg-6 mb-lg-0 mb-4">
-                            <div class="copyright text-center text-sm text-muted text-lg-start">
-                                © <script>
-                                    document.write(new Date().getFullYear())
-                                </script>
-                                <!-- made with <i class="fa fa-heart"></i> by -->
-                                <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
-                                Arsiparis Badan Pendapatan Daerah.by RND
-                            </div>
+                                <div id="form_manual" style="display:none;">
+                                    <div class="container">
+                                        <div id="form_manual_group">
+                                            <!-- Grup Inputan Pertama -->
+                                            <div class="form-group row form-entry">
+                                                <div class="col-md-6">
+                                                    <label>Nama Lengkap:</label>
+                                                    <input type="text" name="nama[]" class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Jabatan:</label>
+                                                    <input type="text" name="jabatan[]" class="form-control">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>Pangkat:</label>
+                                                    <input type="text" name="pangkat[]" class="form-control">
+                                                </div>
+                                                <div class="col-md-6 d-flex align-items-end">
+                                                    <label>Instansi:</label>
+                                                    <div class="d-flex w-100">
+                                                        <input type="text" name="instansi[]" class="form-control" value="BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT,">
+                                                        <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry" style="display: none;">X</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tombol Tambah -->
+                                        <button type="button" class="btn btn-primary mt-2" id="add-entry">+ Tambah</button>
+                                    </div>
+
+
+                                    <div class="d-flex justify-content-end mt-3">
+                                        <button type="submit" class="btn btn-success">Simpan</button>
+                                    </div>
+
+                            </form>
+
+                            <footer class="footer pt-3  ">
+                                <div class="container-fluid">
+                                    <div class="row align-items-center justify-content-lg-between">
+                                        <div class="col-lg-6 mb-lg-0 mb-4">
+                                            <div class="copyright text-center text-sm text-muted text-lg-start">
+                                                © <script>
+                                                    document.write(new Date().getFullYear())
+                                                </script>
+                                                <!-- made with <i class="fa fa-heart"></i> by -->
+                                                <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
+                                                Arsiparis Badan Pendapatan Daerah.by RND
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                                                <li class="nav-item">
+                                                    <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
                         </div>
-                        <div class="col-lg-6">
-                            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                                <li class="nav-item">
-                                    <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
     </main>
     <div class="fixed-plugin">
         <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
@@ -376,17 +379,17 @@
         </div>
     </div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
+    </div>
+    </div>
+    </div>
+    </div>
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-            <script>
-$(document).ready(function () {
-    $('#add-entry').on('click', function () {
-        let newEntry = `
+    <script>
+        $(document).ready(function() {
+            $('#add-entry').on('click', function() {
+                let newEntry = `
         <div class="form-group row form-entry">
             <div class="col-md-6">
                 <label>Nama Lengkap:</label>
@@ -408,120 +411,119 @@ $(document).ready(function () {
                 </div>
             </div>
         </div>`;
-        $('#form_manual_group').append(newEntry);
-    });
+                $('#form_manual_group').append(newEntry);
+            });
 
-    // Hapus grup inputan jika tombol X diklik
-    $('#form_manual_group').on('click', '.remove-entry', function () {
-        $(this).closest('.form-entry').remove();
-    });
-});
-</script>
+            // Hapus grup inputan jika tombol X diklik
+            $('#form_manual_group').on('click', '.remove-entry', function() {
+                $(this).closest('.form-entry').remove();
+            });
+        });
+    </script>
 
 
-<script>
-$(document).ready(function () {
-    $('input[name="input_method"]').change(function () {
-        if ($(this).val() == 'excel') {
-            $('#form_excel').show();
-            $('#form_manual').hide();
-            $('#file_excel').attr('required', true);
-        } else {
-            $('#form_excel').hide();
-            $('#form_manual').show();
-            $('#file_excel').removeAttr('required');
-        }
-    });
-
-    $('#uploadForm').on('submit', function (e) {
-        e.preventDefault();
-
-        var inputMethod = $('input[name="input_method"]:checked').val();
-
-        if (inputMethod === 'excel') {
-            var formData = new FormData(this);
-
-            $.ajax({
-                url: '<?= site_url("index.php/specimen/Specimen/process_excel") ?>',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                beforeSend: function () {
-                    $('#preview-container').html('<p>Sedang memproses file...</p>');
-                },
-                success: function (response) {
-                    $('#preview-container').html(response);
-                },
-                error: function (xhr) {
-                    $('#preview-container').html('<div class="alert alert-danger">Gagal memproses file: ' + xhr.responseText + '</div>');
+    <script>
+        $(document).ready(function() {
+            $('input[name="input_method"]').change(function() {
+                if ($(this).val() == 'excel') {
+                    $('#form_excel').show();
+                    $('#form_manual').hide();
+                    $('#file_excel').attr('required', true);
+                } else {
+                    $('#form_excel').hide();
+                    $('#form_manual').show();
+                    $('#file_excel').removeAttr('required');
                 }
             });
 
-        } else {
-            this.action = '<?= site_url("index.php/specimen/Specimen/proses_input_manual") ?>';
-            this.method = 'POST';
-            $(this).off('submit');
-            this.submit();
-        }
-    });
-});
+            $('#uploadForm').on('submit', function(e) {
+                e.preventDefault();
 
-</script>
+                var inputMethod = $('input[name="input_method"]:checked').val();
 
+                if (inputMethod === 'excel') {
+                    var formData = new FormData(this);
 
-
-
-            <script>
-                $(document).ready(function() {
                     $.ajax({
-                        url: "<?= base_url('specimen/get_nama') ?>", // ganti dengan URL controller yang benar
-                        method: "GET",
-                        dataType: "json",
-                        success: function(data) {
-                            $('#nama').append(`<option value="">-- Pilih Nama --</option>`);
-                            $.each(data, function(index, item) {
-                                $('#nama').append(`<option value="${item.id}">${item.nama}</option>`);
-                            });
+                        url: '<?= site_url("index.php/specimen/Specimen/process_excel") ?>',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        beforeSend: function() {
+                            $('#preview-container').html('<p>Sedang memproses file...</p>');
                         },
-                        error: function(xhr, status, error) {
-                            console.log("Gagal ambil data:", error);
+                        success: function(response) {
+                            $('#preview-container').html(response);
+                        },
+                        error: function(xhr) {
+                            $('#preview-container').html('<div class="alert alert-danger">Gagal memproses file: ' + xhr.responseText + '</div>');
                         }
                     });
-                });
-            </script>
 
-  <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const btn = document.getElementById('toggleSidebar');
-  const sidebar = document.getElementById('sidenav-main');
+                } else {
+                    this.action = '<?= site_url("index.php/specimen/Specimen/proses_input_manual") ?>';
+                    this.method = 'POST';
+                    $(this).off('submit');
+                    this.submit();
+                }
+            });
+        });
+    </script>
 
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation(); // cegah event merembet
-    document.body.classList.toggle('g-sidenav-pinned');
-    document.body.classList.toggle('g-sidenav-hidden');
-  });
 
-  // Klik di luar sidebar akan menutupnya
-  document.addEventListener('click', function(e) {
-    const isMobile = window.innerWidth < 992;
-    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
-      // Jika klik bukan di sidebar dan bukan di hamburger
-      if (!sidebar.contains(e.target) && e.target !== btn) {
-        document.body.classList.remove('g-sidenav-pinned');
-        document.body.classList.add('g-sidenav-hidden');
-      }
-    }
-  });
 
-  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
-  window.addEventListener('resize', function() {
-    if (window.innerWidth >= 992) {
-      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
-    }
-  });
-});
-</script>
+
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                url: "<?= base_url('specimen/get_nama') ?>", // ganti dengan URL controller yang benar
+                method: "GET",
+                dataType: "json",
+                success: function(data) {
+                    $('#nama').append(`<option value="">-- Pilih Nama --</option>`);
+                    $.each(data, function(index, item) {
+                        $('#nama').append(`<option value="${item.id}">${item.nama}</option>`);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.log("Gagal ambil data:", error);
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('toggleSidebar');
+            const sidebar = document.getElementById('sidenav-main');
+
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation(); // cegah event merembet
+                document.body.classList.toggle('g-sidenav-pinned');
+                document.body.classList.toggle('g-sidenav-hidden');
+            });
+
+            // Klik di luar sidebar akan menutupnya
+            document.addEventListener('click', function(e) {
+                const isMobile = window.innerWidth < 992;
+                if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
+                    // Jika klik bukan di sidebar dan bukan di hamburger
+                    if (!sidebar.contains(e.target) && e.target !== btn) {
+                        document.body.classList.remove('g-sidenav-pinned');
+                        document.body.classList.add('g-sidenav-hidden');
+                    }
+                }
+            });
+
+            // Jika layar di-resize ke desktop, pastikan sidebar tampil default
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 992) {
+                    document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
+                }
+            });
+        });
+    </script>
 
 
 </body>
