@@ -406,7 +406,7 @@
             <div class="col-md-6 d-flex align-items-end">
                 <label>Instansi:</label>
                 <div class="d-flex w-100">
-                    <input type="text" name="instansi[]" class="form-control" value="Badan Pendapatan Daerah Provinsi Jawa Barat">
+                    <input type="text" name="instansi[]" class="form-control" value="BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT,">
                     <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry">X</button>
                 </div>
             </div>
