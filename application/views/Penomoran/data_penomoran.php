@@ -439,8 +439,8 @@ data-kode_klasifikasi="<?= $row['kode_surat'] ?>"
 data-pengolah="<?= $row['nama_bidang'] ?>"
   data-lampiran="<?= $row['lampiran'] ?>"
   data-catatan="<?= $row['catatan'] ?>"
- data-noawal="<?= $row['nomor_awal'] ?>"
-data-noakhir="<?= $row['nomor_akhir'] ?>"
+ data-noawal="<?= $row['no_awal'] ?>"
+data-noakhir="<?= $row['no_akhir'] ?>"
 
 >
   <i class="fa fa-print"></i>
@@ -1214,98 +1214,48 @@ DataTables + Export Script
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
-
-
+<!-- SCRIPT FILTER -->
 <script>
-  $(document).ready(function () {
-    
-      // Hancurkan DataTable jika sudah ada
-  if ($.fn.DataTable.isDataTable('#penomoranTable')) {
-    $('#penomoranTable').DataTable().destroy();
-  }
+  document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("searchInput");
+    const startDateInput = document.getElementById("startDate");
+    const endDateInput = document.getElementById("endDate");
+    const table = document.getElementById("penomoranTable");
+    const rows = table.querySelectorAll("tbody tr");
 
-    // Fungsi konversi nama bulan ke angka
-    function convertBulan(bulan) {
-      const map = {
-        Januari: '01', Februari: '02', Maret: '03', April: '04',
-        Mei: '05', Juni: '06', Juli: '07', Agustus: '08',
-        September: '09', Oktober: '10', November: '11', Desember: '12'
-      };
-      return map[bulan] || '01';
-    }
+    function filterTable() {
+      const searchValue = searchInput.value.toLowerCase();
+      const startDate = startDateInput.value;
+      const endDate = endDateInput.value;
 
-// Tambahkan fungsi filter tanggal
-  $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-    const startDate = $('#startDate').val();
-    const endDate = $('#endDate').val();
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        const tanggalCell = row.querySelector(".tanggal-surat");
+        const tanggalSurat = tanggalCell.getAttribute("data-value");
 
-    const tanggalElement = settings.aoData[dataIndex].anCells[0];
-    const dataTanggal = tanggalElement.getAttribute('data-value'); // Perbaikan di sini
+        let matchText = text.includes(searchValue);
+        let matchDate = true;
 
-    if (!dataTanggal) return true; // biarkan lewat kalau kosong
+        if (startDate && tanggalSurat < startDate) matchDate = false;
+        if (endDate && tanggalSurat > endDate) matchDate = false;
 
-    const tglParsed = new Date(dataTanggal);
-    const start = startDate ? new Date(startDate) : null;
-    const end = endDate ? new Date(endDate) : null;
-
-    if (isNaN(tglParsed)) return false;
-
-    if ((start && tglParsed < start) || (end && tglParsed > end)) {
-      return false;
-    }
-
-    return true;
-  });
-
-  // Trigger redraw saat filter berubah
-  $('#startDate, #endDate').on('change', function () {
-    table.draw();
-  });
-
-  // Filter pencarian umum
-  $('#searchInput').on('keyup', function () {
-    table.search(this.value).draw();
-  });
-
-
-     // Inisialisasi DataTable
-    var table = $('#penomoranTable').DataTable({
-      responsive: true,
-      autoWidth: true,
-      pageLength: 10,
-      order: [[5, 'desc']], // updated_at index ke-5
-      language: {
-        search: "Search:",
-        lengthMenu: "Tampilkan _MENU_ entri",
-        info: "Menampilkan _START_ sampai _END_ dari total _TOTAL_ data",
-        zeroRecords: "⚠️ Tidak ada data ditemukan",
-        paginate: {
-           previous: "⭠ Prev",
-           next: "Next ⭢"
+        if (matchText && matchDate) {
+          row.style.display = "";
+        } else {
+          row.style.display = "none";
         }
-      }
+      });
+    }
 
-    });
-
-    $('#jenisFilter').on('change', function () {
-      var selected = $(this).val();
-      if (selected) {
-        table.column(1).search('^' + selected + '$', true, false).draw();
-      } else {
-        table.column(1).search('').draw();
-      }
-    });
-
-    // Filter tanggal mulai dan selesai
-    $('#startDate, #endDate').on('change', function () {
-      table.draw();
-    });
-
+    searchInput.addEventListener("input", filterTable);
+    startDateInput.addEventListener("change", filterTable);
+    endDateInput.addEventListener("change", filterTable);
   });
 </script>
 
 
-<!-- <script>
+
+<script>
 $(document).ready(function () {
     const table = $('#penomoranTable').DataTable({
             responsive: true,
@@ -1347,7 +1297,7 @@ $(document).ready(function () {
         $.fn.dataTable.ext.search.pop();
     });
 });
-</script> -->
+</script>
 
 
 
@@ -1473,9 +1423,7 @@ $(document).on('click', '.print-surat', function (e) {
   e.preventDefault();
 
   const nomor = $(this).data('nomor');
-  const isMultipleRaw = $(this).data('is_multiple');
-  const isMultiple = isMultipleRaw === true || isMultipleRaw === 1 || isMultipleRaw === '1' || isMultipleRaw === 'true';
-
+  const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
   const nomorAwal = $(this).data('noawal') || '';
   const nomorAkhir = $(this).data('noakhir') || '';
   const nomorUrut = $(this).data('urut') || '';
@@ -1497,15 +1445,6 @@ $(document).on('click', '.print-surat', function (e) {
   $('#print_noawal').text(nomorAwal);
   $('#print_noakhir').text(nomorAkhir);
 
-  console.log({
-  isMultipleRaw,
-  isMultiple,
-  nomorAwal,
-  nomorAkhir,
-  nomorUrut,
-  nomorTampil
-});
-
   const printElement = document.getElementById('printArea');
   printElement.style.display = 'block';
 
@@ -1521,12 +1460,43 @@ $(document).on('click', '.print-surat', function (e) {
   });
 });
 
-
-
 </script>
 
 
 
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const btn = document.getElementById('toggleSidebar');
+  const sidebar = document.getElementById('sidenav-main');
+
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation(); // cegah event merembet
+    document.body.classList.toggle('g-sidenav-pinned');
+    document.body.classList.toggle('g-sidenav-hidden');
+  });
+
+  // Klik di luar sidebar akan menutupnya
+  document.addEventListener('click', function(e) {
+    const isMobile = window.innerWidth < 992;
+    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
+      // Jika klik bukan di sidebar dan bukan di hamburger
+      if (!sidebar.contains(e.target) && e.target !== btn) {
+        document.body.classList.remove('g-sidenav-pinned');
+        document.body.classList.add('g-sidenav-hidden');
+      }
+    }
+  });
+
+  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
+  window.addEventListener('resize', function() {
+    if (window.innerWidth >= 992) {
+      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
+    }
+  });
+});
+</script>
 
 
 </body>
