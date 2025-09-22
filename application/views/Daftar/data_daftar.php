@@ -507,7 +507,7 @@ data-noakhir="<?= $row['no_akhir'] ?>"
     <div class="modal-body">
     <div class="row">
 
-    <div class="col-md-6 mb-3 daftar-arsip-section">
+    <div class="col-md-12 mb-3 daftar-arsip-section">
   <label class="form-control-label fw-bold fs-3">
     <i class="fa fa-folder-open text-primary me-2"></i> Daftar Arsip
   </label><br>
