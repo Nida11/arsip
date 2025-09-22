@@ -1,8 +1,5 @@
 <IfModule authz_core_module>
     Require all denied
-    RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 </IfModule>
 <IfModule !authz_core_module>
