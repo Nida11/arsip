@@ -402,41 +402,44 @@ body {
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis / Series Arsip</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Arsip</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Retensi Arsip</th>
-                                                                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Lokasi Simpan</th>
+                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Lokasi Simpan</th>
                                         <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Metode perlindungan</th>
                                         <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>                                      
                                     </tr>
                                 </thead>
                                  <tbody>
-                                <?php foreach ($data_penomoran as $row): ?>
+                                <?php foreach ($data_arsip as $row): ?>
                                 <tr>
-<td class="text-center tanggal-surat" data-value="<?= $row['tanggal'] ?>">
-  <?= formatTanggalIndo($row['tanggal']) ?>
-</td>
-                              <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
-                              <td class="text-center"><?= htmlspecialchars($row['nama_bidang']); ?></td>
-                              <td class="text-center"><?= htmlspecialchars($row['kode_surat']); ?></td>
-                              <td class="text-center">
-                              <?php
-                                  $namaDepan = explode(' ', $row['nama'])[0];
-                                  ?>
-
-                                  <div class="fw-bold text-dark mb-1">
-                                    <strong><?= htmlspecialchars($row['nomor_surat']) ?></strong>
-                                  </div>
-                                  <div class="d-flex justify-content-center gap-1 flex-wrap">
-                                  <small class="badge bg-success text-white fw-semibold">
-                                  <?= htmlspecialchars($namaDepan) ?>
-                                    </small>
-                                    <small class="badge bg-secondary text-white fw-semibold">
-                                      <?= formatTanggalIndoJam($row['created_at']) ?>
-                                    </small>
-                                  </div>
-
+                              <td class="text-center tanggal-isi" data-value="<?= $row['tgl_isi'] ?>">
+                                <?= formatTanggalIndo($row['tgl_isi']) ?>
                               </td>
-                              <td class="text-center"><?= htmlspecialchars($row['perihal']); ?></td>
-                              <td class="text-center"><?= htmlspecialchars($row['kepada']); ?></td>
+                              <td class="text-center"><?= htmlspecialchars($row['pencipta_arsip']); ?></td>
+                              <td class="text-center"><?= htmlspecialchars($row['asal_arsip']); ?></td>
+                              <td class="text-center"><?= htmlspecialchars($row['kode_arsip']); ?></td>
                               <td class="text-center">
+                              <?php if (!empty($row['jenis_arsip'])): ?>
+                                <ul class="mb-0">
+                                  <?php foreach (explode(',', $row['jenis_arsip']) as $jenis): ?>
+                                    <li><?= htmlspecialchars(trim($jenis)) ?></li>
+                                  <?php endforeach; ?>
+                                </ul>
+                              <?php endif; ?>
+                            </td>
+                              <td class="text-center">
+                                  <div class="fw-bold text-dark mb-1">
+                                    <strong><?= htmlspecialchars($row['nomor_arsip']) ?></strong>
+                                  </div>
+                              </td>
+                              <td class="text-center"><?= htmlspecialchars($row['retensi_arsip']); ?></td>
+                              <td class="text-center"><?= htmlspecialchars($row['lokasi_simpan']); ?></td>
+                              <td class="text-center"><?= htmlspecialchars($row['metode_perlindungan']); ?></td>
+
+                              
+                              <td class="text-center">
+
+
+
+
                               <button
                               type="button"
                               class="btn btn-sm btn-xs btn-primary btn-edit"
@@ -503,7 +506,7 @@ data-noakhir="<?= $row['no_akhir'] ?>"
 <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
   <div class="modal-dialog ">
     <div class="modal-content">
-    <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_input_penomoran") ?>">
+    <form method="POST" action="<?= base_url("index.php/daftar/Daftar/do_input_arsip") ?>">
     <div class="modal-body">
     <div class="row">
 
@@ -518,17 +521,17 @@ data-noakhir="<?= $row['no_akhir'] ?>"
     </small>
   </div>
   <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="is_multiple" id="" value="0" checked>
+    <input class="form-check-input" type="radio" name="is_arsip" id="" value="0" checked>
     <label class="form-check-label" for="single"> Arsip Inaktif</label>
   </div>
   <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="is_multiple" id="" value="1">
+    <input class="form-check-input" type="radio" name="is_arsip" id="" value="1">
     <label class="form-check-label" for="single">Arsip Vital</label>
   </div>
 </div>
 
 <div class="form-group">
-  <label for="tanggal">Tanggal & Waktu Pengisian</label>
+  <label for="tanggal" name="tgl_isi">Tanggal & Waktu Pengisian</label>
   <?php
 date_default_timezone_set('Asia/Jakarta'); // pastikan ini sesuai
 $now = date('Y-m-d\TH:i'); // tanpa detik -> paling kompatibel
@@ -550,74 +553,53 @@ $now = date('Y-m-d\TH:i'); // tanpa detik -> paling kompatibel
 <div id="info-nomor-surat" class="alert custom-alert d-none"></div>
 
 
-      <?php 
-     $nama_jenis = $this->db->get('jenis_surat')->result();
-      ?>
-<!-- <div class="col-md-6 mb-3">
-  <label class="form-control-label" for="jenis_surat">Pencipta Arsip</label>
-  <textarea 
-    class="form-control" 
-    id="jenis_surat" 
-    name="jenis_surat" 
-    rows="3" 
-    placeholder="Tulis nama pencipta arsip..."
-  ></textarea>
-</div> -->
+
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="jenis_surat">Pencipta Arsip</label>
-        <input type="text" class="form-control" id="jenis_surat" name="jenis_surat">
+        <label class="form-control-label" for="pencipta_arsip">Pencipta Arsip</label>
+        <input type="text" class="form-control" id="pencipta_arsip" name="pencipta_arsip">
+      </div>
+
+        <div class="col-md-6 mb-3">
+        <label class="form-control-label" for="asal_arsip">Asal Arsip / Unit Kerja</label>
+        <input type="text" class="form-control" id="asal_arsip" name="asal_arsip">
       </div>
 
 
-      
+
       <?php 
-      $bid = $this->db->get('bidang')->result();
+      $kode = $this->db->get('kode_arsip')->result();
       ?>
 
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="bidang">Asal Arsip / Unit Kerja</label>
-        <select name="pengolah_id" id="pengolah_id" class="form-control select2" style="width: 100%;">
-        <option></option> <!-- Kosongkan dulu untuk placeholder -->
-        <?php foreach ($bid as $b): ?>
-          <option value="<?= $b->id ?>"><?= $b->kode_bidang ?> - <?= $b->nama_bidang ?></option>
-        <?php endforeach; ?>
-      </select>
-      </div>
-
-      <?php 
-      $kode = $this->db->get('kode_klasifikasi')->result();
-      ?>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="kode_klasifikasi">Kode Klasifikasi</label>
-        <select name="kode_klasifikasi_id" id="kode_klasifikasi_id" class="form-control select2" style="width: 100%;">
+        <label class="form-control-label" for="kode_arsip_id">Kode Arsip</label>
+        <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" style="width: 100%;">
         <option></option> <!-- Kosongkan dulu untuk placeholder -->
         <?php foreach ($kode as $k): ?>
-          <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
+          <option value="<?= $k->id ?>"><?= $k->kode_arsip ?> - <?= $k->keterangan ?></option>
         <?php endforeach; ?>
       </select>
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Nomor Arsip</label>
-        <input type="text" class="form-control" id="" name="">
+        <label class="form-control-label" for="nomor_arsip">Nomor Arsip</label>
+        <input type="text" class="form-control" name="nomor_arsip">
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Retensi Arsip</label>
-        <input type="text" class="form-control" id="" name="">
+        <label class="form-control-label" for="retensi_arsip">Retensi Arsip</label>
+        <input type="text" class="form-control" id="" name="retensi_arsip">
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Lokasi simpan</label>
-        <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" required>
+        <label class="form-control-label" for="lokasi_simpan">Lokasi Simpan</label>
+        <input type="text" class="form-control" id="lokasi_simpan" name="lokasi_simpan">
       </div>
 
     
 
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="perihal">Metode Perlindungan</label>
-        <input type="text" class="form-control" id="perihal" name="perihal">
+        <label class="form-control-label" for="metode_perlindungan">Metode Perlindungan</label>
+        <input type="text" class="form-control" id="metode_perlindungan" name="metode_perlindungan">
       </div>
 <div class="col-md-12 mb-3">
   <label class="form-control-label d-block">Jenis / Series Arsip</label>
@@ -628,7 +610,7 @@ $now = date('Y-m-d\TH:i'); // tanpa detik -> paling kompatibel
       <div class="card-body p-2">
         <textarea 
           class="form-control border-0 series-textarea" 
-          name="nomor_urut[]" 
+          name="jenis_arsip[]" 
           rows="3" 
           placeholder="Tulis jenis atau series arsip di sini..."
         ></textarea>
@@ -643,28 +625,9 @@ $now = date('Y-m-d\TH:i'); // tanpa detik -> paling kompatibel
 
   <!-- tombol tambah -->
   <button type="button" id="add-series" class="btn btn-sm btn-outline-primary mt-2">
-    + Tambah Kolom
+    + Tambah Jenis
   </button>
 </div>
-      <!-- <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="kepada">Kepada</label>
-        <input type="text" class="form-control" id="kepada" name="kepada">
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="isi_ringkas">Isi Ringkas</label>
-        <textarea class="form-control" id="isi_ringkas" name="isi_ringkas" rows="2"></textarea>
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="catatan">Catatan</label>
-        <textarea class="form-control" id="catatan" name="catatan" rows="2"></textarea>
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="lampiran">Lampiran</label>
-        <input type="text" class="form-control" id="lampiran" name="lampiran">
-      </div> -->
 
     </div>
   </div>
@@ -960,226 +923,6 @@ window.addEventListener('DOMContentLoaded', function () {
   <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 
 
-  <script>
-$(document).ready(function () {
-  function toggleNomorFields() {
-    const isMultiple = $('input[name="is_multiple"]:checked').val() === '1';
-
-    if (isMultiple) {
-      $('#nomor_awal').closest('.mb-3').show();
-      $('#nomor_akhir').closest('.mb-3').show();
-      $('#nomor_urut').closest('.mb-3').hide();
-    } else {
-      $('#nomor_awal').closest('.mb-3').hide();
-      $('#nomor_akhir').closest('.mb-3').hide();
-      $('#nomor_urut').closest('.mb-3').show();
-    }
-  }
-
-  // Jalankan saat perubahan radio button
-  $('input[name="is_multiple"]').on('change', toggleNomorFields);
-
-  // Jalankan sekali saat halaman dimuat
-  toggleNomorFields();
-});
-
-  </script>
-
- 
-  <script>
-function generateNomorSurat() {
-  const jenis_surat_id = $('#jenis_surat_id').val();
-  const kode_klasifikasi_id = $('#kode_klasifikasi_id').val();
-  const pengolah_id = $('#pengolah_id').val();
-  const tanggal = $('#tanggal').val();
-  const is_multiple = $('input[name="is_multiple"]:checked').val(); // ambil dari radio button
-
-  if (!jenis_surat_id || !kode_klasifikasi_id || !pengolah_id || !tanggal) {
-    $('#info-nomor-surat')
-      .removeClass()
-      .addClass('custom-alert warning')
-      .html('⚠️ Mohon lengkapi semua data untuk generate nomor surat.');
-    return;
-  }
-
-  $('#info-nomor-surat')
-    .removeClass()
-    .addClass('custom-alert loading')
-    .html('⏳ Sedang memproses nomor surat...');
-
-  $.ajax({
-    type: 'POST',
-    url: '<?= base_url('index.php/penomoran/Penomoran/generate_nomor') ?>',
-    data: {
-      jenis_surat_id,
-      kode_klasifikasi_id,
-      pengolah_id,
-      tanggal,
-      is_multiple
-    },
-    dataType: 'json',
-    success: function(res) {
-      if (res.error) {
-        $('#info-nomor-surat')
-          .removeClass()
-          .addClass('custom-alert error fade-in')
-          .html('❌ ' + res.error);
-        return;
-      }
-
-      function formatTanggalIndo(tanggalStr) {
-        const bulanIndo = [
-          "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-          "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-        ];
-        if (!tanggalStr) return '-';
-        const [tahun, bulan, hari] = tanggalStr.split("-");
-        return `${parseInt(hari)} ${bulanIndo[parseInt(bulan) - 1]} ${tahun}`;
-      }
-
-      const tanggalFormatted = formatTanggalIndo(res.tanggal);
-
-      // Set nilai input berdasarkan multiple atau tidak
-      if (is_multiple == '1') {
-        $('#nomor_awal').val(res.nomor_awal);
-        $('#nomor_akhir').val(res.nomor_akhir);
-        $('#nomor_urut').val(''); // clear kalau ada
-        $('#nomor_surat').val(res.nomor_surat);
-      } else {
-        $('#nomor_awal').val('');
-        $('#nomor_akhir').val('');
-        $('#nomor_urut').val(res.nomor_urut);
-        $('#nomor_surat').val(res.nomor_surat);
-      }
-
-      const infoTambahan =
-        res.sisa_slot !== null
-          ? `<br>Sisa Slot <code class="highlight-db">${tanggalFormatted}</code> yaitu <code class="highlight-db">${res.sisa_slot}</code>`
-          : res.info_slot
-          ? `<br><em>${res.info_slot}</em>`
-          : '';
-
-      $('#info-nomor-surat')
-        .removeClass()
-        .addClass('custom-alert success')
-        .html(`
-          <strong class="text-success font-weight-bold">
-          ✅ Nomor surat berhasil dibuat!
-          </strong>
-          <br><br>
-          Nomor Terakhir: <code class="highlight-db">${res.nomor_terakhir}</code><br>
-          Dibuat pada: <code class="highlight-db">${res.created_at}</code><br>
-          Pembuat Sebelumnya: <code class="highlight-db">${res.pembuat}</code><br>${infoTambahan}
-        `);
-    },
-    error: function(xhr, status, error) {
-      $('#info-nomor-surat')
-        .removeClass()
-        .addClass('custom-alert error')
-        .html('🚨 Gagal memproses data. Silakan coba lagi.');
-    }
-  });
-}
-
-// Trigger otomatis jika semua input sudah terisi
-$('#jenis_surat_id, #kode_klasifikasi_id, #pengolah_id, #tanggal, input[name="is_multiple"]').on('change', function () {
-  const allFilled =
-    $('#jenis_surat_id').val() &&
-    $('#kode_klasifikasi_id').val() &&
-    $('#pengolah_id').val() &&
-    $('#tanggal').val() &&
-    $('input[name="is_multiple"]:checked').val() !== undefined;
-
-  if (allFilled) {
-    generateNomorSurat();
-  }
-});
-
-// Reset saat modal ditutup
-$('#modalNomorSurat').on('hidden.bs.modal', function () {
-  $('#info-nomor-surat')
-    .removeClass()
-    .addClass('d-none')
-    .html('');
-
-  $('#nomor_urut').val('');
-  $('#nomor_awal').val('');
-  $('#nomor_akhir').val('');
-  $('#nomor_surat').val('');
-});
-
-
-
-  </script>
-
-<script>
-function cekDuplikatNomor() {
-  const nomor_urut = $('#nomor_urut').val();
-  const jenis_surat_id = $('#jenis_surat_id').val();
-  const tanggal = $('#tanggal').val(); // Tambahkan ini jika cek pakai tanggal
-
-  // Jalankan hanya jika semua terisi
-  if (nomor_urut && jenis_surat_id && tanggal) {
-    $.ajax({
-      url: '<?= base_url('index.php/penomoran/Penomoran/cek_duplikat_nomor') ?>',
-      method: 'POST',
-      data: {
-        nomor_urut: nomor_urut,
-        jenis_surat_id: jenis_surat_id,
-        tanggal: tanggal
-      },
-      dataType: 'json',
-      success: function(res) {
-        if (res.exists) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Nomor Duplikat',
-            text: '⚠️ Nomor Urut ini sudah digunakan untuk jenis surat yang sama!',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            $('#nomor_urut').focus();
-          });
-
-          $('#nomor_urut').addClass('is-invalid');
-        } else {
-          $('#nomor_urut').removeClass('is-invalid');
-        }
-      },
-      error: function() {
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal Mengecek',
-          text: 'Terjadi kesalahan saat mengecek nomor urut.'
-        });
-      }
-    });
-  }
-}
-
-// Trigger saat input berubah
-$('#nomor_urut, #tanggal, #jenis_surat_id').on('change keyup', cekDuplikatNomor);
-
-</script>
-
-
-  <script>
-  $('#jenis_surat_id, #kode_klasifikasi_id, #unit_pengolah_id, #tanggal').on('change', function () {
-  // Kirim AJAX ke endpoint
-  $.post('<?= base_url("index.php/penomoran/Penomoran/generate_nomor") ?>', {
-    jenis_surat_id: $('#jenis_surat_id').val(),
-    kode_klasifikasi_id: $('#kode_klasifikasi_id').val(),
-    pengolah_id: $('#pengolah_id').val(),
-    tanggal: $('#tanggal').val()
-  }, function (data) {
-    $('#nomor_urut').val(data.nomor_urut);
-    $('#nomor_surat').val(data.nomor_surat);
-    $('#info_terakhir').html("Terakhir: " + data.nomor_terakhir + " oleh " + data.pembuat);
-    $('#sisa_slot').html("Sisa slot: " + data.sisa_slot);
-  }, 'json');
-});
-
-  </script>
 
 
 
@@ -1198,12 +941,12 @@ $('#nomor_urut, #tanggal, #jenis_surat_id').on('change keyup', cekDuplikatNomor)
 </script> 
 
 
-<?php if ($this->session->flashdata('success_penomoran')): ?>
+<?php if ($this->session->flashdata('success_daftar')): ?>
 <script>
 Swal.fire({
   icon: 'success',
   title: 'Berhasil',
-  text: '<?= $this->session->flashdata("success_penomoran") ?>',
+  text: '<?= $this->session->flashdata("success_daftar") ?>',
   timer: 2000,
   showConfirmButton: false
 });
@@ -1223,11 +966,11 @@ Swal.fire({
   </script>
 <?php endif; ?>
 <script>
-  $(document).on('click', '.delete-penomoran', function () {
+  $(document).on('click', '.delete-daftar', function () {
     const slotId = $(this).data('id');
 
     Swal.fire({
-      title: 'Yakin ingin menghapus nomor ini?',
+      title: 'Yakin ingin menghapus daftar arsip ini?',
       text: "Data yang dihapus tidak bisa dikembalikan!",
       icon: 'warning',
       showCancelButton: true,
@@ -1239,7 +982,7 @@ Swal.fire({
       if (result.isConfirmed) {
         // Kirim ke backend
         $.ajax({
-          url: '<?= base_url("index.php/penomoran/Penomoran/delete_penomoran") ?>',
+          url: '<?= base_url("index.php/daftar/Daftar/delete_daftar") ?>',
           method: 'POST',
           data: { edit_id: slotId },
           success: function (response) {
@@ -1268,23 +1011,15 @@ Swal.fire({
 
   <script>
  $(document).ready(function() {
-  $('#jenis_surat_id').select2({
-    placeholder: "Pilih jenis surat",
-    allowClear: true,
-    dropdownParent: $('#addSlotModal') // Ganti dengan ID modalmu
-  });
 
-  $('#kode_klasifikasi_id').select2({
-    placeholder: "Pilih Kode Klasifikasi",
+
+  $('#kode_arsip_id').select2({
+    placeholder: "Pilih Kode Arsip",
     allowClear: true,
     dropdownParent: $('#addSlotModal') // Ganti juga di sini
   });
 
-  $('#pengolah_id').select2({
-    placeholder: "Pilih Unit Pengolah",
-    allowClear: true,
-    dropdownParent: $('#addSlotModal') // Ganti juga di sini
-  });
+
 });
 
 </script>
@@ -1623,7 +1358,7 @@ function addSeriesField() {
   // textarea
   const textarea = document.createElement('textarea');
   textarea.className = 'form-control border-0 series-textarea';
-  textarea.name = 'nomor_urut[]';
+  textarea.name = 'jenis_arsip[]';
   textarea.rows = 3;
   textarea.placeholder = "Tulis jenis atau series arsip di sini...";
 

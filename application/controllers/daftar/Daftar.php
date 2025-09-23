@@ -7,7 +7,20 @@ class Daftar extends CI_Controller {
     }
 
     public function data_daftar() {
-        $this->load->view('Daftar/data_daftar');
+           
+        
+        $d['data_arsip'] = $this->db->query("
+            SELECT a.id, a.tgl_isi, a.pencipta_arsip, a.asal_arsip, e.kode_arsip,
+                   GROUP_CONCAT(d.jenis_arsip SEPARATOR ', ') as jenis_arsip,
+                   a.nomor_arsip, a.retensi_arsip, a.lokasi_simpan, a.metode_perlindungan
+            FROM daftar_arsip a
+            LEFT JOIN daftar_arsip_detail d ON a.id = d.daftar_arsip_id
+            join kode_arsip e on e.id = a.kode_arsip_id
+            GROUP BY a.id
+            ORDER BY a.tgl_isi DESC
+        ")->result_array();
+
+        $this->load->view('Daftar/data_daftar',$d);
     }
 
     public function do_input_arsip()
@@ -43,13 +56,9 @@ class Daftar extends CI_Controller {
             }
         }
 
-        $this->session->set_flashdata('success', 'Data arsip berhasil disimpan!');
-    } else {
-        $this->session->set_flashdata('error', 'Gagal menyimpan data arsip.');
-    }
-
-    redirect('arsip');
+     $this->session->set_flashdata('success_daftar', 'Daftar arsip berhasil ditambahkan!');
+    redirect('index.php/daftar/Daftar/data_daftar');
 }
-
+}
 
 }
