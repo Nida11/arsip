@@ -527,10 +527,25 @@ data-noakhir="<?= $row['no_akhir'] ?>"
   </div>
 </div>
 
-    <div class="form-group">
-    <label for="tanggal">Tanggal Pengisian</label>
-    <input type="date" max="" class="form-control" id="tanggal" name="tanggal">
+<div class="form-group">
+  <label for="tanggal">Tanggal & Waktu Pengisian</label>
+  <?php
+date_default_timezone_set('Asia/Jakarta'); // pastikan ini sesuai
+$now = date('Y-m-d\TH:i'); // tanpa detik -> paling kompatibel
+?>
+  <input 
+    type="datetime-local" 
+    class="form-control" 
+    id="tanggal" 
+    name="tanggal" 
+    value="<?= date('Y-m-d\TH:i:s') ?>" 
+    min="<?= date('Y-m-d\TH:i:s') ?>" 
+    max="<?= date('Y-m-d\TH:i:s') ?>" 
+    readonly
+  >
 </div>
+
+
 
 <div id="info-nomor-surat" class="alert custom-alert d-none"></div>
 
@@ -538,16 +553,21 @@ data-noakhir="<?= $row['no_akhir'] ?>"
       <?php 
      $nama_jenis = $this->db->get('jenis_surat')->result();
       ?>
-
+<!-- <div class="col-md-6 mb-3">
+  <label class="form-control-label" for="jenis_surat">Pencipta Arsip</label>
+  <textarea 
+    class="form-control" 
+    id="jenis_surat" 
+    name="jenis_surat" 
+    rows="3" 
+    placeholder="Tulis nama pencipta arsip..."
+  ></textarea>
+</div> -->
       <div class="col-md-6 mb-3">
         <label class="form-control-label" for="jenis_surat">Pencipta Arsip</label>
-        <select name="jenis_surat_id" id="jenis_surat_id" class="form-control select2" style="width: 100%;">
-        <option></option> <!-- Kosongkan dulu untuk placeholder -->
-        <?php foreach ($nama_jenis as $g): ?>
-          <option value="<?= $g->id ?>"><?= $g->nama_jenis ?></option>
-        <?php endforeach; ?>
-      </select>
+        <input type="text" class="form-control" id="jenis_surat" name="jenis_surat">
       </div>
+
 
       
       <?php 
@@ -579,18 +599,13 @@ data-noakhir="<?= $row['no_akhir'] ?>"
       </div>
 
       <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Jenis / Series Arsip</label>
-        <input type="text" class="form-control" id="nomor_urut" name="nomor_urut">
-      </div>
-
-      <div class="col-md-6 mb-3">
         <label class="form-control-label" for="nomor_surat">Nomor Arsip</label>
-        <input type="text" class="form-control" id="nomor_awal" name="nomor_awal">
+        <input type="text" class="form-control" id="" name="">
       </div>
 
       <div class="col-md-6 mb-3">
         <label class="form-control-label" for="nomor_surat">Retensi Arsip</label>
-        <input type="text" class="form-control" id="nomor_akhir" name="nomor_akhir">
+        <input type="text" class="form-control" id="" name="">
       </div>
 
       <div class="col-md-6 mb-3">
@@ -604,7 +619,33 @@ data-noakhir="<?= $row['no_akhir'] ?>"
         <label class="form-control-label" for="perihal">Metode Perlindungan</label>
         <input type="text" class="form-control" id="perihal" name="perihal">
       </div>
+<div class="col-md-12 mb-3">
+  <label class="form-control-label d-block">Jenis / Series Arsip</label>
 
+  <!-- container untuk dynamic field -->
+  <div id="series-container">
+    <div class="card mb-2 shadow-sm position-relative">
+      <div class="card-body p-2">
+        <textarea 
+          class="form-control border-0 series-textarea" 
+          name="nomor_urut[]" 
+          rows="3" 
+          placeholder="Tulis jenis atau series arsip di sini..."
+        ></textarea>
+        <!-- tombol hapus pojok kanan atas -->
+        <button type="button" 
+                class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- tombol tambah -->
+  <button type="button" id="add-series" class="btn btn-sm btn-outline-primary mt-2">
+    + Tambah Kolom
+  </button>
+</div>
       <!-- <div class="col-md-6 mb-3">
         <label class="form-control-label" for="kepada">Kepada</label>
         <input type="text" class="form-control" id="kepada" name="kepada">
@@ -1544,7 +1585,81 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<script>
+// --- fungsi utama ---
+// aktifkan Ctrl+Enter (baris baru + tab)
+function enableCtrlEnter(textarea) {
+  textarea.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'Enter') {
+      e.preventDefault();
 
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      const text = this.value;
+
+      // sisipkan newline + tab
+      const insertText = "\n\t";
+
+      this.value = text.substring(0, start) + insertText + text.substring(end);
+
+      // pindah kursor setelah teks baru
+      this.selectionStart = this.selectionEnd = start + insertText.length;
+    }
+  });
+}
+
+// tambah kolom baru
+function addSeriesField() {
+  const container = document.getElementById('series-container');
+
+  // wrapper card
+  const wrapper = document.createElement('div');
+  wrapper.className = 'card mb-2 shadow-sm position-relative';
+
+  // body card
+  const body = document.createElement('div');
+  body.className = 'card-body p-2';
+
+  // textarea
+  const textarea = document.createElement('textarea');
+  textarea.className = 'form-control border-0 series-textarea';
+  textarea.name = 'nomor_urut[]';
+  textarea.rows = 3;
+  textarea.placeholder = "Tulis jenis atau series arsip di sini...";
+
+  // aktifkan ctrl+enter
+  enableCtrlEnter(textarea);
+
+  // tombol hapus
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series';
+  removeBtn.textContent = '✕';
+  removeBtn.addEventListener('click', function() {
+    wrapper.remove();
+  });
+
+  // susun
+  body.appendChild(textarea);
+  wrapper.appendChild(body);
+  wrapper.appendChild(removeBtn);
+  container.appendChild(wrapper);
+}
+
+// --- init ---
+// tombol tambah
+document.getElementById('add-series').addEventListener('click', addSeriesField);
+
+// aktifkan Ctrl+Enter di textarea awal
+document.querySelectorAll('.series-textarea').forEach(enableCtrlEnter);
+
+// tombol hapus default
+document.querySelectorAll('.remove-series').forEach(btn => {
+  btn.addEventListener('click', function() {
+    this.closest('.card').remove();
+  });
+});
+</script>
 
 </body>
 
