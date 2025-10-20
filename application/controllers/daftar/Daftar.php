@@ -59,8 +59,20 @@ class Daftar extends CI_Controller
                 }
             }
 
-            $this->session->set_flashdata('success_daftar', 'Daftar arsip berhasil ditambahkan!');
+            $this->session->set_flashdata('success_message', 'Daftar arsip berhasil ditambahkan!');
             redirect('index.php/daftar/Daftar/data_daftar');
         }
+    }
+    public function delete_arsip($id)
+    {
+        // Hapus data utama
+        $this->db->where('id', $id);
+        $this->db->delete('daftar_arsip');
+
+        // Tambahkan pesan berhasil hapus
+        $this->session->set_flashdata('success_message', 'Data arsip berhasil dihapus!');
+
+        // Redirect kembali ke halaman daftar
+        redirect('index.php/daftar/Daftar/data_daftar');
     }
 }

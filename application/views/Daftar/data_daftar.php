@@ -368,12 +368,6 @@
   </aside>
 
 
-
-
-
-
-
-
   <main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarMain">
@@ -384,6 +378,8 @@
         </button>
       </div>
     </nav>
+
+
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="card mb-4">
@@ -451,10 +447,11 @@
                       <?php endif; ?>
                     </td>
                     <td class="text-center">
-                      <div class="fw-bold text-dark mb-1">
-                        <strong><?= htmlspecialchars($row['nomor_arsip']) ?></strong>
+                      <div class="text-dark mb-1" style="font-weight: normal;">
+                        <?= htmlspecialchars($row['nomor_arsip']) ?>
                       </div>
                     </td>
+
                     <td class="text-center"><?= htmlspecialchars($row['retensi_arsip']); ?></td>
                     <td class="text-center"><?= htmlspecialchars($row['lokasi_simpan']); ?></td>
                     <td class="text-center"><?= htmlspecialchars($row['metode_perlindungan']); ?></td>
@@ -478,11 +475,12 @@
                         <i class="fa fa-pencil"></i>
                       </button>
 
-                      <button class="btn btn-sm btn-xs btn-danger delete-penomoran"
-                        data-id="<?= $row['id']; ?>"
-                        data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Surat Keluar">
+                      <a href="<?= base_url('index.php/daftar/Daftar/delete_arsip/' . $row['id']); ?>"
+                        class="btn btn-sm btn-danger"
+                        onclick="return confirm('Yakin ingin menghapus arsip ini? Data yang dihapus tidak bisa dikembalikan.');">
                         <i class="fa fa-trash"></i>
-                      </button>
+                      </a>
+
 
                       <!-- ✅ Tambah Tombol Print -->
                       <button class="print-surat btn btn-sm btn-primary"
@@ -964,17 +962,20 @@
   </script>
 
 
-  <?php if ($this->session->flashdata('success_daftar')): ?>
+  <?php if ($this->session->flashdata('success_message')): ?>
     <script>
       Swal.fire({
         icon: 'success',
         title: 'Berhasil',
-        text: '<?= $this->session->flashdata("success_daftar") ?>',
+        text: '<?= $this->session->flashdata("success_message") ?>',
         timer: 2000,
         showConfirmButton: false
       });
     </script>
   <?php endif; ?>
+
+
+
 
 
   <?php if ($this->session->flashdata('success_edit')): ?>
@@ -1005,7 +1006,7 @@
         if (result.isConfirmed) {
           // Kirim ke backend
           $.ajax({
-            url: '<?= base_url("index.php/daftar/Daftar/delete_daftar") ?>',
+            url: '<?= base_url("index.php/daftar/Daftar/delete_arsip") ?>',
             method: 'POST',
             data: {
               edit_id: slotId
