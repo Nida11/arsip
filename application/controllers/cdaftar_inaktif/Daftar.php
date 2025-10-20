@@ -16,10 +16,9 @@ class Daftar extends CI_Controller
         $d['data_inaktif'] = $this->db->query("
             SELECT 
                 a.id,
-                a.is_arsip,
                 a.tgl_isi,
                 a.unit_kerja,
-                e.kode_arsip AS kode_klasifikasi,
+                e.kode_surat AS kode_klasifikasi,
                 GROUP_CONCAT(d.jenis_arsip SEPARATOR ', ') AS jenis_arsip,
                 a.uraian_masalah,
                 a.tahun,
@@ -30,7 +29,7 @@ class Daftar extends CI_Controller
                 a.keterangan
             FROM daftar_arsip_inaktif a
             LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
-            JOIN kode_arsip e ON e.id = a.kode_arsip_id
+            JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
             GROUP BY a.id
             ORDER BY a.tgl_isi DESC
         ")->result_array();
@@ -77,7 +76,6 @@ public function do_delete_arsip($id)
     {
         // Ambil data utama dari form
         $data_inaktif = [
-            'is_arsip'         => $this->input->post('is_arsip'),
             'tgl_isi'          => $this->input->post('tgl_isi'),
             'unit_kerja'       => $this->input->post('unit_kerja'),
             'kode_arsip_id'    => $this->input->post('kode_arsip_id'),

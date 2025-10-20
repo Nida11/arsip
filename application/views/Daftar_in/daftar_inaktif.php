@@ -487,7 +487,7 @@
           <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-          <form method="POST" action="<?= base_url("index.php/daftar/Daftar/do_input_arsip") ?>">
+          <form method="POST" action="<?= base_url("index.php/cdaftar_inaktif/Daftar/do_input_inaktif") ?>">
 
                   <div class="modal-body">
                     <div class="row">
@@ -503,13 +503,13 @@
                         <input type="text" class="form-control" id="unit_kerja" name="unit_kerja" required>
                       </div>
 
-                      <?php $kode = $this->db->get('kode_arsip')->result(); ?>
+                      <?php $kode = $this->db->get('kode_klasifikasi')->result(); ?>
                       <div class="col-md-6 mb-3">
                         <label for="kode_arsip_id" class="form-control-label">Kode Klasifikasi</label>
                         <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" required>
                           <option value="">-- Pilih Kode Klasifikasi --</option>
                           <?php foreach ($kode as $k): ?>
-                            <option value="<?= $k->id ?>"><?= $k->kode_arsip ?> - <?= $k->keterangan ?></option>
+                            <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
                           <?php endforeach; ?>
                         </select>
                       </div>
@@ -596,9 +596,11 @@
               <input type="text" class="form-control" id="edit_unit_kerja" name="unit_kerja" required>
             </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Kode Arsip ID</label>
-              <input type="number" class="form-control" id="edit_kode_arsip_id" name="kode_arsip_id">
+            <?php $kode = $this->db->get('kode_klasifikasi')->result(); $selected_kode_id = isset($data_arsip['kode_arsip_id']) ? $data_arsip['kode_arsip_id'] : ''; ?> 
+            <div class="col-md-6 mb-3"> <label for="kode_arsip_id" class="form-control-label">Kode Klasifikasi</label>
+             <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" required> <option value="">-- Pilih Kode Klasifikasi --</option>
+              <?php foreach ($kode as $k): ?> <option value="<?= $k->id ?>" <?= ($k->id == $selected_kode_id) ? 'selected' : '' ?>>
+                 <?= $k->kode_surat ?> - <?= $k->ket ?> </option> <?php endforeach; ?> </select> 
             </div>
 
             <div class="col-md-6 mb-3">
