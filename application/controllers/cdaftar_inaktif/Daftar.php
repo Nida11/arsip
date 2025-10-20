@@ -41,6 +41,38 @@ class Daftar extends CI_Controller
     // =======================
     // SIMPAN DATA INAKTIF
     // =======================
+public function do_edit_arsip()
+{
+    $id = $this->input->post('id');
+    $data = [
+        'tgl_isi' => $this->input->post('tgl_isi'),
+        'unit_kerja' => $this->input->post('unit_kerja'),
+        'kode_arsip_id' => $this->input->post('kode_arsip_id'),
+        'uraian_masalah' => $this->input->post('uraian_masalah'),
+        'tahun' => $this->input->post('tahun'),
+        'jumlah' => $this->input->post('jumlah'),
+        'nomor_sampul' => $this->input->post('nomor_sampul'),
+        'nomor_box' => $this->input->post('nomor_box'),
+        'nomor_rak' => $this->input->post('nomor_rak'),
+        'keterangan' => $this->input->post('keterangan')
+    ];
+
+    $this->db->where('id', $id);
+    $this->db->update('daftar_arsip_inaktif', $data);
+
+    $this->session->set_flashdata('success_edit', 'Data arsip berhasil diperbarui!');
+    redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
+}
+
+public function do_delete_arsip($id)
+{
+    $this->db->delete('daftar_arsip_inaktif', ['id' => $id]);
+    $this->session->set_flashdata('success_edit', 'Data arsip berhasil dihapus!');
+    redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
+}
+
+
+
     public function do_input_inaktif()
     {
         // Ambil data utama dari form
