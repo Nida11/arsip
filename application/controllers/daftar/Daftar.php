@@ -9,116 +9,118 @@ class Daftar extends CI_Controller
     }
 
     public function data_daftar()
-{
-    // Data arsip utama
-    $d['data_arsip'] = $this->db->query("
+    {
+        // Data arsip utama
+        $d['data_arsip'] = $this->db->query("
         SELECT 
-            a.id, 
-            a.tgl_isi, 
-            a.pencipta_arsip, 
-            a.asal_arsip, 
-            e.kode_surat,
-            a.nomor_arsip, 
-            a.retensi_arsip, 
-            a.lokasi_simpan, 
-            a.metode_perlindungan
+        a.id, 
+        a.tgl_isi, 
+        a.pencipta_arsip, 
+        a.asal_arsip, 
+        e.kode_surat, 
+        e.ket, 
+        a.nomor_arsip, 
+        a.retensi_arsip, 
+        a.lokasi_simpan, 
+        a.metode_perlindungan
         FROM daftar_arsip a
-        JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
+        LEFT JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
         ORDER BY a.tgl_isi DESC
+
     ")->result_array();
 
-    // Ambil semua detail (jenis + file)
-    $details = $this->db->get('daftar_arsip_detail')->result_array();
+        // Ambil semua detail (jenis + file)
+        $details = $this->db->get('daftar_arsip_detail')->result_array();
 
-    // Kelompokkan detail per arsip_id
-    $detail_map = [];
-    foreach ($details as $drow) {
-        $detail_map[$drow['daftar_arsip_id']][] = $drow;
-    }
-
-    $d['detail_map'] = $detail_map;
-
-    $this->load->view('Daftar/data_daftar', $d);
-}
-
-
-   public function do_input_arsip()
-{
-    // Ambil data dari form utama
-    $data_arsip = [
-        'tgl_isi'             => $this->input->post('tgl_isi'),
-        'pencipta_arsip'      => $this->input->post('pencipta_arsip'),
-        'asal_arsip'          => $this->input->post('asal_arsip'),
-        'kode_arsip_id'       => $this->input->post('kode_arsip_id'),
-        'nomor_arsip'         => $this->input->post('nomor_arsip'),
-        'retensi_arsip'       => $this->input->post('retensi_arsip'),
-        'lokasi_simpan'       => $this->input->post('lokasi_simpan'),
-        'metode_perlindungan' => $this->input->post('metode_perlindungan'),
-    ];
-
-    // Insert ke tabel daftar_arsip
-    $this->db->insert('daftar_arsip', $data_arsip);
-    $arsip_id = $this->db->insert_id();
-
-    if ($arsip_id) {
-        // Ambil data detail dari form
-        $jenis_arsip_list = $this->input->post('jenis_arsip');
-
-        // pastikan folder upload ada
-        $upload_path = './uploads/arsip/';
-        if (!is_dir($upload_path)) {
-            mkdir($upload_path, 0777, true);
+        // Kelompokkan detail per arsip_id
+        $detail_map = [];
+        foreach ($details as $drow) {
+            $detail_map[$drow['daftar_arsip_id']][] = $drow;
         }
 
-        // Loop setiap jenis arsip dan file
-        if (!empty($jenis_arsip_list)) {
-            $count = count($jenis_arsip_list);
+        $d['detail_map'] = $detail_map;
 
-            // Load library upload sekali saja
-            $this->load->library('upload');
+        $this->load->view('Daftar/data_daftar', $d);
+    }
 
-            for ($i = 0; $i < $count; $i++) {
-                $uploaded_file_name = null;
 
-                // cek apakah ada file di index ini
-                if (!empty($_FILES['file_arsip']['name'][$i])) {
-                    $_FILES['file_temp']['name']     = $_FILES['file_arsip']['name'][$i];
-                    $_FILES['file_temp']['type']     = $_FILES['file_arsip']['type'][$i];
-                    $_FILES['file_temp']['tmp_name'] = $_FILES['file_arsip']['tmp_name'][$i];
-                    $_FILES['file_temp']['error']    = $_FILES['file_arsip']['error'][$i];
-                    $_FILES['file_temp']['size']     = $_FILES['file_arsip']['size'][$i];
+    public function do_input_arsip()
+    {
+        // Ambil data dari form utama
+        $data_arsip = [
+            'tgl_isi'             => $this->input->post('tgl_isi'),
+            'pencipta_arsip'      => $this->input->post('pencipta_arsip'),
+            'asal_arsip'          => $this->input->post('asal_arsip'),
+            'kode_arsip_id'       => $this->input->post('kode_arsip_id'),
+            'nomor_arsip'         => $this->input->post('nomor_arsip'),
+            'retensi_arsip'       => $this->input->post('retensi_arsip'),
+            'lokasi_simpan'       => $this->input->post('lokasi_simpan'),
+            'metode_perlindungan' => $this->input->post('metode_perlindungan'),
+        ];
 
-                    $config['upload_path']   = $upload_path;
-                    $config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx';
-                    $config['max_size']      = 5120; // 5MB
-                    $config['file_name']     = time() . '_' . $i . '_' . $_FILES['file_temp']['name'];
+        // Insert ke tabel daftar_arsip
+        $this->db->insert('daftar_arsip', $data_arsip);
+        $arsip_id = $this->db->insert_id();
 
-                    $this->upload->initialize($config); // reinit setiap iterasi
+        if ($arsip_id) {
+            // Ambil data detail dari form
+            $jenis_arsip_list = $this->input->post('jenis_arsip');
 
-                    if ($this->upload->do_upload('file_temp')) {
-                        $uploaded_data = $this->upload->data();
-                        $uploaded_file_name = $uploaded_data['file_name'];
-                    }
-                }
-
-                // Simpan ke tabel detail
-                $data_detail = [
-                    'daftar_arsip_id' => $arsip_id,
-                    'jenis_arsip'     => $jenis_arsip_list[$i],
-                    'file_arsip'      => $uploaded_file_name // kolom baru
-                ];
-
-                $this->db->insert('daftar_arsip_detail', $data_detail);
+            // pastikan folder upload ada
+            $upload_path = './uploads/arsip/';
+            if (!is_dir($upload_path)) {
+                mkdir($upload_path, 0777, true);
             }
-        }
 
-        $this->session->set_flashdata('success_message', 'Daftar arsip berhasil ditambahkan!');
-        redirect('index.php/daftar/Daftar/data_daftar');
-    } else {
-        $this->session->set_flashdata('error_message', 'Gagal menambahkan daftar arsip.');
-        redirect('index.php/daftar/Daftar/data_daftar');
+            // Loop setiap jenis arsip dan file
+            if (!empty($jenis_arsip_list)) {
+                $count = count($jenis_arsip_list);
+
+                // Load library upload sekali saja
+                $this->load->library('upload');
+
+                for ($i = 0; $i < $count; $i++) {
+                    $uploaded_file_name = null;
+
+                    // cek apakah ada file di index ini
+                    if (!empty($_FILES['file_arsip']['name'][$i])) {
+                        $_FILES['file_temp']['name']     = $_FILES['file_arsip']['name'][$i];
+                        $_FILES['file_temp']['type']     = $_FILES['file_arsip']['type'][$i];
+                        $_FILES['file_temp']['tmp_name'] = $_FILES['file_arsip']['tmp_name'][$i];
+                        $_FILES['file_temp']['error']    = $_FILES['file_arsip']['error'][$i];
+                        $_FILES['file_temp']['size']     = $_FILES['file_arsip']['size'][$i];
+
+                        $config['upload_path']   = $upload_path;
+                        $config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx';
+                        $config['max_size']      = 5120; // 5MB
+                        $config['file_name']     = time() . '_' . $i . '_' . $_FILES['file_temp']['name'];
+
+                        $this->upload->initialize($config); // reinit setiap iterasi
+
+                        if ($this->upload->do_upload('file_temp')) {
+                            $uploaded_data = $this->upload->data();
+                            $uploaded_file_name = $uploaded_data['file_name'];
+                        }
+                    }
+
+                    // Simpan ke tabel detail
+                    $data_detail = [
+                        'daftar_arsip_id' => $arsip_id,
+                        'jenis_arsip'     => $jenis_arsip_list[$i],
+                        'file_arsip'      => $uploaded_file_name // kolom baru
+                    ];
+
+                    $this->db->insert('daftar_arsip_detail', $data_detail);
+                }
+            }
+
+            $this->session->set_flashdata('success_message', 'Daftar arsip berhasil ditambahkan!');
+            redirect('index.php/daftar/Daftar/data_daftar');
+        } else {
+            $this->session->set_flashdata('error_message', 'Gagal menambahkan daftar arsip.');
+            redirect('index.php/daftar/Daftar/data_daftar');
+        }
     }
-}
 
 
     public function delete_arsip($id)
@@ -132,5 +134,13 @@ class Daftar extends CI_Controller
 
         // Redirect kembali ke halaman daftar
         redirect('index.php/daftar/Daftar/data_daftar');
+    }
+    public function index()
+    {
+        // Ambil data dari tabel kode_klasifikasi
+        $data['kode_klasifikasi'] = $this->db->get('kode_klasifikasi')->result_array();
+
+        // Tampilkan ke view
+        $this->load->view('daftar_arsip', $data);
     }
 }
