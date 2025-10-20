@@ -437,15 +437,29 @@
                     <td class="text-center"><?= htmlspecialchars($row['pencipta_arsip']); ?></td>
                     <td class="text-center"><?= htmlspecialchars($row['asal_arsip']); ?></td>
                     <td class="text-center"><?= htmlspecialchars($row['kode_arsip']); ?></td>
-                    <td class="text-center">
-                      <?php if (!empty($row['jenis_arsip'])): ?>
-                        <ul class="mb-0">
-                          <?php foreach (explode(',', $row['jenis_arsip']) as $jenis): ?>
-                            <li><?= htmlspecialchars(trim($jenis)) ?></li>
-                          <?php endforeach; ?>
-                        </ul>
-                      <?php endif; ?>
-                    </td>
+                   <td>
+  <?php 
+    if (!empty($detail_map[$row['id']])): ?>
+      <ul class="mb-0">
+        <?php foreach ($detail_map[$row['id']] as $detail): ?>
+          <li>
+            <?= htmlspecialchars($detail['jenis_arsip']) ?><br>
+            <?php if (!empty($detail['file_arsip'])): ?>
+              <a href="<?= base_url('uploads/arsip/'.$detail['file_arsip']) ?>" 
+                 target="_blank">
+                 <?= htmlspecialchars($detail['file_arsip']) ?>
+              </a>
+            <?php else: ?>
+              <em>Tidak ada file</em>
+            <?php endif; ?>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+  <?php else: ?>
+    <em>-</em>
+  <?php endif; ?>
+</td>
+
                     <td class="text-center">
                       <div class="text-dark mb-1" style="font-weight: normal;">
                         <?= htmlspecialchars($row['nomor_arsip']) ?>
@@ -519,7 +533,7 @@
     <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
       <div class="modal-dialog ">
         <div class="modal-content">
-          <form method="POST" action="<?= base_url("index.php/daftar/Daftar/do_input_arsip") ?>">
+          <form method="POST" enctype="multipart/form-data" action="<?= base_url("index.php/daftar/Daftar/do_input_arsip") ?>">
             <div class="modal-body">
               <div class="row">
 
@@ -529,18 +543,7 @@
                   </label><br>
                   <!-- Instruksi -->
                   <div class="mb-2">
-                    <small class="form-text text-muted">
-                      Silakan pilih jenis arsip yang sesuai sebelum melanjutkan.
-                    </small>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="is_arsip" id="" value="0" checked>
-                    <label class="form-check-label" for="single"> Arsip Inaktif</label>
-                  </div>
-                  <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="is_arsip" id="" value="1">
-                    <label class="form-check-label" for="single">Arsip Vital</label>
-                  </div>
+                    
                 </div>
 
                 <div class="form-group">
@@ -560,11 +563,7 @@
                     readonly>
                 </div>
 
-
-
                 <div id="info-nomor-surat" class="alert custom-alert d-none"></div>
-
-
 
                 <div class="col-md-6 mb-3">
                   <label class="form-control-label" for="pencipta_arsip">Pencipta Arsip</label>
@@ -576,10 +575,8 @@
                   <input type="text" class="form-control" id="asal_arsip" name="asal_arsip">
                 </div>
 
-
-
                 <?php
-                $kode = $this->db->get('kode_arsip')->result();
+                $kode = $this->db->get('kode_klasifikasi')->result();
                 ?>
 
                 <div class="col-md-6 mb-3">
@@ -587,7 +584,7 @@
                   <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" style="width: 100%;">
                     <option></option> <!-- Kosongkan dulu untuk placeholder -->
                     <?php foreach ($kode as $k): ?>
-                      <option value="<?= $k->id ?>"><?= $k->kode_arsip ?> - <?= $k->keterangan ?></option>
+                      <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
                     <?php endforeach; ?>
                   </select>
                 </div>
@@ -618,26 +615,27 @@
 
                   <!-- container untuk dynamic field -->
                   <div id="series-container">
-                    <div class="card mb-2 shadow-sm position-relative">
-                      <div class="card-body p-2">
-                        <textarea
-                          class="form-control border-0 series-textarea"
-                          name="jenis_arsip[]"
-                          rows="3"
-                          placeholder="Tulis jenis atau series arsip di sini..."></textarea>
-                        <!-- tombol hapus pojok kanan atas -->
-                        <button type="button"
-                          class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">
-                          ✕
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+  <div class="card mb-2 shadow-sm position-relative">
+    <div class="card-body p-2">
+      <textarea
+        class="form-control border-0 series-textarea mb-2"
+        name="jenis_arsip[]"
+        rows="3"
+        placeholder="Tulis jenis atau series arsip di sini..."></textarea>
+      <input type="file" class="form-control border-0" name="file_arsip[]" />
+      <!-- tombol hapus -->
+      <button type="button"
+        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">
+        ✕
+      </button>
+    </div>
+  </div>
+</div>
 
                   <!-- tombol tambah -->
-                  <button type="button" id="add-series" class="btn btn-sm btn-outline-primary mt-2">
-                    + Tambah Jenis
-                  </button>
+<button type="button" id="add-series" class="btn btn-primary btn-sm mt-2">
+  + Add
+</button>
                 </div>
 
               </div>
@@ -1353,81 +1351,36 @@ DataTables + Export Script
       });
     });
   </script>
-  <script>
-    // --- fungsi utama ---
-    // aktifkan Ctrl+Enter (baris baru + tab)
-    function enableCtrlEnter(textarea) {
-      textarea.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'Enter') {
-          e.preventDefault();
+ <script>
+// event tambah form baru
+document.getElementById("add-series").addEventListener("click", function () {
+  const container = document.getElementById("series-container");
+  const newCard = document.createElement("div");
+  newCard.classList.add("card", "mb-2", "shadow-sm", "position-relative");
+  newCard.innerHTML = `
+    <div class="card-body p-2">
+      <textarea
+        class="form-control border-0 series-textarea mb-2"
+        name="jenis_arsip[]"
+        rows="3"
+        placeholder="Tulis jenis atau series arsip di sini..."></textarea>
+      <input type="file" class="form-control border-0" name="file_arsip[]" />
+      <button type="button"
+        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">
+        ✕
+      </button>
+    </div>
+  `;
+  container.appendChild(newCard);
+});
 
-          const start = this.selectionStart;
-          const end = this.selectionEnd;
-          const text = this.value;
-
-          // sisipkan newline + tab
-          const insertText = "\n\t";
-
-          this.value = text.substring(0, start) + insertText + text.substring(end);
-
-          // pindah kursor setelah teks baru
-          this.selectionStart = this.selectionEnd = start + insertText.length;
-        }
-      });
-    }
-
-    // tambah kolom baru
-    function addSeriesField() {
-      const container = document.getElementById('series-container');
-
-      // wrapper card
-      const wrapper = document.createElement('div');
-      wrapper.className = 'card mb-2 shadow-sm position-relative';
-
-      // body card
-      const body = document.createElement('div');
-      body.className = 'card-body p-2';
-
-      // textarea
-      const textarea = document.createElement('textarea');
-      textarea.className = 'form-control border-0 series-textarea';
-      textarea.name = 'jenis_arsip[]';
-      textarea.rows = 3;
-      textarea.placeholder = "Tulis jenis atau series arsip di sini...";
-
-      // aktifkan ctrl+enter
-      enableCtrlEnter(textarea);
-
-      // tombol hapus
-      const removeBtn = document.createElement('button');
-      removeBtn.type = 'button';
-      removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series';
-      removeBtn.textContent = '✕';
-      removeBtn.addEventListener('click', function() {
-        wrapper.remove();
-      });
-
-      // susun
-      body.appendChild(textarea);
-      wrapper.appendChild(body);
-      wrapper.appendChild(removeBtn);
-      container.appendChild(wrapper);
-    }
-
-    // --- init ---
-    // tombol tambah
-    document.getElementById('add-series').addEventListener('click', addSeriesField);
-
-    // aktifkan Ctrl+Enter di textarea awal
-    document.querySelectorAll('.series-textarea').forEach(enableCtrlEnter);
-
-    // tombol hapus default
-    document.querySelectorAll('.remove-series').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.closest('.card').remove();
-      });
-    });
-  </script>
+// event hapus form
+document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("remove-series")) {
+    e.target.closest(".card").remove();
+  }
+});
+</script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const editButtons = document.querySelectorAll('.btn-edit');
