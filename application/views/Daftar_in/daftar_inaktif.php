@@ -401,6 +401,28 @@
                 <label for="searchInput" class="form-label">Cari</label>
                 <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
               </div>
+
+               <form method="get" class="mb-3">
+    <div class="row">
+      <div class="col-md-3">
+        <input type="text" name="unit_kerja" class="form-control" value="<?= $this->input->get('unit_kerja') ?>" placeholder="Unit Kerja">
+      </div>
+      <div class="col-md-3">
+        <input type="text" name="uraian_masalah" class="form-control" value="<?= $this->input->get('uraian_masalah') ?>" placeholder="Uraian Masalah">
+      </div>
+      <div class="col-md-2">
+        <input type="text" name="tahun" class="form-control" value="<?= $this->input->get('tahun') ?>" placeholder="Tahun">
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Cari</button>
+      </div>
+      <div class="col-md-2 text-end">
+        <a href="<?= base_url('cdaftr_inaktif/Daftar/export_excel_inaktif?' . http_build_query($_GET)) ?>" class="btn btn-success">
+          <i class="fa fa-file-excel"></i> Export Excel
+        </a>
+      </div>
+    </div>
+  </form>
               <!-- <div class="col-md-3">
                 <label for="startDate" class="form-label">Tanggal Awal</label>
                 <input type="date" id="startDate" class="form-control">
@@ -417,7 +439,7 @@
           </div>
 
           <div class="p-3">
-            <table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
+            <table id="penomoranTable"  class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
               <thead class="thead-dark">
                 <tr>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>

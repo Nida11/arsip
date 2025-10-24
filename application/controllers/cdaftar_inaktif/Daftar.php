@@ -11,31 +11,126 @@ class Daftar extends CI_Controller
     // =======================
     // TAMPIL DATA INAKTIF
     // =======================
-    public function daftar_inaktif()
-    {
-        $d['data_inaktif'] = $this->db->query("
-            SELECT 
-                a.id,
-                a.tgl_isi,
-                a.unit_kerja,
-                e.kode_surat AS kode_klasifikasi,
-                GROUP_CONCAT(d.jenis_arsip SEPARATOR ', ') AS jenis_arsip,
-                a.uraian_masalah,
-                a.tahun,
-                a.jumlah,
-                a.nomor_sampul,
-                a.nomor_box,
-                a.nomor_rak,
-                a.keterangan
-            FROM daftar_arsip_inaktif a
-            LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
-            JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
-            GROUP BY a.id
-            ORDER BY a.tgl_isi DESC
-        ")->result_array();
 
-        $this->load->view('Daftar_in/daftar_inaktif', $d);
+ public function daftar_inaktif()
+{
+    // Ambil semua parameter pencarian dari GET
+    $search = $this->input->get();
+
+    $where = [];
+
+    if (!empty($search['unit_kerja'])) {
+        $where[] = "a.unit_kerja LIKE '%" . $this->db->escape_like_str($search['unit_kerja']) . "%'";
     }
+    if (!empty($search['uraian_masalah'])) {
+        $where[] = "a.uraian_masalah LIKE '%" . $this->db->escape_like_str($search['uraian_masalah']) . "%'";
+    }
+   
+    if (!empty($search['tahun'])) {
+        $where[] = "a.tahun LIKE '%" . $this->db->escape_like_str($search['tahun']) . "%'";
+    }
+
+    $where_sql = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+    $sql = "
+        SELECT 
+            a.id,
+            a.tgl_isi,
+            a.unit_kerja,
+            e.kode_surat AS kode_klasifikasi,
+            GROUP_CONCAT(d.jenis_arsip SEPARATOR ', ') AS jenis_arsip,
+            a.uraian_masalah,
+            a.tahun,
+            a.jumlah,
+            a.nomor_sampul,
+            a.nomor_box,
+            a.nomor_rak,
+            a.keterangan
+        FROM daftar_arsip_inaktif a
+        LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
+        JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
+        $where_sql
+        GROUP BY a.id
+        ORDER BY a.tgl_isi DESC
+    ";
+
+    $d['data_inaktif'] = $this->db->query($sql)->result_array();
+
+    $this->load->view('Daftar_in/daftar_inaktif', $d);
+}
+
+public function export_excel_inaktif()
+{
+    $search = $this->input->get();
+    $where = [];
+
+    if (!empty($search['unit_kerja'])) {
+        $where[] = "a.unit_kerja LIKE '%" . $this->db->escape_like_str($search['unit_kerja']) . "%'";
+    }
+    if (!empty($search['uraian_masalah'])) {
+        $where[] = "a.uraian_masalah LIKE '%" . $this->db->escape_like_str($search['uraian_masalah']) . "%'";
+    }
+    if (!empty($search['tahun'])) {
+        $where[] = "a.tahun LIKE '%" . $this->db->escape_like_str($search['tahun']) . "%'";
+    }
+
+    $where_sql = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+    $sql = "
+        SELECT 
+            a.id,
+            a.tgl_isi,
+            a.unit_kerja,
+            e.kode_surat AS kode_klasifikasi,
+            GROUP_CONCAT(d.jenis_arsip SEPARATOR ', ') AS jenis_arsip,
+            a.uraian_masalah,
+            a.tahun,
+            a.jumlah,
+            a.nomor_sampul,
+            a.nomor_box,
+            a.nomor_rak,
+            a.keterangan
+        FROM daftar_arsip_inaktif a
+        LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
+        JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
+        $where_sql
+        GROUP BY a.id
+        ORDER BY a.tgl_isi DESC
+    ";
+
+    $data = $this->db->query($sql)->result_array();
+
+    // === Export ke Excel ===
+    $this->load->library('Spreadsheet');
+    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Header
+    $headers = ['ID','Tanggal Isi','Unit Kerja','Kode Klasifikasi','Jenis Arsip','Uraian Masalah','Tahun','Jumlah','Nomor Sampul','Nomor Box','Nomor Rak','Keterangan'];
+    $col = 'A';
+    foreach ($headers as $header) {
+        $sheet->setCellValue($col . '1', $header);
+        $col++;
+    }
+
+    // Isi data
+    $rowNum = 2;
+    foreach ($data as $row) {
+        $col = 'A';
+        foreach ($row as $cell) {
+            $sheet->setCellValue($col . $rowNum, $cell);
+            $col++;
+        }
+        $rowNum++;
+    }
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="Daftar_Arsip_Inaktif.xlsx"');
+    header('Cache-Control: max-age=0');
+    $writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $writer->save('php://output');
+}
+
 
     // =======================
     // SIMPAN DATA INAKTIF
