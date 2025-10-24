@@ -416,6 +416,7 @@
 
               <thead class="thead-dark">
                 <tr>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Pengisian</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Pencipta Arsip</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Asal Arsip / unit kerja</th>
@@ -429,8 +430,10 @@
                 </tr>
               </thead>
               <tbody>
-                <?php foreach ($data_arsip as $row): ?>
+                <?php $no = 1;
+                foreach ($data_arsip as $row): ?>
                   <tr>
+                    <td class="text-center"><?= $no++ ?></td>
                     <td class="text-center tanggal-isi" data-value="<?= $row['tgl_isi'] ?>">
                       <?= formatTanggalIndo($row['tgl_isi']) ?>
                     </td>
@@ -524,65 +527,66 @@
 
               </tbody>
             </table>
-            <!-- Modal Edit Arsip -->
-            <div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <form method="post" action="<?= base_url('index.php/daftar/Daftar/do_edit_arsip') ?>">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="editArsipModalLabel">Edit Data Arsip</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                    </div>
-                    <div class="modal-body">
-                      <input type="hidden" name="id" id="editId">
+          </div>
+          <!-- Modal Edit Arsip -->
+          <div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <form method="post" action="<?= base_url('index.php/daftar/Daftar/do_edit_arsip') ?>">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editArsipModalLabel">Edit Data Arsip</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                  </div>
+                  <div class="modal-body">
+                    <input type="hidden" name="id" id="editId">
 
-                      <div class="mb-3">
-                        <label for="editPencipta" class="form-label">Pencipta Arsip</label>
-                        <input type="text" class="form-control" name="pencipta_arsip" id="editPencipta" required>
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="editUnit" class="form-label">Unit Kerja</label>
-                        <input type="text" class="form-control" name="asal_arsip" id="editUnit" required>
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="editKode" class="form-label">Kode Klasifikasi</label>
-                        <input type="text" class="form-control" name="kode_arsip_id" id="editKode" required>
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="editNomor" class="form-label">Nomor Arsip</label>
-                        <input type="text" class="form-control" name="nomor_arsip" id="editNomor" required>
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="editRetensi" class="form-label">Retensi Arsip</label>
-                        <input type="text" class="form-control" name="retensi_arsip" id="editRetensi">
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="editLokasi" class="form-label">Lokasi Simpan</label>
-                        <input type="text" class="form-control" name="lokasi_simpan" id="editLokasi">
-                      </div>
-
-                      <div class="mb-3">
-                        <label for="editMetode" class="form-label">Metode Perlindungan</label>
-                        <input type="text" class="form-control" name="metode_perlindungan" id="editMetode">
-                      </div>
+                    <div class="mb-3">
+                      <label for="editPencipta" class="form-label">Pencipta Arsip</label>
+                      <input type="text" class="form-control" name="pencipta_arsip" id="editPencipta" required>
                     </div>
 
-                    <div class="modal-footer">
-                      <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <div class="mb-3">
+                      <label for="editUnit" class="form-label">Unit Kerja</label>
+                      <input type="text" class="form-control" name="asal_arsip" id="editUnit" required>
                     </div>
-                  </form>
-                </div>
+
+                    <div class="mb-3">
+                      <label for="editKode" class="form-label">Kode Klasifikasi</label>
+                      <input type="text" class="form-control" name="kode_arsip_id" id="editKode" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="editNomor" class="form-label">Nomor Arsip</label>
+                      <input type="text" class="form-control" name="nomor_arsip" id="editNomor" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="editRetensi" class="form-label">Retensi Arsip</label>
+                      <input type="text" class="form-control" name="retensi_arsip" id="editRetensi">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="editLokasi" class="form-label">Lokasi Simpan</label>
+                      <input type="text" class="form-control" name="lokasi_simpan" id="editLokasi">
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="editMetode" class="form-label">Metode Perlindungan</label>
+                      <input type="text" class="form-control" name="metode_perlindungan" id="editMetode">
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                  </div>
+                </form>
               </div>
             </div>
-
           </div>
+
         </div>
       </div>
+    </div>
     </div>
     </div>
     <!-- Modal Tambah Slot -->
