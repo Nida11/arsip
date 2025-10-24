@@ -402,27 +402,27 @@
                 <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
               </div>
 
-               <form method="get" class="mb-3">
-    <div class="row">
-      <div class="col-md-3">
-        <input type="text" name="unit_kerja" class="form-control" value="<?= $this->input->get('unit_kerja') ?>" placeholder="Unit Kerja">
-      </div>
-      <div class="col-md-3">
-        <input type="text" name="uraian_masalah" class="form-control" value="<?= $this->input->get('uraian_masalah') ?>" placeholder="Uraian Masalah">
-      </div>
-      <div class="col-md-2">
-        <input type="text" name="tahun" class="form-control" value="<?= $this->input->get('tahun') ?>" placeholder="Tahun">
-      </div>
-      <div class="col-md-2">
-        <button type="submit" class="btn btn-primary">Cari</button>
-      </div>
-      <div class="col-md-2 text-end">
-        <a href="<?= base_url('cdaftr_inaktif/Daftar/export_excel_inaktif?' . http_build_query($_GET)) ?>" class="btn btn-success">
-          <i class="fa fa-file-excel"></i> Export Excel
-        </a>
-      </div>
-    </div>
-  </form>
+              <form method="get" class="mb-3">
+                <div class="row">
+                  <div class="col-md-3">
+                    <input type="text" name="unit_kerja" class="form-control" value="<?= $this->input->get('unit_kerja') ?>" placeholder="Unit Kerja">
+                  </div>
+                  <div class="col-md-3">
+                    <input type="text" name="uraian_masalah" class="form-control" value="<?= $this->input->get('uraian_masalah') ?>" placeholder="Uraian Masalah">
+                  </div>
+                  <div class="col-md-2">
+                    <input type="text" name="tahun" class="form-control" value="<?= $this->input->get('tahun') ?>" placeholder="Tahun">
+                  </div>
+                  <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                  </div>
+                  <div class="col-md-2 text-end">
+                    <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/export_excel_inaktif?' . http_build_query($_GET)) ?>" class="btn btn-success">
+                      <i class="fa fa-file-excel"></i> Export Excel
+                    </a>
+                  </div>
+                </div>
+              </form>
               <!-- <div class="col-md-3">
                 <label for="startDate" class="form-label">Tanggal Awal</label>
                 <input type="date" id="startDate" class="form-control">
@@ -431,15 +431,15 @@
                 <label for="endDate" class="form-label">Tanggal Akhir</label>
                 <input type="date" id="endDate" class="form-control">
               </div> -->
-<div class="col-md-3 text-end">
-  <button id="exportBtn" class="btn btn-success btn-sm">📊 Export Excel</button>
-</div>
+              <div class="col-md-3 text-end">
+                <button id="exportBtn" class="btn btn-success btn-sm">📊 Export Excel</button>
+              </div>
 
             </div>
           </div>
 
           <div class="p-3">
-            <table id="penomoranTable"  class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
+            <table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
               <thead class="thead-dark">
                 <tr>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
@@ -471,34 +471,34 @@
                     <td class="text-center"><?= htmlspecialchars($row['nomor_box']) ?></td>
                     <td class="text-center"><?= htmlspecialchars($row['nomor_rak']) ?></td>
                     <td class="text-center"><?= htmlspecialchars($row['keterangan']) ?></td>
-<td class="text-center">
-<!-- Tombol Edit -->
-<button class="btn btn-sm btn-warning"
-        data-bs-toggle="modal"
-        data-bs-target="#editArsipModal"
-        data-id="<?= $row['id']; ?>"
-        data-tgl_isi="<?= $row['tgl_isi']; ?>"
-        data-unit_kerja="<?= $row['unit_kerja']; ?>"
-        data-kode_arsip_id="<?= $row['kode_arsip_id']; ?>"
-        data-uraian_masalah="<?= htmlspecialchars($row['uraian_masalah']); ?>"
-        data-tahun="<?= $row['tahun']; ?>"
-        data-jumlah="<?= $row['jumlah']; ?>"
-        data-nomor_sampul="<?= $row['nomor_sampul']; ?>"
-        data-nomor_box="<?= $row['nomor_box']; ?>"
-        data-nomor_rak="<?= $row['nomor_rak']; ?>"
-        data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
-    <i class="fa fa-edit"></i> Edit
-</button>
+                    <td class="text-center">
+                      <!-- Tombol Edit -->
+                      <button class="btn btn-sm btn-warning"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editArsipModal"
+                        data-id="<?= $row['id']; ?>"
+                        data-tgl_isi="<?= $row['tgl_isi']; ?>"
+                        data-unit_kerja="<?= $row['unit_kerja']; ?>"
+                        data-kode_arsip_id="<?= $row['kode_arsip_id']; ?>"
+                        data-uraian_masalah="<?= htmlspecialchars($row['uraian_masalah']); ?>"
+                        data-tahun="<?= $row['tahun']; ?>"
+                        data-jumlah="<?= $row['jumlah']; ?>"
+                        data-nomor_sampul="<?= $row['nomor_sampul']; ?>"
+                        data-nomor_box="<?= $row['nomor_box']; ?>"
+                        data-nomor_rak="<?= $row['nomor_rak']; ?>"
+                        data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
+                        <i class="fa fa-edit"></i> Edit
+                      </button>
 
-<!-- Tombol Hapus -->
-<a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_delete_arsip/'.$row['id']); ?>" 
-   class="btn btn-sm btn-danger"
-   onclick="return confirm('Yakin ingin menghapus data ini? Data detailnya juga akan terhapus!')">
-   <i class="fa fa-trash"></i> Hapus
-</a>
+                      <!-- Tombol Hapus -->
+                      <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_delete_arsip/' . $row['id']); ?>"
+                        class="btn btn-sm btn-danger"
+                        onclick="return confirm('Yakin ingin menghapus data ini? Data detailnya juga akan terhapus!')">
+                        <i class="fa fa-trash"></i> Hapus
+                      </a>
 
 
-</td>
+                    </td>
                   </tr>
                 <?php endforeach; ?>
               </tbody>
@@ -509,7 +509,7 @@
           <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
-          <form method="POST" action="<?= base_url("index.php/cdaftar_inaktif/Daftar/do_input_inaktif") ?>">
+                <form method="POST" action="<?= base_url("index.php/cdaftar_inaktif/Daftar/do_input_inaktif") ?>">
 
                   <div class="modal-body">
                     <div class="row">
@@ -584,92 +584,95 @@
 
           <!-- END Modal -->
           <!-- Modal Edit Penomoran -->
-<!-- Modal Edit Arsip -->
-<!-- Modal Edit Arsip -->
-<div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-<form method="POST" action="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_edit_arsip'); ?>">
+          <!-- Modal Edit Arsip -->
+          <!-- Modal Edit Arsip -->
+          <div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <form method="POST" action="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_edit_arsip'); ?>">
 
 
 
-        <div class="modal-header">
-          <h5 class="modal-title" id="editArsipModalLabel">Edit Data Arsip Inaktif</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-        </div>
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="editArsipModalLabel">Edit Data Arsip Inaktif</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
 
-        <div class="modal-body">
-          <input type="hidden" id="edit_id" name="id">
+                  <div class="modal-body">
+                    <input type="hidden" id="edit_id" name="id">
 
-          <div class="row">
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Tanggal Isi</label>
-<input type="datetime-local" 
-       class="form-control" 
-       id="edit_tgl_isi" 
-       name="tgl_isi" 
-       value="<?= date('Y-m-d\TH:i') ?>" 
-       required>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Tanggal Isi</label>
+                        <input type="datetime-local"
+                          class="form-control"
+                          id="edit_tgl_isi"
+                          name="tgl_isi"
+                          value="<?= date('Y-m-d\TH:i') ?>"
+                          required>
 
-            </div>
+                      </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Unit Kerja</label>
-              <input type="text" class="form-control" id="edit_unit_kerja" name="unit_kerja" required>
-            </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Unit Kerja</label>
+                        <input type="text" class="form-control" id="edit_unit_kerja" name="unit_kerja" required>
+                      </div>
 
-            <?php $kode = $this->db->get('kode_klasifikasi')->result(); $selected_kode_id = isset($data_arsip['kode_arsip_id']) ? $data_arsip['kode_arsip_id'] : ''; ?> 
-            <div class="col-md-6 mb-3"> <label for="kode_arsip_id" class="form-control-label">Kode Klasifikasi</label>
-             <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" required> <option value="">-- Pilih Kode Klasifikasi --</option>
-              <?php foreach ($kode as $k): ?> <option value="<?= $k->id ?>" <?= ($k->id == $selected_kode_id) ? 'selected' : '' ?>>
-                 <?= $k->kode_surat ?> - <?= $k->ket ?> </option> <?php endforeach; ?> </select> 
-            </div>
+                      <?php $kode = $this->db->get('kode_klasifikasi')->result();
+                      $selected_kode_id = isset($data_arsip['kode_arsip_id']) ? $data_arsip['kode_arsip_id'] : ''; ?>
+                      <div class="col-md-6 mb-3"> <label for="kode_arsip_id" class="form-control-label">Kode Klasifikasi</label>
+                        <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" required>
+                          <option value="">-- Pilih Kode Klasifikasi --</option>
+                          <?php foreach ($kode as $k): ?> <option value="<?= $k->id ?>" <?= ($k->id == $selected_kode_id) ? 'selected' : '' ?>>
+                              <?= $k->kode_surat ?> - <?= $k->ket ?> </option> <?php endforeach; ?>
+                        </select>
+                      </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Uraian Masalah</label>
-              <textarea class="form-control" id="edit_uraian_masalah" name="uraian_masalah" rows="2"></textarea>
-            </div>
+                      <div class="col-md-6 mb-3">
+                        <label class="form-label">Uraian Masalah</label>
+                        <textarea class="form-control" id="edit_uraian_masalah" name="uraian_masalah" rows="2"></textarea>
+                      </div>
 
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Tahun</label>
-              <input type="number" class="form-control" id="edit_tahun" name="tahun">
-            </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">Tahun</label>
+                        <input type="number" class="form-control" id="edit_tahun" name="tahun">
+                      </div>
 
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Jumlah</label>
-              <input type="number" class="form-control" id="edit_jumlah" name="jumlah">
-            </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">Jumlah</label>
+                        <input type="number" class="form-control" id="edit_jumlah" name="jumlah">
+                      </div>
 
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Nomor Sampul</label>
-              <input type="text" class="form-control" id="edit_nomor_sampul" name="nomor_sampul">
-            </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">Nomor Sampul</label>
+                        <input type="text" class="form-control" id="edit_nomor_sampul" name="nomor_sampul">
+                      </div>
 
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Nomor Box</label>
-              <input type="text" class="form-control" id="edit_nomor_box" name="nomor_box">
-            </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">Nomor Box</label>
+                        <input type="text" class="form-control" id="edit_nomor_box" name="nomor_box">
+                      </div>
 
-            <div class="col-md-4 mb-3">
-              <label class="form-label">Nomor Rak</label>
-              <input type="text" class="form-control" id="edit_nomor_rak" name="nomor_rak">
-            </div>
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">Nomor Rak</label>
+                        <input type="text" class="form-control" id="edit_nomor_rak" name="nomor_rak">
+                      </div>
 
-            <div class="col-md-12 mb-3">
-              <label class="form-label">Keterangan</label>
-              <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="2"></textarea>
+                      <div class="col-md-12 mb-3">
+                        <label class="form-label">Keterangan</label>
+                        <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="2"></textarea>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
 
 
           </tbody>
@@ -1384,39 +1387,38 @@ DataTables + Export Script
   </script>
 
   <script>
-  var editModal = document.getElementById('editArsipModal');
-  editModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget;
+    var editModal = document.getElementById('editArsipModal');
+    editModal.addEventListener('show.bs.modal', function(event) {
+      var button = event.relatedTarget;
 
-    document.getElementById('edit_id').value = button.getAttribute('data-id');
-    document.getElementById('edit_tgl_isi').value = button.getAttribute('data-tgl_isi');
-    document.getElementById('edit_unit_kerja').value = button.getAttribute('data-unit_kerja');
-    document.getElementById('edit_kode_arsip_id').value = button.getAttribute('data-kode_arsip_id');
-    document.getElementById('edit_uraian_masalah').value = button.getAttribute('data-uraian_masalah');
-    document.getElementById('edit_tahun').value = button.getAttribute('data-tahun');
-    document.getElementById('edit_jumlah').value = button.getAttribute('data-jumlah');
-    document.getElementById('edit_nomor_sampul').value = button.getAttribute('data-nomor_sampul');
-    document.getElementById('edit_nomor_box').value = button.getAttribute('data-nomor_box');
-    document.getElementById('edit_nomor_rak').value = button.getAttribute('data-nomor_rak');
-    document.getElementById('edit_keterangan').value = button.getAttribute('data-keterangan');
-  });
-  
-</script>
-<script>
-document.addEventListener('shown.bs.modal', function (event) {
-  if (event.target.id === 'editArsipModal') {
-    const inputTanggal = document.getElementById('edit_tgl_isi');
-    const now = new Date();
-    const local = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
-                      .toISOString().slice(0, 16);
-    inputTanggal.value = local;
-  }
-});
-</script>
+      document.getElementById('edit_id').value = button.getAttribute('data-id');
+      document.getElementById('edit_tgl_isi').value = button.getAttribute('data-tgl_isi');
+      document.getElementById('edit_unit_kerja').value = button.getAttribute('data-unit_kerja');
+      document.getElementById('edit_kode_arsip_id').value = button.getAttribute('data-kode_arsip_id');
+      document.getElementById('edit_uraian_masalah').value = button.getAttribute('data-uraian_masalah');
+      document.getElementById('edit_tahun').value = button.getAttribute('data-tahun');
+      document.getElementById('edit_jumlah').value = button.getAttribute('data-jumlah');
+      document.getElementById('edit_nomor_sampul').value = button.getAttribute('data-nomor_sampul');
+      document.getElementById('edit_nomor_box').value = button.getAttribute('data-nomor_box');
+      document.getElementById('edit_nomor_rak').value = button.getAttribute('data-nomor_rak');
+      document.getElementById('edit_keterangan').value = button.getAttribute('data-keterangan');
+    });
+  </script>
+  <script>
+    document.addEventListener('shown.bs.modal', function(event) {
+      if (event.target.id === 'editArsipModal') {
+        const inputTanggal = document.getElementById('edit_tgl_isi');
+        const now = new Date();
+        const local = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
+          .toISOString().slice(0, 16);
+        inputTanggal.value = local;
+      }
+    });
+  </script>
 
-<!-- ✅ START EXPORT EXCEL SCRIPT -->
-<!-- Tambahkan di bawah file, sebelum </body> -->
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- ✅ START EXPORT EXCEL SCRIPT -->
+  <!-- Tambahkan di bawah file, sebelum </body> -->
+  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
@@ -1428,44 +1430,42 @@ document.addEventListener('shown.bs.modal', function (event) {
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css"> -->
 
-<script>
-$(document).ready(function () {
-const table = $('#penomoranTable').DataTable({
-    // konfigurasi lama kamu tetap di sini...
-    dom: '<"d-flex justify-content-between align-items-center mb-3"Bf>tip',
-    buttons: [
-        {
-            extend: 'excelHtml5',
-            text: '📊 Export Excel',
-            className: 'd-none', // disembunyikan (karena kita pakai tombol manual)
-            exportOptions: {
-                columns: ':not(.no-export)'
-            }
-        }
-    ]
+  <script>
+    $(document).ready(function() {
+      const table = $('#penomoranTable').DataTable({
+        // konfigurasi lama kamu tetap di sini...
+        dom: '<"d-flex justify-content-between align-items-center mb-3"Bf>tip',
+        buttons: [{
+          extend: 'excelHtml5',
+          text: '📊 Export Excel',
+          className: 'd-none', // disembunyikan (karena kita pakai tombol manual)
+          exportOptions: {
+            columns: ':not(.no-export)'
+          }
+        }]
 
-    
-});
-// Hubungkan tombol export manual
-$('#exportBtn').on('click', function () {
+
+      });
+      // Hubungkan tombol export manual
+      $('#exportBtn').on('click', function() {
+        table.button('.buttons-excel').trigger();
+      });
+
+
+    });
+
+    // Hubungkan dengan input pencarian custom
+    $('#searchInput').on('keyup', function() {
+      table.search(this.value).draw();
+    });
+
+    // Hubungkan tombol manual Export Excel di atas
+    $('#exportBtn').on('click', function() {
     table.button('.buttons-excel').trigger();
-});
-
-
-  });
-
-  // Hubungkan dengan input pencarian custom
-  $('#searchInput').on('keyup', function () {
-    table.search(this.value).draw();
-  });
-
-  // Hubungkan tombol manual Export Excel di atas
-  $('#exportBtn').on('click', function () {
-    table.button('.buttons-excel').trigger();
-  });
-});
-</script>
-<!-- ✅ END EXPORT EXCEL SCRIPT -->
+    });
+    });
+  </script>
+  <!-- ✅ END EXPORT EXCEL SCRIPT -->
 
 
 
