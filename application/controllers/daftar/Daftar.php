@@ -1,6 +1,9 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 class Daftar extends CI_Controller
 {
     public function __construct()
@@ -10,8 +13,32 @@ class Daftar extends CI_Controller
 
     public function data_daftar()
     {
+
+         // 🟢 Hapus flash message lama supaya tidak muncul saat refresh
+        $this->session->unset_userdata(['success_msg']);
+        // Ambil semua parameter pencarian dari GET
+        $search = $this->input->get();
+
+        $where = [];
+
+        if (!empty($search['pencipta_arsip'])) {
+            $where[] = "a.pencipta_arsip LIKE '%" . $this->db->escape_like_str($search['pencipta_arsip']) . "%'";
+        }
+        if (!empty($search['asal_arsip'])) {
+            $where[] = "a.asal_arsip LIKE '%" . $this->db->escape_like_str($search['asal_arsip']) . "%'";
+        }
+        if (!empty($search['nomor_arsip'])) {
+            $where[] = "a.nomor_arsip LIKE '%" . $this->db->escape_like_str($search['nomor_arsip']) . "%'";
+        }
+         if (!empty($search['retensi_arsip'])) {
+            $where[] = "a.retensi_arsip LIKE '%" . $this->db->escape_like_str($search['retensi_arsip']) . "%'";
+        }
+
+        $where_sql = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+
         // Data arsip utama
-        $d['data_arsip'] = $this->db->query("
+         $sql = "
         SELECT 
         a.id, 
         a.tgl_isi, 
@@ -25,9 +52,11 @@ class Daftar extends CI_Controller
         a.metode_perlindungan
         FROM daftar_arsip a
         LEFT JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
-        ORDER BY a.tgl_isi DESC
+         $where_sql
+        ORDER BY a.tgl_isi DESC";
 
-    ")->result_array();
+
+        $d['data_arsip'] = $this->db->query($sql)->result_array();
 
         // Ambil semua detail (jenis + file)
         $details = $this->db->get('daftar_arsip_detail')->result_array();
@@ -41,6 +70,89 @@ class Daftar extends CI_Controller
         $d['detail_map'] = $detail_map;
 
         $this->load->view('Daftar/data_daftar', $d);
+    }
+
+     public function export_excel_vital()
+    {
+        $search = $this->input->get();
+        $where = [];
+
+       if (!empty($search['pencipta_arsip'])) {
+            $where[] = "a.pencipta_arsip LIKE '%" . $this->db->escape_like_str($search['pencipta_arsip']) . "%'";
+        }
+        if (!empty($search['asal_arsip'])) {
+            $where[] = "a.asal_arsip LIKE '%" . $this->db->escape_like_str($search['asal_arsip']) . "%'";
+        }
+        if (!empty($search['nomor_arsip'])) {
+            $where[] = "a.nomor_arsip LIKE '%" . $this->db->escape_like_str($search['nomor_arsip']) . "%'";
+        }
+         if (!empty($search['retensi_arsip'])) {
+            $where[] = "a.retensi_arsip LIKE '%" . $this->db->escape_like_str($search['retensi_arsip']) . "%'";
+        }
+        $where_sql = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+        $sql = "
+        SELECT 
+        a.id, 
+        a.tgl_isi, 
+        a.pencipta_arsip, 
+        a.asal_arsip, 
+        e.kode_surat, 
+        e.ket, 
+        a.nomor_arsip, 
+        a.retensi_arsip, 
+        a.lokasi_simpan, 
+        a.metode_perlindungan
+        FROM daftar_arsip a
+        LEFT JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
+         $where_sql
+        ORDER BY a.tgl_isi DESC";
+        $data = $this->db->query($sql)->result_array();
+
+        // === Export ke Excel ===
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header
+        $headers = [
+            'ID',
+            'Tanggal Isi',
+            'Pencipta Arsip',
+            'Asal Arsip',
+            'Kode Klasifikasi',
+            'Keterangan',
+            'Nomor Arsip',
+            'Retensi Arsip',
+            'Lokasi Simpan',
+            'Metode Perlindungan'
+        ];
+
+        $col = 'A';
+        foreach ($headers as $header) {
+            $sheet->setCellValue($col . '1', $header);
+            $col++;
+        }
+
+        // Isi data
+        $rowNum = 2;
+        foreach ($data as $row) {
+            $col = 'A';
+            foreach ($row as $cell) {
+                $sheet->setCellValue($col . $rowNum, $cell);
+                $col++;
+            }
+            $rowNum++;
+        }
+
+        // Output Excel
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Daftar_Arsip_Vital.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        $writer->save('php://output');
     }
 
 

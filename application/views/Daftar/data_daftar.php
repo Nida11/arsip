@@ -402,24 +402,40 @@
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <!-- Dropdown Filter Jenis Surat -->
-          <div class="px-3 mb-3">
-            <div class="row g-2 align-items-end">
-              <div class="col-md-3">
-                <label for="searchInput" class="form-label">Cari</label>
-                <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
-              </div>
-              <div class="col-md-3">
-                <label for="startDate" class="form-label">Tanggal Awal</label>
-                <input type="date" id="startDate" class="form-control">
-              </div>
-              <div class="col-md-3">
-                <label for="endDate" class="form-label">Tanggal Akhir</label>
-                <input type="date" id="endDate" class="form-control">
-              </div>
-              <!-- <div class="col-md-2">
-                                <button id="exportBtn" class="btn btn-success w-100">Export Excel</button>
-                            </div> -->
-            </div>
+           <form method="get" class="mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label mb-1 text-sm">Pencipta Arsip</label>
+            <input type="text" name="pencipta_arsip" class="form-control form-control-sm"
+              value="<?= $this->input->get('pencipta_arsip') ?>" placeholder="Masukkan Unit Kerja">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label mb-1 text-sm">Asal Arsip / unit kerja</label>
+            <input type="text" name="asal_arsip" class="form-control form-control-sm"
+              value="<?= $this->input->get('asal_arsip') ?>" placeholder="Masukkan Uraian Masalah">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label mb-1 text-sm">Nomor Arsip</label>
+            <input type="text" name="nomor_arsip" class="form-control form-control-sm"
+              value="<?= $this->input->get('nomor_arsip') ?>" placeholder="Nomor Arsip">
+          </div>
+           <div class="col-md-2">
+            <label class="form-label mb-1 text-sm">Retensi Arsip</label>
+            <input type="text" name="retensi_arsip" class="form-control form-control-sm"
+              value="<?= $this->input->get('retensi_arsip') ?>" placeholder="Retensi Arsip">
+          </div>
+            <div class="col-md-4 d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-primary btn-sm w-auto">
+              <i class="fa fa-search"></i> Cari
+            </button>
+            <a href="<?= base_url('index.php/daftar/Daftar/export_excel_vital?' . http_build_query($_GET)) ?>"
+              class="btn btn-success btn-sm w-auto">
+              <i class="fa fa-file-excel"></i> Export
+            </a>
+          </div>
+        </div>
+      </form>
+
           </div>
 
           <div class="p-3">
@@ -491,18 +507,21 @@
                     <td class="text-center"><?= htmlspecialchars($row['metode_perlindungan']); ?></td>
                     <td class="text-center">
 
-
-                      <button type="button" class="btn btn-primary btn-edit"
+                        <button class="btn btn-sm btn-primary"
+                        data-bs-toggle="modal"
+                        data-bs-target="#editArsipModal"
                         data-id="<?= $row['id']; ?>"
-                        data-pencipta="<?= $row['pencipta_arsip']; ?>"
-                        data-unit="<?= $row['asal_arsip']; ?>"
-                        data-klasifikasi_id="<?= $row['kode_arsip_id']; ?>"
-                        data-jenis="<?= $row['jenis_arsip']; ?>"
-                        data-nomor="<?= $row['nomor_arsip']; ?>"
-                        data-retensi="<?= $row['retensi_arsip']; ?>"
-                        data-lokasi="<?= $row['lokasi_simpan']; ?>"
-                        data-metode="<?= $row['metode_perlindungan']; ?>">
-                        <i class="fa fa-pencil"></i>
+                        data-tgl="<?= $row['tgl_isi']; ?>"
+                        data-pencipta="<?= htmlspecialchars($row['pencipta_arsip']); ?>"
+                        data-asal="<?= htmlspecialchars($row['asal_arsip']); ?>"
+                        data-kode="<?= $row['kode_arsip_id']; ?>"
+                        data-nomor="<?= htmlspecialchars($row['nomor_arsip']); ?>"
+                        data-retensi="<?= htmlspecialchars($row['retensi_arsip']); ?>"
+                        data-lokasi="<?= htmlspecialchars($row['lokasi_simpan']); ?>"
+                        data-metode="<?= htmlspecialchars($row['metode_perlindungan']); ?>"
+                        data-jenis='<?= json_encode($row["detail"], JSON_HEX_APOS | JSON_HEX_QUOT); ?>'
+                        title="Edit Arsip">
+                        <i class="fas fa-edit"></i>
                       </button>
 
                       <a href="<?= base_url('index.php/daftar/Daftar/delete_arsip/' . $row['id']); ?>"
@@ -510,27 +529,6 @@
                         onclick="return confirm('Yakin ingin menghapus arsip ini? Data yang dihapus tidak bisa dikembalikan.');">
                         <i class="fa fa-trash"></i>
                       </a>
-
-
-
-                      <!-- ✅ Tambah Tombol Print -->
-                      <button class="print-surat btn btn-sm btn-primary"
-                        data-is_multiple="<?= $row['is_multiple'] ?>"
-                        data-nomor="<?= $row['nomor_surat'] ?>"
-                        data-urut="<?= $row['nomor_urut'] ?>"
-                        data-tanggal="<?= $row['tanggal'] ?>"
-                        data-jenis="<?= $row['nama_jenis'] ?>"
-                        data-kode_klasifikasi="<?= $row['kode_surat'] ?>"
-                        data-perihal="<?= $row['perihal'] ?>"
-                        data-isi="<?= $row['isi_ringkas'] ?>"
-                        data-kepada="<?= $row['kepada'] ?>"
-                        data-pengolah="<?= $row['nama_bidang'] ?>"
-                        data-lampiran="<?= $row['lampiran'] ?>"
-                        data-catatan="<?= $row['catatan'] ?>"
-                        data-noawal="<?= $row['no_awal'] ?>"
-                        data-noakhir="<?= $row['no_akhir'] ?>">
-                        <i class="fa fa-print"></i>
-                      </button>
 
                     </td>
                   </tr>
@@ -540,68 +538,13 @@
               </tbody>
             </table>
           </div>
-          <!-- Modal Edit Arsip -->
-          <div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <form method="post" action="<?= base_url('index.php/daftar/Daftar/do_edit_arsip') ?>">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="editArsipModalLabel">Edit Data Arsip</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-                  </div>
-                  <div class="modal-body">
-                    <input type="hidden" name="id" id="editId">
-
-                    <div class="mb-3">
-                      <label for="editPencipta" class="form-label">Pencipta Arsip</label>
-                      <input type="text" class="form-control" name="pencipta_arsip" id="editPencipta" required>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="editUnit" class="form-label">Unit Kerja</label>
-                      <input type="text" class="form-control" name="asal_arsip" id="editUnit" required>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="editKode" class="form-label">Kode Klasifikasi</label>
-                      <input type="text" class="form-control" name="kode_arsip_id" id="editKode" required>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="editNomor" class="form-label">Nomor Arsip</label>
-                      <input type="text" class="form-control" name="nomor_arsip" id="editNomor" required>
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="editRetensi" class="form-label">Retensi Arsip</label>
-                      <input type="text" class="form-control" name="retensi_arsip" id="editRetensi">
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="editLokasi" class="form-label">Lokasi Simpan</label>
-                      <input type="text" class="form-control" name="lokasi_simpan" id="editLokasi">
-                    </div>
-
-                    <div class="mb-3">
-                      <label for="editMetode" class="form-label">Metode Perlindungan</label>
-                      <input type="text" class="form-control" name="metode_perlindungan" id="editMetode">
-                    </div>
-                  </div>
-
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
 
         </div>
       </div>
     </div>
     </div>
     </div>
-    <!-- Modal Tambah Slot -->
+    <!-- Modal Tambah Arsip -->
     <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
       <div class="modal-dialog ">
         <div class="modal-content">
@@ -725,64 +668,108 @@
       </div>
     </div>
 
-    <!-- Modal Edit Arsip Vital -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <form id="formEditArsip" method="POST" action="<?= base_url('index.php/daftar/Daftar/update_arsip_vital'); ?>">
-            <div class="modal-header">
-              <h5 class="modal-title" id="editModalLabel">Edit Arsip Vital</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <input type="hidden" name="id" id="edit_id">
-
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label for="edit_pencipta" class="form-label">Pencipta Arsip</label>
-                  <input type="text" class="form-control" name="pencipta_arsip" id="edit_pencipta" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="edit_unit" class="form-label">Unit Kerja</label>
-                  <input type="text" class="form-control" name="asal_arsip" id="edit_unit" required>
-                </div>
-
-                <div class="col-md-6">
-                  <label for="edit_klasifikasi" class="form-label">Kode Klasifikasi</label>
-                  <input type="text" class="form-control" name="kode_arsip_id" id="edit_klasifikasi" required>
-                </div>
+  
 
 
-                <div class="col-md-6">
-                  <label for="edit_jenis" class="form-label">Jenis Arsip</label>
-                  <input type="text" class="form-control" name="jenis_arsip" id="edit_jenis">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit_nomor" class="form-label">Nomor Arsip</label>
-                  <input type="text" class="form-control" name="nomor_arsip" id="edit_nomor" required>
-                </div>
-                <div class="col-md-6">
-                  <label for="edit_retensi" class="form-label">Retensi Arsip</label>
-                  <input type="text" class="form-control" name="retensi_arsip" id="edit_retensi">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit_lokasi" class="form-label">Lokasi Simpan</label>
-                  <input type="text" class="form-control" name="lokasi_simpan" id="edit_lokasi">
-                </div>
-                <div class="col-md-6">
-                  <label for="edit_metode" class="form-label">Metode Perlindungan</label>
-                  <input type="text" class="form-control" name="metode_perlindungan" id="edit_metode">
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-              <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-            </div>
-          </form>
+<!-- Modal Edit Arsip -->
+<div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"> <!-- boleh pakai modal-lg biar luas -->
+    <div class="modal-content">
+      <form method="POST" enctype="multipart/form-data" action="<?= base_url("index.php/daftar/Daftar/do_edit_arsip") ?>">
+
+        <!-- HEADER -->
+        <div class="modal-header">
+          <h5 class="modal-title" id="editArsipModalLabel">
+            <i class="fa fa-edit text-primary me-2"></i> Edit Arsip
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      </div>
+
+        <!-- BODY -->
+        <div class="modal-body">
+          <input type="hidden" id="edit_id" name="id">
+
+          <div class="row">
+            <div class="col-md-12 mb-3 daftar-arsip-section">
+
+              <!-- tanggal isi -->
+              <div class="form-group mb-3">
+                <label for="edit_tgl_isi">Tanggal & Waktu Pengisian</label>
+                <input type="datetime-local" class="form-control" id="edit_tgl_isi" name="tgl_isi" readonly>
+              </div>
+
+              <!-- Pencipta Arsip -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_pencipta_arsip">Pencipta Arsip</label>
+                <input type="text" class="form-control" id="edit_pencipta_arsip" name="pencipta_arsip">
+              </div>
+
+              <!-- Asal Arsip -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_asal_arsip">Asal Arsip / Unit Kerja</label>
+                <input type="text" class="form-control" id="edit_asal_arsip" name="asal_arsip">
+              </div>
+
+              <!-- Kode Arsip -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_kode_arsip_id">Kode Arsip</label>
+                <select name="kode_arsip_id" id="edit_kode_arsip_id" class="form-control select2" style="width: 100%;">
+                  <option></option>
+                  <?php foreach ($kode as $k): ?>
+                    <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
+                  <?php endforeach; ?>
+                </select>
+              </div>
+
+              <!-- Nomor Arsip -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_nomor_arsip">Nomor Arsip</label>
+                <input type="text" class="form-control" id="edit_nomor_arsip" name="nomor_arsip">
+              </div>
+
+              <!-- Retensi -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_retensi_arsip">Retensi Arsip</label>
+                <input type="text" class="form-control" id="edit_retensi_arsip" name="retensi_arsip">
+              </div>
+
+              <!-- Lokasi Simpan -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_lokasi_simpan">Lokasi Simpan</label>
+                <input type="text" class="form-control" id="edit_lokasi_simpan" name="lokasi_simpan">
+              </div>
+
+              <!-- Metode Perlindungan -->
+              <div class="mb-3">
+                <label class="form-control-label" for="edit_metode_perlindungan">Metode Perlindungan</label>
+                <input type="text" class="form-control" id="edit_metode_perlindungan" name="metode_perlindungan">
+              </div>
+
+              <!-- Jenis Arsip -->
+              <div class="mb-3">
+                <label class="form-control-label d-block">Jenis / Series Arsip</label>
+                <div id="edit-series-container"><!-- isi dinamis via JS --></div>
+                <button type="button" id="edit-add-series" class="btn btn-primary btn-sm mt-2">+ Add</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- FOOTER -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+
+      </form>
     </div>
+  </div>
+</div>
+
+
 
     </tbody>
     </table>
@@ -901,108 +888,6 @@
       </div>
     </div>
   </div>
-  <script>
-    $(document).ready(function() {
-      $('.btn-edit').on('click', function() {
-        const modal = $('#editSlotModal');
-
-        // ambil data
-        const id = $(this).data('id');
-        const tanggal = $(this).data('tanggal');
-        const jenis = $(this).data('jenis');
-        const pengolah = $(this).data('pengolah');
-        const klasifikasi = $(this).data('klasifikasi');
-        const nomorUrut = $(this).data('nomor_urut');
-        const nomorSurat = $(this).data('nomor_surat');
-        const perihal = $(this).data('perihal');
-        const kepada = $(this).data('kepada');
-        const isiRingkas = $(this).data('isi_ringkas');
-        const catatan = $(this).data('catatan');
-        const lampiran = $(this).data('lampiran');
-
-        // isi field
-        modal.find('#edit_id').val(id);
-        modal.find('#edit_tanggal').val(tanggal);
-        modal.find('#edit_jenis_surat_id').val(jenis).trigger('change');
-        modal.find('#edit_pengolah_id').val(pengolah).trigger('change');
-        modal.find('#edit_kode_klasifikasi_id').val(klasifikasi).trigger('change');
-        modal.find('#edit_nomor_urut').val(nomorUrut);
-        modal.find('#edit_nomor_surat').val(nomorSurat);
-        modal.find('#edit_perihal').val(perihal);
-        modal.find('#edit_kepada').val(kepada);
-        modal.find('#edit_isi_ringkas').val(isiRingkas);
-        modal.find('#edit_catatan').val(catatan);
-        modal.find('#edit_lampiran').val(lampiran);
-
-        // tampilkan modal setelah semua field diisi
-        $('#editSlotModal').modal('show'); // untuk Bootstrap 4
-      });
-    });
-  </script>
-
-  <script>
-    function updateNomorSurat() {
-      const awal = document.getElementById('nomor_awal').value.padStart(3, '0');
-      const akhir = document.getElementById('nomor_akhir').value.padStart(3, '0');
-      const klasifikasi = document.getElementById('kode_klasifikasi_id').selectedOptions[0]?.text.split(' - ')[0] || '';
-      const bidang = document.getElementById('pengolah_id').selectedOptions[0].text.split(' - ')[0] || '';
-
-      let nomor_surat = '';
-
-      if (awal && akhir && awal !== akhir) {
-        nomor_surat = `${awal} - ${akhir}/${klasifikasi}/${bidang}`;
-      } else {
-        nomor_surat = `${awal}/${klasifikasi}/${bidang}`;
-      }
-
-      document.getElementById('nomor_surat').value = nomor_surat;
-    }
-
-    function handleMultipleAutoFill() {
-      const awal = parseInt(document.getElementById('nomor_awal').value);
-      const isMultiple = document.querySelector('input[name="is_multiple"]:checked')?.value === '1';
-
-      if (!isNaN(awal)) {
-        const akhir = isMultiple ? awal + 1 : awal;
-        document.getElementById('nomor_akhir').value = akhir.toString().padStart(3, '0');
-        updateNomorSurat();
-      }
-    }
-
-    // Saat halaman selesai dimuat
-    window.addEventListener('DOMContentLoaded', function() {
-      const nomorAwalInput = document.getElementById('nomor_awal');
-      const nomorAkhirInput = document.getElementById('nomor_akhir');
-
-      // Jika nomor_awal sudah terisi (misalnya dari JS lain), langsung proses
-      if (nomorAwalInput.value) {
-        handleMultipleAutoFill();
-      }
-
-      // Event saat nomor_awal diubah (manual atau programmatically dengan dispatchEvent)
-      nomorAwalInput.addEventListener('input', handleMultipleAutoFill);
-
-      // Event saat nomor_akhir diubah manual
-      nomorAkhirInput.addEventListener('input', function() {
-        const awal = parseInt(document.getElementById('nomor_awal').value);
-        const akhir = parseInt(this.value);
-
-
-        updateNomorSurat();
-      });
-
-      // Event saat radio multiple/single diubah
-      document.querySelectorAll('input[name="is_multiple"]').forEach(function(radio) {
-        radio.addEventListener('change', handleMultipleAutoFill);
-      });
-
-      // Jika klasifikasi atau bidang diubah, update nomor surat juga
-      document.getElementById('kode_klasifikasi_id').addEventListener('change', updateNomorSurat);
-      document.getElementById('pengolah_id').addEventListener('change', updateNomorSurat);
-    });
-  </script>
-
-
 
 
   <!--   Core JS Files   -->
@@ -1124,14 +1009,7 @@
 
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
-  <!-- 
-DataTables + Export Script
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
-  <!-- SCRIPT FILTER -->
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const searchInput = document.getElementById("searchInput");
@@ -1228,167 +1106,11 @@ DataTables + Export Script
   </script>
 
 
-  <!-- PRINT TEMPLATE -->
-  <div id="printArea" style="width: 210mm; height: 148mm; display: none;">
-    <div style="width: 100%; height: 100%; display: flex; border: none; background: white; box-sizing: border-box;">
-
-      <!-- Red Bar -->
-      <div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
-        <div style="
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-90deg);
-        color: white;
-        font-weight: bold;
-        font-size: 1rem;
-        line-height: 1.5;
-        font-family: 'Times New Roman', serif;
-        text-align: center;
-        white-space: nowrap;">
-          <div>PEMERINTAH DAERAH PROVINSI JAWA BARAT</div>
-          <div>BADAN PENDAPATAN DAERAH</div>
-          <div>KARTU SURAT KELUAR</div>
-        </div>
-      </div>
-
-      <!-- Content -->
-      <div style="flex: 1; padding: 12px; box-sizing: border-box; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black; display: flex; flex-direction: column; justify-content: space-between;">
-
-        <!-- Kode & Nomor Urut -->
-        <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.75rem;">
-          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-            Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-            Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-          <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-            Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;font-size: 0.9rem; "></strong>
-          </div>
-        </div>
-
-        <!-- PERIHAL -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.1rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem; margin: 0; line-height: 1;">Perihal:</div>
-          <div style="text-align: left; padding-left: 2rem; ">
-            <strong id="print_perihal" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-
-        <!-- ISI RINGKAS -->
-        <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding: 0.25rem 0 0.25rem 0.25rem; min-height: 4.5rem;">
-  <div style="font-size: 0.7rem;">Isi Ringkas:</div>
-  <div><strong id="print_isi_ringkas" style="font-size: 0.9rem;"></strong></div>
-</div> -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem;">Isi Ringkas:</div>
-          <div style="text-align: left; padding-left: 2rem;">
-            <strong id="print_isi_ringkas" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-        <!-- Kepada -->
-        <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
-        Kepada: <strong id="print_kepada" style="margin-left: 0.25rem; font-size: 1.5rem; "></strong>
-      </div> -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem;">Kepada:</div>
-          <div style="text-align: left; padding-left: 2rem;">
-            <strong id="print_kepada" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-
-        <!-- Pengolah / Tanggal / Lampiran -->
-        <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.5rem;">
-          <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
-            Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem; font-size: 1.2rem; "></strong>
-          </div>
-          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-            Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-          <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-            Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-        </div>
-
-        <!-- Catatan -->
-        <!-- <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
-        Catatan: <strong id="print_catatan" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-      </div> -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem;">Catatan:</div>
-          <div style="text-align: left; padding-left: 2rem;">
-            <strong id="print_catatan" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-  </div>
-
-
 
   <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    $(document).on('click', '.print-surat', function(e) {
-      e.preventDefault();
-
-      const nomor = $(this).data('nomor');
-      const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
-      const nomorAwal = $(this).data('noawal') || '';
-      const nomorAkhir = $(this).data('noakhir') || '';
-      const nomorUrut = $(this).data('urut') || '';
-
-      const nomorTampil = isMultiple && nomorAwal && nomorAkhir ?
-        `${nomorAwal} - ${nomorAkhir}` :
-        nomorUrut;
-
-      $('#print_nomor_urut').text(nomorTampil);
-      $('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
-      $('#print_tanggal').text($(this).data('tanggal'));
-      $('#print_jenis').text($(this).data('jenis'));
-      $('#print_perihal').text($(this).data('perihal'));
-      $('#print_isi_ringkas').text($(this).data('isi'));
-      $('#print_kepada').text($(this).data('kepada'));
-      $('#print_nama_pengolah').text($(this).data('pengolah'));
-      $('#print_lampiran').text($(this).data('lampiran'));
-      $('#print_catatan').text($(this).data('catatan'));
-      $('#print_noawal').text(nomorAwal);
-      $('#print_noakhir').text(nomorAkhir);
-
-      const printElement = document.getElementById('printArea');
-      printElement.style.display = 'block';
-
-      html2canvas(printElement, {
-        scale: 2,
-        useCORS: true
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const {
-          jsPDF
-        } = window.jspdf;
-        const pdf = new jsPDF({
-          orientation: 'landscape',
-          unit: 'mm',
-          format: 'a5'
-        });
-
-        pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
-        pdf.save(`Surat_${nomor}.pdf`);
-
-        printElement.style.display = 'none';
-      });
-    });
-  </script>
-
-
-
+ 
 
 
   <script>
@@ -1452,26 +1174,78 @@ DataTables + Export Script
       }
     });
   </script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const editButtons = document.querySelectorAll('.btn-edit');
+ <script>
+$(document).on('click', 'button[data-bs-target="#editArsipModal"]', function () {
+  const btn = $(this);
 
-      editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-          document.getElementById('editId').value = this.dataset.id;
-          document.getElementById('editPencipta').value = this.dataset.pencipta;
-          document.getElementById('editUnit').value = this.dataset.unit;
-          document.getElementById('editKode').value = this.dataset.kode;
-          document.getElementById('editNomor').value = this.dataset.nomor;
-          document.getElementById('editRetensi').value = this.dataset.retensi;
-          document.getElementById('editLokasi').value = this.dataset.lokasi;
-          document.getElementById('editMetode').value = this.dataset.metode;
-        });
-      });
+  // isi field utama
+  $('#edit_id').val(btn.data('id'));
+  $('#edit_tgl_isi').val(btn.data('tgl'));
+  $('#edit_pencipta_arsip').val(btn.data('pencipta'));
+  $('#edit_asal_arsip').val(btn.data('asal'));
+  $('#edit_kode_arsip_id').val(btn.data('kode')).trigger('change');
+  $('#edit_nomor_arsip').val(btn.data('nomor'));
+  $('#edit_retensi_arsip').val(btn.data('retensi'));
+  $('#edit_lokasi_simpan').val(btn.data('lokasi'));
+  $('#edit_metode_perlindungan').val(btn.data('metode'));
+
+  // kosongkan container dulu
+  const container = $('#edit-series-container');
+  container.empty();
+
+  // parse jenis arsip dari data (misal bentuk JSON)
+  let jenisData = btn.data('jenis');
+  if (typeof jenisData === 'string') {
+    try {
+      jenisData = JSON.parse(jenisData);
+    } catch (e) {
+      jenisData = [jenisData]; // fallback: single string
+    }
+  }
+
+  // isi tiap jenis arsip
+  if (Array.isArray(jenisData)) {
+    jenisData.forEach(item => {
+      container.append(`
+        <div class="card mb-2 shadow-sm position-relative">
+          <div class="card-body p-2">
+            <textarea class="form-control border-0 series-textarea mb-2" name="jenis_arsip[]" rows="3">${item.jenis_arsip || ''}</textarea>
+            <input type="file" class="form-control border-0" name="file_arsip[]" />
+            ${item.file_arsip ? `<small class="text-muted">File sebelumnya: ${item.file_arsip}</small>` : ''}
+            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">✕</button>
+          </div>
+        </div>
+      `);
     });
-  </script>
+  }
+});
+
+// tombol tambah baru di modal edit
+$('#edit-add-series').on('click', function () {
+  $('#edit-series-container').append(`
+    <div class="card mb-2 shadow-sm position-relative">
+      <div class="card-body p-2">
+        <textarea class="form-control border-0 series-textarea mb-2" name="jenis_arsip[]" rows="3" placeholder="Tulis jenis arsip baru..."></textarea>
+        <input type="file" class="form-control border-0" name="file_arsip[]" />
+        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">✕</button>
+      </div>
+    </div>
+  `);
+});
+
+// tombol hapus baris
+$(document).on('click', '.remove-series', function () {
+  $(this).closest('.card').remove();
+});
+
+</script>
+
+
+
 
 
 </body>
+
+
 
 </html>
