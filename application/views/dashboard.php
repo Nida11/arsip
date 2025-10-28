@@ -19,9 +19,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/bapenda.png') ?>">
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/triarsip.png') ?>">
   <title>
-    Arsip Penomoran Surat Keluar
+    TRIARSIP
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -40,6 +40,14 @@
 
 
   <style>
+    /* Highlight nav-link aktif */
+.nav-link.active {
+    background-color: #e0e0e0; /* ubah sesuai warna tema */
+    color: #000 !important;   /* teks lebih gelap */
+    font-weight: 600;          /* teks tebal */
+    border-left: 4px solid #344767; /* garis kiri tebal untuk aktif */
+}
+
 @media (max-width: 991.98px) {
   body.g-sidenav-hidden #sidenav-main {
     transform: translateX(-110%); /* lebih jauh agar benar-benar keluar */
@@ -117,7 +125,22 @@
             </ul>
           </div>
         </li>
-
+                <li class="nav-item">
+          <a class="nav-link" href="<?= base_url('/index.php/daftar/Daftar/data_daftar') ?>">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Daftar Arsip Vital</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="<?= base_url('/index.php/cdaftar_inaktif/Daftar/daftar_inaktif') ?>">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-archive-2 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Daftar Arsip Inaktif</span>
+          </a>
+        </li>
         <!-- Billing -->
         <li class="nav-item">
           <a class="nav-link" href="<?= base_url('/index.php/specimen/Specimen/data_specimen')?>">
@@ -128,14 +151,7 @@
           </a>
         </li>
 
-                <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/daftar/Daftar/data_daftar') ?>">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Daftar Arsip Inaktif</span>
-          </a>
-        </li>
+
 
 
         <!-- Virtual Reality -->

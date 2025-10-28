@@ -5,9 +5,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/bapenda.png') ?>">
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/triarsip.png') ?>">
   <title>
-    Arsip Penomoran Surat Keluar
+    TRIARSIP / DAFTAR ARSIP INAKTIF
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -43,6 +43,44 @@
 
 
   <style>
+    /* Highlight nav-link aktif */
+.nav-link.active {
+    background-color: #e0e0e0; /* ubah sesuai warna tema */
+    color: #000 !important;   /* teks lebih gelap */
+    font-weight: 600;          /* teks tebal */
+    border-left: 4px solid #344767; /* garis kiri tebal untuk aktif */
+}
+
+
+
+/* Modal Edit Arsip */
+/* Atur modal edit default agak ke kanan */
+#editArsipModal .modal-dialog {
+    max-width: 900px;
+    width: 60%;
+    margin: 1.75rem auto;
+    transform: translateX(50px); /* default geser 50px ke kanan */
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+}
+
+
+/* scroll di modal body jika tinggi melebihi layar */
+#editArsipModal .modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+/* kursor draggable */
+#editArsipModal .modal-header {
+    cursor: move;
+}
+
+
+
+
     /* Bungkus table wrapper agar tidak overflow keluar */
     #penomoranTable_wrapper {
       overflow-x: auto;
@@ -279,7 +317,7 @@
       <ul class="navbar-nav">
         <!-- Dashboard -->
         <li class="nav-item">
-          <a class="nav-link active" href="<?= base_url('/index.php/Guest/beranda_admin') ?>">
+          <a class="nav-link " href="<?= base_url('/index.php/Guest/beranda_admin') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-tv-2 text-dark text-sm opacity-10"></i>
             </div>
@@ -312,6 +350,22 @@
             </ul>
           </div>
         </li>
+                <li class="nav-item">
+          <a class="nav-link" href="<?= base_url('/index.php/daftar/Daftar/data_daftar') ?>">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Daftar Arsip Vital</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="<?= base_url('/index.php/cdaftar_inaktif/Daftar/daftar_inaktif') ?>">
+            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="ni ni-archive-2 text-dark text-sm opacity-10"></i>
+            </div>
+            <span class="nav-link-text ms-1">Daftar Arsip Inaktif</span>
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="<?= base_url('/index.php/specimen/Specimen/data_specimen') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
@@ -320,22 +374,7 @@
             <span class="nav-link-text ms-1">Specimen</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/daftar/Daftar/data_daftar') ?>">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Daftar Arsip Vital</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="<?= base_url('/index.php/cdaftar_inaktif/Daftar/daftar_inaktif') ?>">
-            <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="ni ni-world-2 text-dark text-sm opacity-10"></i>
-            </div>
-            <span class="nav-link-text ms-1">Daftar Arsip Inaktif</span>
-          </a>
-        </li>
+
 
         <li class="nav-item">
           <a class="nav-link" href="<?= base_url('/index.php/Guest/') ?>">
@@ -389,106 +428,95 @@
     <div class="container-fluid py-4">
       <div class="card mb-4">
         <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-          <h6>Data's Daftar Arsip </h6>
+          <h6> Daftar Arsip Inaktif</h6>
           <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSlotModal">
             Tambah Daftar Arsip </button>
         </div>
         <div class="card-body px-0 pt-0 pb-2">
           <!-- Dropdown Filter Jenis Surat -->
-          <div class="px-3 mb-3">
-            <div class="row g-2 align-items-end">
-              <div class="col-md-3">
-                <label for="searchInput" class="form-label">Cari</label>
-                <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
-              </div>
-
-              <form method="get" class="mb-3">
-                <div class="row">
-                  <div class="col-md-3">
-                    <input type="text" name="unit_kerja" class="form-control" value="<?= $this->input->get('unit_kerja') ?>" placeholder="Unit Kerja">
-                  </div>
-                  <div class="col-md-3">
-                    <input type="text" name="uraian_masalah" class="form-control" value="<?= $this->input->get('uraian_masalah') ?>" placeholder="Uraian Masalah">
-                  </div>
-                  <div class="col-md-2">
-                    <input type="text" name="tahun" class="form-control" value="<?= $this->input->get('tahun') ?>" placeholder="Tahun">
-                  </div>
-                  <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary">Cari</button>
-                  </div>
-                  <div class="col-md-2 text-end">
-                    <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/export_excel_inaktif?' . http_build_query($_GET)) ?>" class="btn btn-success">
-                      <i class="fa fa-file-excel"></i> Export Excel
-                    </a>
-                  </div>
-                </div>
-              </form>
-              <!-- <div class="col-md-3">
-                <label for="startDate" class="form-label">Tanggal Awal</label>
-                <input type="date" id="startDate" class="form-control">
-              </div>
-              <div class="col-md-3">
-                <label for="endDate" class="form-label">Tanggal Akhir</label>
-                <input type="date" id="endDate" class="form-control">
-              </div> -->
-              <div class="col-md-3 text-end">
-                <button id="exportBtn" class="btn btn-success btn-sm">📊 Export Excel</button>
-              </div>
-
-            </div>
+    <div class="card-body px-3 pt-3 pb-2">
+      <!-- Filter & Export -->
+      <form method="get" class="mb-3">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label mb-1 text-sm">Unit Kerja</label>
+            <input type="text" name="unit_kerja" class="form-control form-control-sm"
+              value="<?= $this->input->get('unit_kerja') ?>" placeholder="Masukkan Unit Kerja">
           </div>
+          <div class="col-md-3">
+            <label class="form-label mb-1 text-sm">Uraian Masalah</label>
+            <input type="text" name="uraian_masalah" class="form-control form-control-sm"
+              value="<?= $this->input->get('uraian_masalah') ?>" placeholder="Masukkan Uraian Masalah">
+          </div>
+          <div class="col-md-2">
+            <label class="form-label mb-1 text-sm">Tahun</label>
+            <input type="text" name="tahun" class="form-control form-control-sm"
+              value="<?= $this->input->get('tahun') ?>" placeholder="Tahun">
+          </div>
+            <div class="col-md-4 d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-primary btn-sm w-auto">
+              <i class="fa fa-search"></i> Cari
+            </button>
+            <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/export_excel_inaktif?' . http_build_query($_GET)) ?>"
+              class="btn btn-success btn-sm w-auto">
+              <i class="fa fa-file-excel"></i> Export
+            </a>
+          </div>
+        </div>
+      </form>
 
-          <div class="p-3">
-            <table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
-              <thead class="thead-dark">
-                <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Pengisian</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit Kerja</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Klasifikasi</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Uraian Masalah</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tahun</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jumlah</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Sampul</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Box</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Rak</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
-                  <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <?php $no = 1;
-                foreach ($data_inaktif as $row): ?>
-                  <tr>
-                    <td class="text-center"><?= $no++ ?></td>
-                    <td class="text-center"><?= htmlspecialchars(formatTanggalIndo($row['tgl_isi'])) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['unit_kerja']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['kode_klasifikasi']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['uraian_masalah']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['tahun']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['jumlah']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['nomor_sampul']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['nomor_box']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['nomor_rak']) ?></td>
-                    <td class="text-center"><?= htmlspecialchars($row['keterangan']) ?></td>
-                    <td class="text-center">
-                      <!-- Tombol Edit -->
-                      <button class="btn btn-sm btn-warning"
-                        data-bs-toggle="modal"
-                        data-bs-target="#editArsipModal"
-                        data-id="<?= $row['id']; ?>"
-                        data-tgl_isi="<?= $row['tgl_isi']; ?>"
-                        data-unit_kerja="<?= $row['unit_kerja']; ?>"
-                        data-kode_arsip_id="<?= $row['kode_arsip_id']; ?>"
-                        data-uraian_masalah="<?= htmlspecialchars($row['uraian_masalah']); ?>"
-                        data-tahun="<?= $row['tahun']; ?>"
-                        data-jumlah="<?= $row['jumlah']; ?>"
-                        data-nomor_sampul="<?= $row['nomor_sampul']; ?>"
-                        data-nomor_box="<?= $row['nomor_box']; ?>"
-                        data-nomor_rak="<?= $row['nomor_rak']; ?>"
-                        data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
-                        <i class="fa fa-edit"></i> Edit
-                      </button>
+      <!-- Tabel Arsip -->
+      <div class="table-responsive">
+        <table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
+          <thead class="thead-dark">
+            <tr>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Pengisian</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Unit Kerja</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Klasifikasi</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Uraian Masalah</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tahun</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jumlah</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Sampul</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Box</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Rak</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
+              <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php $no = 1;
+            foreach ($data_inaktif as $row): ?>
+              <tr>
+                <td class="text-center"><?= $no++ ?></td>
+                <td class="text-center"><?= htmlspecialchars(formatTanggalIndo($row['tgl_isi'])) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['unit_kerja']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['kode_klasifikasi']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['uraian_masalah']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['tahun']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['jumlah']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['nomor_sampul']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['nomor_box']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['nomor_rak']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['keterangan']) ?></td>
+                <td class="text-center">
+<button class="btn btn-sm btn-warning"
+  data-bs-toggle="modal"
+  data-bs-target="#editArsipModal"
+  data-id="<?= $row['id']; ?>"
+  data-tgl_isi="<?= $row['tgl_isi']; ?>"
+  data-unit_kerja="<?= htmlspecialchars($row['unit_kerja']); ?>"
+  data-kode_arsip_id="<?= $row['kode_arsip_id']; ?>"
+  data-kode_klasifikasi_text="<?= htmlspecialchars($row['kode_klasifikasi']); ?>" 
+  data-uraian_masalah="<?= htmlspecialchars($row['uraian_masalah']); ?>"
+  data-tahun="<?= $row['tahun']; ?>"
+  data-jumlah="<?= $row['jumlah']; ?>"
+  data-nomor_sampul="<?= htmlspecialchars($row['nomor_sampul']); ?>"
+  data-nomor_box="<?= htmlspecialchars($row['nomor_box']); ?>"
+  data-nomor_rak="<?= htmlspecialchars($row['nomor_rak']); ?>"
+  data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
+  <i class="fa fa-edit"></i> Edit
+</button>
 
                       <!-- Tombol Hapus -->
                       <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_delete_arsip/' . $row['id']); ?>"
@@ -513,6 +541,11 @@
 
                   <div class="modal-body">
                     <div class="row">
+                      <?php 
+                        // Pastikan timezone sudah di-set di controller __construct atau di atas view
+                        date_default_timezone_set('Asia/Jakarta'); 
+                        $currentDateTime = date('Y-m-d\TH:i'); 
+                        ?>
 
                       <div class="col-md-12 mb-3">
                         <label for="tgl_isi" class="form-control-label fw-bold">Tanggal & Waktu Pengisian</label>
@@ -618,7 +651,7 @@
                         <input type="text" class="form-control" id="edit_unit_kerja" name="unit_kerja" required>
                       </div>
 
-                      <?php $kode = $this->db->get('kode_klasifikasi')->result();
+                      <!-- <?php $kode = $this->db->get('kode_klasifikasi')->result();
                       $selected_kode_id = isset($data_arsip['kode_arsip_id']) ? $data_arsip['kode_arsip_id'] : ''; ?>
                       <div class="col-md-6 mb-3"> <label for="kode_arsip_id" class="form-control-label">Kode Klasifikasi</label>
                         <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" required>
@@ -626,7 +659,26 @@
                           <?php foreach ($kode as $k): ?> <option value="<?= $k->id ?>" <?= ($k->id == $selected_kode_id) ? 'selected' : '' ?>>
                               <?= $k->kode_surat ?> - <?= $k->ket ?> </option> <?php endforeach; ?>
                         </select>
-                      </div>
+                      </div> -->
+          <!-- ✅ Tambahan Kode Klasifikasi Lama dan Baru -->
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Kode Klasifikasi (Saat Ini)</label>
+              <input type="text" class="form-control" id="edit_kode_klasifikasi_lama" name="kode_klasifikasi_lama" readonly>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Ganti Kode Klasifikasi (Opsional)</label>
+              <select class="form-control select2" id="edit_kode_arsip_id" name="kode_arsip_id">
+                <option value="">-- Pilih Kode Klasifikasi Baru (jika ingin ganti) --</option>
+                <?php foreach ($kode as $k): ?>
+                  <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+
+
+
+
 
                       <div class="col-md-6 mb-3">
                         <label class="form-label">Uraian Masalah</label>
@@ -1223,62 +1275,6 @@ DataTables + Export Script
   <!-- JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <!-- <script>
-    $(document).on('click', '.print-surat', function(e) {
-      e.preventDefault();
-
-      const nomor = $(this).data('nomor');
-      const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
-      const nomorAwal = $(this).data('noawal') || '';
-      const nomorAkhir = $(this).data('noakhir') || '';
-      const nomorUrut = $(this).data('urut') || '';
-
-      const nomorTampil = isMultiple && nomorAwal && nomorAkhir ?
-        `${nomorAwal} - ${nomorAkhir}` :
-        nomorUrut;
-
-      $('#print_nomor_urut').text(nomorTampil);
-      $('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
-      $('#print_tanggal').text($(this).data('tanggal'));
-      $('#print_jenis').text($(this).data('jenis'));
-      $('#print_perihal').text($(this).data('perihal'));
-      $('#print_isi_ringkas').text($(this).data('isi'));
-      $('#print_kepada').text($(this).data('kepada'));
-      $('#print_nama_pengolah').text($(this).data('pengolah'));
-      $('#print_lampiran').text($(this).data('lampiran'));
-      $('#print_catatan').text($(this).data('catatan'));
-      $('#print_noawal').text(nomorAwal);
-      $('#print_noakhir').text(nomorAkhir);
-
-      const printElement = document.getElementById('printArea');
-      printElement.style.display = 'block';
-
-      html2canvas(printElement, {
-        scale: 2,
-        useCORS: true
-      }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
-        const {
-          jsPDF
-        } = window.jspdf;
-        const pdf = new jsPDF({
-          orientation: 'landscape',
-          unit: 'mm',
-          format: 'a5'
-        });
-
-        pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
-        pdf.save(`Surat_${nomor}.pdf`);
-
-        printElement.style.display = 'none';
-      });
-    });
-  </script> -->
-
-
-
-
-
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const btn = document.getElementById('toggleSidebar');
@@ -1430,7 +1426,7 @@ DataTables + Export Script
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css"> -->
 
-  <script>
+  <!-- <script>
     $(document).ready(function() {
       const table = $('#penomoranTable').DataTable({
         // konfigurasi lama kamu tetap di sini...
@@ -1463,12 +1459,150 @@ DataTables + Export Script
     $('#exportBtn').on('click', function() {
     table.button('.buttons-excel').trigger();
     });
-    });
-  </script>
+
+  </script> -->
   <!-- ✅ END EXPORT EXCEL SCRIPT -->
 
+<!-- <script>
+$(document).ready(function () {
+  // Aktifkan Select2
+  $('#edit_kode_arsip_id').select2({
+    placeholder: 'Pilih kode klasifikasi baru...',
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#editArsipModal')
+  });
+
+  // Saat modal edit dibuka
+  $('#editArsipModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget);
+
+    // Ambil data dari tombol
+    var id = button.data('id');
+    var tgl_isi = button.data('tgl_isi');
+    var unit_kerja = button.data('unit_kerja');
+    var kode_arsip_id = button.data('kode_arsip_id');
+    var uraian_masalah = button.data('uraian_masalah');
+    var tahun = button.data('tahun');
+    var jumlah = button.data('jumlah');
+    var nomor_sampul = button.data('nomor_sampul');
+    var nomor_box = button.data('nomor_box');
+    var nomor_rak = button.data('nomor_rak');
+    var keterangan = button.data('keterangan');
+    var kode_klasifikasi_text = button.data('kode_klasifikasi_text'); // teks kode lama
+
+    // Isi field ke form
+    $('#edit_id').val(id);
+    $('#edit_tgl_isi').val(tgl_isi);
+    $('#edit_unit_kerja').val(unit_kerja);
+    $('#edit_uraian_masalah').val(uraian_masalah);
+    $('#edit_tahun').val(tahun);
+    $('#edit_jumlah').val(jumlah);
+    $('#edit_nomor_sampul').val(nomor_sampul);
+    $('#edit_nomor_box').val(nomor_box);
+    $('#edit_nomor_rak').val(nomor_rak);
+    $('#edit_keterangan').val(keterangan);
+
+    // ✅ tampilkan kode klasifikasi lama
+    $('#edit_kode_klasifikasi_lama').val(kode_klasifikasi_text);
+
+    // kosongkan dropdown baru dulu
+    $('#edit_kode_arsip_id').val('').trigger('change');
+  });
+
+  // Saat form dikirim
+  $('#formEditArsip').on('submit', function () {
+    // Kalau user tidak pilih kode baru → kirim kode lama
+    if (!$('#edit_kode_arsip_id').val()) {
+      $('<input>').attr({
+        type: 'hidden',
+        name: 'kode_arsip_id',
+        value: $('#edit_kode_klasifikasi_lama').val()
+      }).appendTo('#formEditArsip');
+    }
+  });
+});
+</script> -->
 
 
+
+<!-- jQuery UI untuk draggable -->
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+<!-- <script>
+$(document).ready(function() {
+    // Modal edit bisa digeser lewat header
+    $('#editArsipModal .modal-dialog').draggable({
+        handle: ".modal-header"
+    });
+});
+</script> -->
+<script>
+$(document).ready(function() {
+  // ✅ MODIFIED: Safe DataTable initialization
+  if (! $.fn.DataTable.isDataTable('#penomoranTable') ) {
+    const table = $('#penomoranTable').DataTable({
+      dom: '<"d-flex justify-content-between align-items-center mb-3"Bf>tip',
+      buttons: [{
+        extend: 'excelHtml5',
+        text: '📊 Export Excel',
+        className: 'd-none',
+        exportOptions: { columns: ':not(.no-export)' }
+      }]
+    });
+
+    $('#exportBtn').on('click', function() {
+      table.button('.buttons-excel').trigger();
+    });
+
+    $('#searchInput').on('keyup', function() {
+      table.search(this.value).draw();
+    });
+  }
+
+  // ✅ ADDED: Select2 in modal
+  $('#edit_kode_arsip_id').select2({
+    placeholder: 'Pilih kode klasifikasi baru...',
+    allowClear: true,
+    width: '100%',
+    dropdownParent: $('#editArsipModal')
+  });
+
+  // ✅ MODIFIED: modal show event
+  $('#editArsipModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget);
+    $('#edit_id').val(button.data('id'));
+    $('#edit_tgl_isi').val(button.data('tgl_isi'));
+    $('#edit_unit_kerja').val(button.data('unit_kerja'));
+    $('#edit_uraian_masalah').val(button.data('uraian_masalah'));
+    $('#edit_tahun').val(button.data('tahun'));
+    $('#edit_jumlah').val(button.data('jumlah'));
+    $('#edit_nomor_sampul').val(button.data('nomor_sampul'));
+    $('#edit_nomor_box').val(button.data('nomor_box'));
+    $('#edit_nomor_rak').val(button.data('nomor_rak'));
+    $('#edit_keterangan').val(button.data('keterangan'));
+    $('#edit_kode_klasifikasi_lama').val(button.data('kode_klasifikasi_text')); // ✅ MODIFIED: tampilkan kode lama
+    $('#edit_kode_arsip_id').val('').trigger('change'); // reset dropdown baru
+  });
+
+  // ✅ MODIFIED: form submit jika kode baru kosong, kirim kode lama
+  $('#formEditArsip').on('submit', function () {
+    if (!$('#edit_kode_arsip_id').val()) {
+      $('<input>').attr({
+        type: 'hidden',
+        name: 'kode_arsip_id',
+        value: $('#edit_kode_klasifikasi_lama').val()
+      }).appendTo('#formEditArsip');
+    }
+  });
+
+  // ✅ ADDED: modal draggable
+  $('#editArsipModal .modal-dialog').draggable({
+    handle: ".modal-header"
+  });
+});
+</script>
 </body>
 
 </html>

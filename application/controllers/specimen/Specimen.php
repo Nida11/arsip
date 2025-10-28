@@ -105,7 +105,7 @@ class  Specimen extends CI_Controller
         }
 
         $template_path = FCPATH . 'assets/images/template_specimen.jpg';
-        $font_path     = FCPATH . 'assets/fonts/arial.ttf';
+        $font_path     = FCPATH . 'assets/fonts/calibri.ttf';
 
         if (!file_exists($template_path)) show_error('Template tidak ditemukan.');
         if (!file_exists($font_path))     show_error('Font tidak ditemukan.');
@@ -280,7 +280,7 @@ class  Specimen extends CI_Controller
         }
 
         $template_path = FCPATH . 'assets/images/template_specimen.jpg';
-        $font_path     = FCPATH . 'assets/fonts/arial.ttf';
+        $font_path     = FCPATH . 'assets/fonts/calibri.ttf';
 
         if (!file_exists($template_path)) show_error('Template tidak ditemukan.');
         if (!file_exists($font_path))     show_error('Font tidak ditemukan.');

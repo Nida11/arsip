@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -17,6 +18,8 @@ class Daftar extends CI_Controller
 
     public function daftar_inaktif()
     {
+        // 🟢 Hapus flash message lama supaya tidak muncul saat refresh
+        $this->session->unset_userdata(['success_msg']);
         // Ambil semua parameter pencarian dari GET
         $search = $this->input->get();
 
@@ -28,7 +31,6 @@ class Daftar extends CI_Controller
         if (!empty($search['uraian_masalah'])) {
             $where[] = "a.uraian_masalah LIKE '%" . $this->db->escape_like_str($search['uraian_masalah']) . "%'";
         }
-
         if (!empty($search['tahun'])) {
             $where[] = "a.tahun LIKE '%" . $this->db->escape_like_str($search['tahun']) . "%'";
         }
@@ -55,7 +57,7 @@ class Daftar extends CI_Controller
         $where_sql
         GROUP BY a.id
         ORDER BY a.tgl_isi DESC
-    ";
+        ";
 
         $d['data_inaktif'] = $this->db->query($sql)->result_array();
 
@@ -85,7 +87,6 @@ class Daftar extends CI_Controller
             a.tgl_isi,
             a.unit_kerja,
             e.kode_surat AS kode_klasifikasi,
-            
             a.uraian_masalah,
             a.tahun,
             a.jumlah,
@@ -99,7 +100,7 @@ class Daftar extends CI_Controller
         $where_sql
         GROUP BY a.id
         ORDER BY a.tgl_isi DESC
-    ";
+        ";
 
         $data = $this->db->query($sql)->result_array();
 
@@ -151,15 +152,40 @@ class Daftar extends CI_Controller
     }
 
     // =======================
-    // SIMPAN DATA INAKTIF
+    // 🟢 TAMBAHAN: FORM EDIT (MENAMPILKAN KODE KLASIFIKASI)
+    // =======================
+    public function edit_arsip($id)
+    {
+        // Ambil data arsip berdasarkan id
+        $data['arsip'] = $this->db->get_where('daftar_arsip_inaktif', ['id' => $id])->row();
+
+        // Ambil semua kode klasifikasi untuk dropdown
+        $data['kode'] = $this->db->get('kode_klasifikasi')->result();
+
+        // Load view edit (buat file: application/views/Daftar_in/edit_inaktif.php)
+        $this->load->view('Daftar_in/edit_inaktif', $data);
+    }
+    // =======================
+
+
+    // =======================
+    // SIMPAN DATA EDIT INAKTIF
     // =======================
     public function do_edit_arsip()
     {
         $id = $this->input->post('id');
+
+        // 🟢 Jika kode klasifikasi kosong, ambil dari data lama
+        $kode_arsip_id = $this->input->post('kode_arsip_id');
+        if (empty($kode_arsip_id)) {
+            $lama = $this->db->get_where('daftar_arsip_inaktif', ['id' => $id])->row();
+            $kode_arsip_id = $lama->kode_arsip_id;
+        }
+
         $data = [
             'tgl_isi' => $this->input->post('tgl_isi'),
             'unit_kerja' => $this->input->post('unit_kerja'),
-            'kode_arsip_id' => $this->input->post('kode_arsip_id'),
+            'kode_arsip_id' => $kode_arsip_id, // 🟢 pakai yang baru atau lama
             'uraian_masalah' => $this->input->post('uraian_masalah'),
             'tahun' => $this->input->post('tahun'),
             'jumlah' => $this->input->post('jumlah'),
@@ -182,8 +208,6 @@ class Daftar extends CI_Controller
         $this->session->set_flashdata('success_edit', 'Data arsip berhasil dihapus!');
         redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
     }
-
-
 
     public function do_input_inaktif()
     {
@@ -218,7 +242,7 @@ class Daftar extends CI_Controller
                 }
             }
 
-            $this->session->set_flashdata('success_daftar', 'Data arsip inaktif berhasil ditambahkan!');
+            $this->session->set_flashdata('success_msg', 'Data arsip inaktif berhasil ditambahkan!');
             redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
         }
     }
