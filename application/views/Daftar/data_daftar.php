@@ -534,6 +534,9 @@
                     <td class="text-center"><?= htmlspecialchars($row['metode_perlindungan']); ?></td>
                     <td class="text-center">
 
+
+
+
                       <button class="btn btn-sm btn-primary"
                         data-bs-toggle="modal"
                         data-bs-target="#editArsipModal"
@@ -546,10 +549,14 @@
                         data-retensi="<?= htmlspecialchars($row['retensi_arsip']); ?>"
                         data-lokasi="<?= htmlspecialchars($row['lokasi_simpan']); ?>"
                         data-metode="<?= htmlspecialchars($row['metode_perlindungan']); ?>"
-                        data-jenis='<?= json_encode($row["detail"], JSON_HEX_APOS | JSON_HEX_QUOT); ?>'
                         title="Edit Arsip">
+
                         <i class="fas fa-edit"></i>
                       </button>
+
+
+
+
 
                       <a href="<?= base_url('index.php/daftar/Daftar/delete_arsip/' . $row['id']); ?>"
                         class="btn btn-sm btn-danger"
@@ -564,10 +571,86 @@
 
               </tbody>
             </table>
+
+            <div class="modal fade" id="editArsipModal" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+
+                <form action="<?= base_url('index.php/daftar/Daftar/update_arsip'); ?>" method="post">
+
+
+
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Edit Data Arsip</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                      <input type="hidden" name="id" id="edit-id">
+
+                      <div class="mb-2">
+                        <label>Tanggal Isi Arsip</label>
+                        <input type="date" name="tgl" id="edit-tgl" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Pencipta Arsip</label>
+                        <input type="text" name="pencipta" id="edit-pencipta" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Asal Arsip</label>
+                        <input type="text" name="asal" id="edit-asal" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Kode Arsip</label>
+                        <input type="text" name="kode" id="edit-kode" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Nomor Arsip</label>
+                        <input type="text" name="nomor" id="edit-nomor" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Retensi Arsip</label>
+                        <input type="text" name="retensi" id="edit-retensi" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Lokasi Simpan</label>
+                        <input type="text" name="lokasi" id="edit-lokasi" class="form-control">
+                      </div>
+
+                      <div class="mb-2">
+                        <label>Metode Perlindungan</label>
+                        <input type="text" name="metode" id="edit-metode" class="form-control">
+                      </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary btn-sm">Simpan</button>
+                      <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                        Batal
+                      </button>
+                    </div>
+                  </div>
+
+                </form>
+
+              </div>
+            </div>
+
+
           </div>
 
         </div>
+
       </div>
+    </div>
     </div>
     </div>
     </div>
@@ -959,17 +1042,19 @@
 
 
 
-  <?php if ($this->session->flashdata('success_edit')): ?>
+  <?php if ($this->session->flashdata('success_message')): ?>
     <script>
       Swal.fire({
         icon: 'success',
         title: 'Berhasil',
-        text: '<?= $this->session->flashdata('success_edit'); ?>',
-        showConfirmButton: false,
-        timer: 2000
+        text: '<?= $this->session->flashdata("success_message") ?>',
+        timer: 2000,
+        showConfirmButton: false
       });
     </script>
   <?php endif; ?>
+
+
   <script>
     $(document).on('click', '.delete-daftar', function() {
       const slotId = $(this).data('id');
@@ -1201,77 +1286,31 @@
       }
     });
   </script>
+
+
+  ...
+  <!-- Modal Edit Arsip ada di sini -->
+
+  <!-- JavaScript -->
   <script>
-    $(document).on('click', 'button[data-bs-target="#editArsipModal"]', function() {
-      const btn = $(this);
+    var modal = document.getElementById('editArsipModal');
 
-      // isi field utama
-      $('#edit_id').val(btn.data('id'));
-      $('#edit_tgl_isi').val(btn.data('tgl'));
-      $('#edit_pencipta_arsip').val(btn.data('pencipta'));
-      $('#edit_asal_arsip').val(btn.data('asal'));
-      $('#edit_kode_arsip_id').val(btn.data('kode')).trigger('change');
-      $('#edit_nomor_arsip').val(btn.data('nomor'));
-      $('#edit_retensi_arsip').val(btn.data('retensi'));
-      $('#edit_lokasi_simpan').val(btn.data('lokasi'));
-      $('#edit_metode_perlindungan').val(btn.data('metode'));
+    modal.addEventListener('show.bs.modal', function(event) {
+      var button = event.relatedTarget;
 
-      // kosongkan container dulu
-      const container = $('#edit-series-container');
-      container.empty();
-
-      // parse jenis arsip dari data (misal bentuk JSON)
-      let jenisData = btn.data('jenis');
-      if (typeof jenisData === 'string') {
-        try {
-          jenisData = JSON.parse(jenisData);
-        } catch (e) {
-          jenisData = [jenisData]; // fallback: single string
-        }
-      }
-
-      // isi tiap jenis arsip
-      if (Array.isArray(jenisData)) {
-        jenisData.forEach(item => {
-          container.append(`
-        <div class="card mb-2 shadow-sm position-relative">
-          <div class="card-body p-2">
-            <textarea class="form-control border-0 series-textarea mb-2" name="jenis_arsip[]" rows="3">${item.jenis_arsip || ''}</textarea>
-            <input type="file" class="form-control border-0" name="file_arsip[]" />
-            ${item.file_arsip ? `<small class="text-muted">File sebelumnya: ${item.file_arsip}</small>` : ''}
-            <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">✕</button>
-          </div>
-        </div>
-      `);
-        });
-      }
-    });
-
-    // tombol tambah baru di modal edit
-    $('#edit-add-series').on('click', function() {
-      $('#edit-series-container').append(`
-    <div class="card mb-2 shadow-sm position-relative">
-      <div class="card-body p-2">
-        <textarea class="form-control border-0 series-textarea mb-2" name="jenis_arsip[]" rows="3" placeholder="Tulis jenis arsip baru..."></textarea>
-        <input type="file" class="form-control border-0" name="file_arsip[]" />
-        <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">✕</button>
-      </div>
-    </div>
-  `);
-    });
-
-    // tombol hapus baris
-    $(document).on('click', '.remove-series', function() {
-      $(this).closest('.card').remove();
+      document.getElementById('edit-id').value = button.getAttribute('data-id');
+      document.getElementById('edit-tgl').value = button.getAttribute('data-tgl');
+      document.getElementById('edit-pencipta').value = button.getAttribute('data-pencipta');
+      document.getElementById('edit-asal').value = button.getAttribute('data-asal');
+      document.getElementById('edit-kode').value = button.getAttribute('data-kode');
+      document.getElementById('edit-nomor').value = button.getAttribute('data-nomor');
+      document.getElementById('edit-retensi').value = button.getAttribute('data-retensi');
+      document.getElementById('edit-lokasi').value = button.getAttribute('data-lokasi');
+      document.getElementById('edit-metode').value = button.getAttribute('data-metode');
     });
   </script>
 
 
-
-
-
 </body>
-
-
 
 </html>

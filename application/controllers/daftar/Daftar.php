@@ -14,7 +14,7 @@ class Daftar extends CI_Controller
     public function data_daftar()
     {
 
-         // 🟢 Hapus flash message lama supaya tidak muncul saat refresh
+        // 🟢 Hapus flash message lama supaya tidak muncul saat refresh
         $this->session->unset_userdata(['success_msg']);
         // Ambil semua parameter pencarian dari GET
         $search = $this->input->get();
@@ -30,7 +30,7 @@ class Daftar extends CI_Controller
         if (!empty($search['nomor_arsip'])) {
             $where[] = "a.nomor_arsip LIKE '%" . $this->db->escape_like_str($search['nomor_arsip']) . "%'";
         }
-         if (!empty($search['retensi_arsip'])) {
+        if (!empty($search['retensi_arsip'])) {
             $where[] = "a.retensi_arsip LIKE '%" . $this->db->escape_like_str($search['retensi_arsip']) . "%'";
         }
 
@@ -38,7 +38,7 @@ class Daftar extends CI_Controller
 
 
         // Data arsip utama
-         $sql = "
+        $sql = "
         SELECT 
         a.id, 
         a.tgl_isi, 
@@ -72,12 +72,12 @@ class Daftar extends CI_Controller
         $this->load->view('Daftar/data_daftar', $d);
     }
 
-     public function export_excel_vital()
+    public function export_excel_vital()
     {
         $search = $this->input->get();
         $where = [];
 
-       if (!empty($search['pencipta_arsip'])) {
+        if (!empty($search['pencipta_arsip'])) {
             $where[] = "a.pencipta_arsip LIKE '%" . $this->db->escape_like_str($search['pencipta_arsip']) . "%'";
         }
         if (!empty($search['asal_arsip'])) {
@@ -86,7 +86,7 @@ class Daftar extends CI_Controller
         if (!empty($search['nomor_arsip'])) {
             $where[] = "a.nomor_arsip LIKE '%" . $this->db->escape_like_str($search['nomor_arsip']) . "%'";
         }
-         if (!empty($search['retensi_arsip'])) {
+        if (!empty($search['retensi_arsip'])) {
             $where[] = "a.retensi_arsip LIKE '%" . $this->db->escape_like_str($search['retensi_arsip']) . "%'";
         }
         $where_sql = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
@@ -254,5 +254,27 @@ class Daftar extends CI_Controller
 
         // Tampilkan ke view
         $this->load->view('daftar_arsip', $data);
+    }
+
+    public function update_arsip()
+    {
+        $id = $this->input->post('id');
+
+        $data = [
+            'tgl_isi'             => $this->input->post('tgl'),
+            'pencipta_arsip'      => $this->input->post('pencipta'),
+            'asal_arsip'          => $this->input->post('asal'),
+            'kode_arsip_id'       => $this->input->post('kode'),
+            'nomor_arsip'         => $this->input->post('nomor'),
+            'retensi_arsip'       => $this->input->post('retensi'),
+            'lokasi_simpan'       => $this->input->post('lokasi'),
+            'metode_perlindungan' => $this->input->post('metode'),
+        ];
+
+        $this->db->where('id', $id);
+        $this->db->update('data_arsip', $data);
+
+        $this->session->set_flashdata('success_message', 'Data arsip berhasil diperbarui');
+        redirect('Daftar/data_daftar');
     }
 }
