@@ -43,6 +43,7 @@ class Daftar extends CI_Controller
         a.id, 
         a.tgl_isi, 
         a.pencipta_arsip, 
+         e.id as idkode, 
         a.asal_arsip, 
         e.kode_surat, 
         e.ket, 
@@ -96,7 +97,8 @@ class Daftar extends CI_Controller
         a.id, 
         a.tgl_isi, 
         a.pencipta_arsip, 
-        a.asal_arsip, 
+        a.asal_arsip,
+       
         e.kode_surat, 
         e.ket, 
         a.nomor_arsip, 
@@ -247,34 +249,91 @@ class Daftar extends CI_Controller
         // Redirect kembali ke halaman daftar
         redirect('index.php/daftar/Daftar/data_daftar');
     }
-    public function index()
-    {
-        // Ambil data dari tabel kode_klasifikasi
-        $data['kode_klasifikasi'] = $this->db->get('kode_klasifikasi')->result_array();
+   
+    public function get_detail_arsip($id)
+{
+    $this->db->where('daftar_arsip_id', $id);
+    $query = $this->db->get('daftar_arsip_detail')->result_array();
+    echo json_encode($query);
+}
 
-        // Tampilkan ke view
-        $this->load->view('daftar_arsip', $data);
+
+    public function do_update_arsip()
+{
+    $id = $this->input->post('id');
+
+    // === 1️⃣ Update tabel utama daftar_arsip ===
+    $data = [
+        'tgl_isi'             => $this->input->post('tgl_isi'),
+        'pencipta_arsip'      => $this->input->post('pencipta_arsip'),
+        'asal_arsip'          => $this->input->post('asal_arsip'),
+        'kode_arsip_id'       => $this->input->post('kode_arsip_id'),
+        'nomor_arsip'         => $this->input->post('nomor_arsip'),
+        'retensi_arsip'       => $this->input->post('retensi_arsip'),
+        'lokasi_simpan'       => $this->input->post('lokasi_simpan'),
+        'metode_perlindungan' => $this->input->post('metode_perlindungan'),
+    ];
+
+    $this->db->where('id', $id);
+    $this->db->update('daftar_arsip', $data);
+
+    // === 2️⃣ Hapus data detail lama dulu ===
+    $this->db->where('daftar_arsip_id', $id);
+    $this->db->delete('daftar_arsip_detail');
+
+    // === 3️⃣ Tambah ulang detail baru ===
+    $jenis_arsip = $this->input->post('jenis_arsip');
+    $files = $_FILES['file_arsip'];
+
+    if (!empty($jenis_arsip)) {
+
+        // folder upload
+        $upload_path = FCPATH . 'uploads/arsip/';
+        if (!is_dir($upload_path)) {
+            mkdir($upload_path, 0777, true);
+        }
+
+        $this->load->library('upload');
+
+        foreach ($jenis_arsip as $i => $jenis) {
+            $file_name = null;
+
+            // cek apakah ada file baru di indeks ini
+            if (!empty($files['name'][$i])) {
+                $_FILES['single_file']['name']     = $files['name'][$i];
+                $_FILES['single_file']['type']     = $files['type'][$i];
+                $_FILES['single_file']['tmp_name'] = $files['tmp_name'][$i];
+                $_FILES['single_file']['error']    = $files['error'][$i];
+                $_FILES['single_file']['size']     = $files['size'][$i];
+
+                $config['upload_path']   = $upload_path;
+                $config['allowed_types'] = 'pdf|jpg|jpeg|png|doc|docx';
+                $config['max_size']      = 10000; // 10MB
+                $config['file_name']     = time() . '_' . $files['name'][$i];
+
+                $this->upload->initialize($config);
+
+                if ($this->upload->do_upload('single_file')) {
+                    $uploadData = $this->upload->data();
+                    $file_name = $uploadData['file_name'];
+                } else {
+                    // kalau gagal upload, bisa di-log tapi tetap lanjut
+                    log_message('error', 'Upload gagal: ' . $this->upload->display_errors());
+                }
+            }
+
+            // simpan ke tabel detail
+            $detailData = [
+                'daftar_arsip_id' => $id,
+                'jenis_arsip'     => $jenis,
+                'file_arsip'      => $file_name
+            ];
+            $this->db->insert('daftar_arsip_detail', $detailData);
+        }
     }
 
-    public function update_arsip()
-    {
-        $id = $this->input->post('id');
+    $this->session->set_flashdata('success_message', 'Data arsip berhasil diperbarui');
+redirect('index.php/daftar/Daftar/data_daftar');
+}
 
-        $data = [
-            'tgl_isi'             => $this->input->post('tgl'),
-            'pencipta_arsip'      => $this->input->post('pencipta'),
-            'asal_arsip'          => $this->input->post('asal'),
-            'kode_arsip_id'       => $this->input->post('kode'),
-            'nomor_arsip'         => $this->input->post('nomor'),
-            'retensi_arsip'       => $this->input->post('retensi'),
-            'lokasi_simpan'       => $this->input->post('lokasi'),
-            'metode_perlindungan' => $this->input->post('metode'),
-        ];
-
-        $this->db->where('id', $id);
-        $this->db->update('data_arsip', $data);
-
-        $this->session->set_flashdata('success_message', 'Data arsip berhasil diperbarui');
-        redirect('Daftar/data_daftar');
-    }
 }
