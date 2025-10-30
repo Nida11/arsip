@@ -1049,21 +1049,41 @@ $('#modalNomorSurat').on('hidden.bs.modal', function () {
 
   </script>
 
+
+
+
+  <script>
+  $('#jenis_surat_id, #kode_klasifikasi_id, #unit_pengolah_id, #tanggal').on('change', function () {
+  // Kirim AJAX ke endpoint
+  $.post('<?= base_url("index.php/penomoran/Penomoran/generate_nomor") ?>', {
+    jenis_surat_id: $('#jenis_surat_id').val(),
+    kode_klasifikasi_id: $('#kode_klasifikasi_id').val(),
+    pengolah_id: $('#pengolah_id').val(),
+    tanggal: $('#tanggal').val()
+  }, function (data) {
+    $('#nomor_urut').val(data.nomor_urut);
+    $('#nomor_surat').val(data.nomor_surat);
+    $('#info_terakhir').html("Terakhir: " + data.nomor_terakhir + " oleh " + data.pembuat);
+    $('#sisa_slot').html("Sisa slot: " + data.sisa_slot);
+  }, 'json');
+});
+
+  </script>
+
 <script>
 function cekDuplikatNomor() {
-  const nomor_urut = $('#nomor_urut').val();
+  const nomor_urut = parseInt($('#nomor_urut').val(), 10);
   const jenis_surat_id = $('#jenis_surat_id').val();
-  const tanggal = $('#tanggal').val(); // Tambahkan ini jika cek pakai tanggal
 
   // Jalankan hanya jika semua terisi
-  if (nomor_urut && jenis_surat_id && tanggal) {
+  if (nomor_urut && jenis_surat_id) {
     $.ajax({
       url: '<?= base_url('index.php/penomoran/Penomoran/cek_duplikat_nomor') ?>',
       method: 'POST',
       data: {
         nomor_urut: nomor_urut,
         jenis_surat_id: jenis_surat_id,
-        tanggal: tanggal
+       
       },
       dataType: 'json',
       success: function(res) {
@@ -1095,30 +1115,9 @@ function cekDuplikatNomor() {
 }
 
 // Trigger saat input berubah
-$('#nomor_urut, #tanggal, #jenis_surat_id').on('change keyup', cekDuplikatNomor);
+$('#nomor_urut, #jenis_surat_id').on('change keyup', cekDuplikatNomor);
 
 </script>
-
-
-  <script>
-  $('#jenis_surat_id, #kode_klasifikasi_id, #unit_pengolah_id, #tanggal').on('change', function () {
-  // Kirim AJAX ke endpoint
-  $.post('<?= base_url("index.php/penomoran/Penomoran/generate_nomor") ?>', {
-    jenis_surat_id: $('#jenis_surat_id').val(),
-    kode_klasifikasi_id: $('#kode_klasifikasi_id').val(),
-    pengolah_id: $('#pengolah_id').val(),
-    tanggal: $('#tanggal').val()
-  }, function (data) {
-    $('#nomor_urut').val(data.nomor_urut);
-    $('#nomor_surat').val(data.nomor_surat);
-    $('#info_terakhir').html("Terakhir: " + data.nomor_terakhir + " oleh " + data.pembuat);
-    $('#sisa_slot').html("Sisa slot: " + data.sisa_slot);
-  }, 'json');
-});
-
-  </script>
-
-
 
 <script>
   document.addEventListener("DOMContentLoaded", function () {

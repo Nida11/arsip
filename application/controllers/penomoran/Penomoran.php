@@ -232,7 +232,7 @@ public function cek_duplikat_nomor()
 
     $this->db->where('nomor_urut', $nomor_urut);
     $this->db->where('jenis_surat_id', $jenis_surat_id);
-    $cek = $this->db->get('request_number')->num_rows(); // atau nama tabel kamu
+    $cek = $this->db->get('request_number')->num_rows();
 
     echo json_encode(['exists' => $cek > 0]);
 }
