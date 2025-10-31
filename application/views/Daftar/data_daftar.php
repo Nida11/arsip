@@ -460,7 +460,7 @@
                 </div>
 
 
-                <!-- Tombol Cari & Export -->
+                <!-- Tombol Cari dan Export -->
                 <div class="d-flex justify-content-center gap-2 my-2">
                   <button type="submit" class="btn btn-cari">
                     <i class="fa fa-search"></i> Cari

@@ -409,7 +409,7 @@ class Daftar extends CI_Controller
                     }
                 }
 
-                // simpan ke tabel detail
+                // simpan ke tabel detail arsip
                 $detailData = [
                     'daftar_arsip_id' => $id,
                     'jenis_arsip'     => $jenis,
