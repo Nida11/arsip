@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
   <link rel="icon" type="image/png" href="<?= base_url('assets/img/triarsip.png') ?>">
   <title>
-TRIARSIP
+    TRIARSIP
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -17,17 +17,17 @@ TRIARSIP
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- munculin icon icon yang smpet ga jalan -->
 
 
   <!-- CSS Files -->
   <link id="pagestyle" href="<?= base_url('assets/css/argon-dashboard.css?v=2.1.0') ?>" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
-<!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
   <link rel="stylesheet" href="<?= base_url('assets/css/custom-slot.css') ?>">
 
   <!-- jQuery -->
@@ -42,68 +42,71 @@ TRIARSIP
 
 
 
-<style>
+  <style>
+    /* Highlight nav-link aktif */
+    .nav-link.active {
+      background-color: #e0e0e0;
+      /* ubah sesuai warna tema */
+      color: #000 !important;
+      /* teks lebih gelap */
+      font-weight: 600;
+      /* teks tebal */
+      border-left: 4px solid #344767;
+      /* garis kiri tebal untuk aktif */
+    }
 
-  /* Highlight nav-link aktif */
-.nav-link.active {
-    background-color: #e0e0e0; /* ubah sesuai warna tema */
-    color: #000 !important;   /* teks lebih gelap */
-    font-weight: 600;          /* teks tebal */
-    border-left: 4px solid #344767; /* garis kiri tebal untuk aktif */
-}
+    /* Bungkus table wrapper agar tidak overflow keluar */
+    #penomoranTable_wrapper {
+      overflow-x: auto;
+    }
 
-  /* Bungkus table wrapper agar tidak overflow keluar */
-#penomoranTable_wrapper {
-  overflow-x: auto;
-}
+    /* Atur table agar lebar tidak memaksa keluar kontainer */
+    #penomoranTable {
+      width: 100% !important;
+      table-layout: auto;
+      white-space: nowrap;
+    }
 
-/* Atur table agar lebar tidak memaksa keluar kontainer */
-#penomoranTable {
-  width: 100% !important;
-  table-layout: auto;
-  white-space: nowrap;
-}
+    /* Pagination DataTables - versi minimalis */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      padding: 6px 10px;
+      margin: 2px;
+      border: none;
+      background-color: transparent;
+      color: #555 !important;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
 
-  /* Pagination DataTables - versi minimalis */
-  .dataTables_wrapper .dataTables_paginate .paginate_button {
-    padding: 6px 10px;
-    margin: 2px;
-    border: none;
-    background-color: transparent;
-    color: #555 !important;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-/* Saat hover - warna lembut, tidak hitam */
-.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-  background-color: #e0e0e0;
-  color: #000 !important;
-  border: 1px solid #ccc;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+    /* Saat hover - warna lembut, tidak hitam */
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background-color: #e0e0e0;
+      color: #000 !important;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
 
 
-  .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    background-color: #e0e0e0 !important;
-    color: #000 !important;
-    border-radius: 4px;
-  }
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background-color: #e0e0e0 !important;
+      color: #000 !important;
+      border-radius: 4px;
+    }
 
-  .dataTables_wrapper .dataTables_length select,
-  .dataTables_wrapper .dataTables_filter input {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 0.85rem;
-    box-shadow: none;
-  }
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_filter input {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 0.85rem;
+      box-shadow: none;
+    }
 
-  .dataTables_wrapper .dataTables_info {
-    font-size: 0.85rem;
-    color: #666;
-  }
-</style>
+    .dataTables_wrapper .dataTables_info {
+      font-size: 0.85rem;
+      color: #666;
+    }
+  </style>
 
 
 
@@ -116,34 +119,38 @@ TRIARSIP
       padding: 1rem 1.25rem;
       border-radius: 0.75rem;
       color: #333;
-      font-size: 0.8rem; /* Ukuran default untuk tulisan biasa */
+      font-size: 0.8rem;
+      /* Ukuran default untuk tulisan biasa */
       margin-top: 1rem;
       line-height: 1.6;
     }
 
-  .custom-alert.success {
-    border-left-color: #28a745;
-    color:rgb(1, 1, 1);
-  }
+    .custom-alert.success {
+      border-left-color: #28a745;
+      color: rgb(1, 1, 1);
+    }
+
     .custom-alert.warning {
-    border-left-color: #ffc107;
-    color: #856404;
-  }
+      border-left-color: #ffc107;
+      color: #856404;
+    }
 
-  .custom-alert.loading {
-    border-left-color: #007bff;
-    color: #004085;
-  }
+    .custom-alert.loading {
+      border-left-color: #007bff;
+      color: #004085;
+    }
 
-  .custom-alert.error {
-    border-left-color: #dc3545;
-    color:rgb(255, 0, 25);
-  }
+    .custom-alert.error {
+      border-left-color: #dc3545;
+      color: rgb(255, 0, 25);
+    }
 
     .highlight-db {
-    color:rgb(255, 0, 0); /* merah elegan */
-    font-weight: 600;
-    font-size: 1rem; /* Lebih besar dari teks biasa */
+      color: rgb(255, 0, 0);
+      /* merah elegan */
+      font-weight: 600;
+      font-size: 1rem;
+      /* Lebih besar dari teks biasa */
     }
 
     /* Responsive untuk mobile */
@@ -152,67 +159,69 @@ TRIARSIP
         font-size: 0.95rem;
         padding: 0.75rem 1rem;
       }
-          .highlight-db {
-      font-size: 1rem;
-    }
-    
-    }
 
+      .highlight-db {
+        font-size: 1rem;
+      }
 
+    }
   </style>
 
   <style>
-@media print {
-  @page {
-    size: A5 landscape;
-    margin: 0;
-  }
+    @media print {
+      @page {
+        size: A5 landscape;
+        margin: 0;
+      }
 
-  #printArea {
-    width: 210mm;
-    height: 148mm;
-  }
-    * {
-  box-sizing: border-box;
-}
+      #printArea {
+        width: 210mm;
+        height: 148mm;
+      }
 
-body {
-  background: white;
-  margin: 0;
-  padding: 0;
-}
+      * {
+        box-sizing: border-box;
+      }
 
-}
-</style>
+      body {
+        background: white;
+        margin: 0;
+        padding: 0;
+      }
 
-<style>
-@media (max-width: 991.98px) {
-  body.g-sidenav-hidden #sidenav-main {
-    transform: translateX(-110%); /* lebih jauh agar benar-benar keluar */
-    box-shadow: none !important;
-    border: none !important;
-  }
+    }
+  </style>
 
-  body.g-sidenav-pinned #sidenav-main {
-    transform: translateX(0);
-    transition: all 0.3s ease-in-out;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 250px;
-    z-index: 1050;
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* opsional */
-  }
+  <style>
+    @media (max-width: 991.98px) {
+      body.g-sidenav-hidden #sidenav-main {
+        transform: translateX(-110%);
+        /* lebih jauh agar benar-benar keluar */
+        box-shadow: none !important;
+        border: none !important;
+      }
 
-  /* Hilangkan margin-left konten utama agar full width di layar kecil */
-  main.main-content {
-    margin-left: 0 !important;
-    transition: all 0.3s ease-in-out;
-  }
-}
-</style>
+      body.g-sidenav-pinned #sidenav-main {
+        transform: translateX(0);
+        transition: all 0.3s ease-in-out;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        z-index: 1050;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        /* opsional */
+      }
+
+      /* Hilangkan margin-left konten utama agar full width di layar kecil */
+      main.main-content {
+        margin-left: 0 !important;
+        transition: all 0.3s ease-in-out;
+      }
+    }
+  </style>
 
 </head>
 
@@ -265,7 +274,7 @@ body {
             </ul>
           </div>
         </li>
-                <li class="nav-item">
+        <li class="nav-item">
           <a class="nav-link" href="<?= base_url('/index.php/daftar/Daftar/data_daftar') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-folder-17 text-dark text-sm opacity-10"></i>
@@ -329,387 +338,383 @@ body {
 
   <main class="main-content position-relative border-radius-lg ">
     <!-- Navbar -->
-<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarMain">
-  <div class="container-fluid py-1 px-3 d-flex align-items-center">
-    <!-- Tombol hamburger -->
-    <button class="navbar-toggler d-lg-none me-3" type="button" id="toggleSidebar" aria-label="Toggle sidebar">
-      <i class="fas fa-bars text-white"></i>
-    </button>
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarMain">
+      <div class="container-fluid py-1 px-3 d-flex align-items-center">
+        <!-- Tombol hamburger -->
+        <button class="navbar-toggler d-lg-none me-3" type="button" id="toggleSidebar" aria-label="Toggle sidebar">
+          <i class="fas fa-bars text-white"></i>
+        </button>
 
-    <!-- Breadcrumb (opsional) -->
-    <!-- <nav aria-label="breadcrumb">
+        <!-- Breadcrumb (opsional) -->
+        <!-- <nav aria-label="breadcrumb">
       <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
         <li class="breadcrumb-item text-sm"><a href="#">Histori of Booking Slot</a></li>
         <li class="breadcrumb-item text-sm active" aria-current="page">Dashboard</li>
       </ol>
       <h6 class="font-weight-bolder mb-0">Dashboard</h6>
     </nav> -->
-  </div>
-</nav>
-<!-- End Navbar -->
+      </div>
+    </nav>
+    <!-- End Navbar -->
     <div class="container-fluid py-4">
-                <div class="card mb-4">
-                    <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-                        <h6>Numbering Data's</h6>
-                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSlotModal">
-                            Tambah Penomoran
-                        </button>
-                    </div>
+      <div class="card mb-4">
+        <div class="card-header pb-0 d-flex justify-content-between align-items-center">
+          <h6>Numbering Data's</h6>
+          <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addSlotModal">
+            Tambah Penomoran
+          </button>
+        </div>
         <div class="card-body px-0 pt-0 pb-2">
           <!-- Dropdown Filter Jenis Surat -->
-<div class="px-3 mb-3">
-                        <div class="row g-2 align-items-end">
-                            <div class="col-md-3">
-                                <label for="searchInput" class="form-label">Cari</label>
-                                <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="startDate" class="form-label">Tanggal Awal</label>
-                                <input type="date" id="startDate" class="form-control">
-                            </div>
-                            <div class="col-md-3">
-                                <label for="endDate" class="form-label">Tanggal Akhir</label>
-                                <input type="date" id="endDate" class="form-control">
-                            </div>
-                            <!-- <div class="col-md-2">
+          <div class="px-3 mb-3">
+            <div class="row g-2 align-items-end">
+              <div class="col-md-3">
+                <label for="searchInput" class="form-label">Cari</label>
+                <input type="text" id="searchInput" class="form-control" placeholder="Cari perihal, kepada, dll.">
+              </div>
+              <div class="col-md-3">
+                <label for="startDate" class="form-label">Tanggal Awal</label>
+                <input type="date" id="startDate" class="form-control">
+              </div>
+              <div class="col-md-3">
+                <label for="endDate" class="form-label">Tanggal Akhir</label>
+                <input type="date" id="endDate" class="form-control">
+              </div>
+              <!-- <div class="col-md-2">
                                 <button id="exportBtn" class="btn btn-success w-100">Export Excel</button>
                             </div> -->
-                        </div>
-                    </div>
+            </div>
+          </div>
 
-                    <div class="p-3">
-                                        
-<table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
+          <div class="p-3">
 
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Surat</th> 
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Surat</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Pengolah</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Klasifikasi</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Surat</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perihal</th>
-                                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kepada</th>
-                                        <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>                                      
-                                    </tr>
-                                </thead>
-                                 <tbody>
-                                <?php foreach ($data_penomoran as $row): ?>
-                                <tr>
-<td class="text-center tanggal-surat" data-value="<?= $row['tanggal'] ?>">
-  <?= formatTanggalIndo($row['tanggal']) ?>
-</td>
-                              <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
-                              <td class="text-center"><?= htmlspecialchars($row['nama_bidang']); ?></td>
-                              <td class="text-center"><?= htmlspecialchars($row['kode_surat']); ?></td>
-                              <td class="text-center">
-                              <?php
-                                  $namaDepan = explode(' ', $row['nama'])[0];
-                                  ?>
+            <table id="penomoranTable" class="table table-sm table-bordered table-striped align-items-center mb-0 w-100">
 
-                                  <div class="fw-bold text-dark mb-1">
-                                    <strong><?= htmlspecialchars($row['nomor_surat']) ?></strong>
-                                  </div>
-                                  <div class="d-flex justify-content-center gap-1 flex-wrap">
-                                  <small class="badge bg-success text-white fw-semibold">
-                                  <?= htmlspecialchars($namaDepan) ?>
-                                    </small>
-                                    <small class="badge bg-secondary text-white fw-semibold">
-                                      <?= formatTanggalIndoJam($row['created_at']) ?>
-                                    </small>
-                                  </div>
+              <thead class="thead-dark">
+                <tr>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tanggal Surat</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Jenis Surat</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Pengolah</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kode Klasifikasi</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Surat</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Perihal</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Kepada</th>
+                  <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($data_penomoran as $row): ?>
+                  <tr>
+                    <td class="text-center tanggal-surat" data-value="<?= $row['tanggal'] ?>">
+                      <?= formatTanggalIndo($row['tanggal']) ?>
+                    </td>
+                    <td class="text-center"><?= htmlspecialchars($row['nama_jenis']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($row['nama_bidang']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($row['kode_surat']); ?></td>
+                    <td class="text-center">
+                      <?php
+                      $namaDepan = explode(' ', $row['nama'])[0];
+                      ?>
 
-                              </td>
-                              <td class="text-center"><?= htmlspecialchars($row['perihal']); ?></td>
-                              <td class="text-center"><?= htmlspecialchars($row['kepada']); ?></td>
-                              <td class="text-center">
-                              <button
-                              type="button"
-                              class="btn btn-sm btn-xs btn-primary btn-edit"
-                              data-id="<?= $row['id']; ?>"
-                              data-tanggal="<?= $row['tanggal']; ?>"
-                              data-jenis="<?= $row['jenis_surat_id']; ?>"
-                              data-pengolah="<?= $row['pengolah_id']; ?>"
-                              data-klasifikasi="<?= $row['kode_klasifikasi_id']; ?>"
-                              data-nomor_urut="<?= $row['nomor_urut']; ?>"
-                              data-nomor_surat="<?= $row['nomor_surat']; ?>"
-                              data-perihal="<?= $row['perihal']; ?>"
-                              data-kepada="<?= $row['kepada']; ?>"
-                              data-isi_ringkas="<?= $row['isi_ringkas']; ?>"
-                              data-catatan="<?= $row['catatan']; ?>"
-                              data-lampiran="<?= $row['lampiran']; ?>"
-                              data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Surat Keluar"
-                            >
-                              <i class="fa fa-pencil"></i>
-                            </button>
+                      <div class="fw-bold text-dark mb-1">
+                        <strong><?= htmlspecialchars($row['nomor_surat']) ?></strong>
+                      </div>
+                      <div class="d-flex justify-content-center gap-1 flex-wrap">
+                        <small class="badge bg-success text-white fw-semibold">
+                          <?= htmlspecialchars($namaDepan) ?>
+                        </small>
+                        <small class="badge bg-secondary text-white fw-semibold">
+                          <?= formatTanggalIndoJam($row['created_at']) ?>
+                        </small>
+                      </div>
 
-                            <button class="btn btn-sm btn-xs btn-danger delete-penomoran"
-                            data-id="<?= $row['id']; ?>"
-                            data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Surat Keluar"
-                            >
-                            <i class="fa fa-trash"></i>
-                          </button>
+                    </td>
+                    <td class="text-center"><?= htmlspecialchars($row['perihal']); ?></td>
+                    <td class="text-center"><?= htmlspecialchars($row['kepada']); ?></td>
+                    <td class="text-center">
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-xs btn-primary btn-edit"
+                        data-id="<?= $row['id']; ?>"
+                        data-tanggal="<?= $row['tanggal']; ?>"
+                        data-jenis="<?= $row['jenis_surat_id']; ?>"
+                        data-pengolah="<?= $row['pengolah_id']; ?>"
+                        data-klasifikasi="<?= $row['kode_klasifikasi_id']; ?>"
+                        data-nomor_urut="<?= $row['nomor_urut']; ?>"
+                        data-nomor_surat="<?= $row['nomor_surat']; ?>"
+                        data-perihal="<?= $row['perihal']; ?>"
+                        data-kepada="<?= $row['kepada']; ?>"
+                        data-isi_ringkas="<?= $row['isi_ringkas']; ?>"
+                        data-catatan="<?= $row['catatan']; ?>"
+                        data-lampiran="<?= $row['lampiran']; ?>"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Surat Keluar">
+                        <i class="fa fa-pencil"></i>
+                      </button>
 
-           <!-- ✅ Tambah Tombol Print -->
-<button class="print-surat btn btn-sm btn-primary"
-data-is_multiple="<?= $row['is_multiple'] ?>"
-  data-nomor="<?= $row['nomor_surat'] ?>"
-  data-urut="<?= $row['nomor_urut'] ?>"
-  data-tanggal="<?= $row['tanggal'] ?>"
-  data-jenis="<?= $row['nama_jenis'] ?>"
-data-kode_klasifikasi="<?= $row['kode_surat'] ?>"   
-  data-perihal="<?= $row['perihal'] ?>"
-  data-isi="<?= $row['isi_ringkas'] ?>"
-  data-kepada="<?= $row['kepada'] ?>"
-data-pengolah="<?= $row['nama_bidang'] ?>"
-  data-lampiran="<?= $row['lampiran'] ?>"
-  data-catatan="<?= $row['catatan'] ?>"
- data-noawal="<?= $row['no_awal'] ?>"
-data-noakhir="<?= $row['no_akhir'] ?>"
+                      <button class="btn btn-sm btn-xs btn-danger delete-penomoran"
+                        data-id="<?= $row['id']; ?>"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Hapus Surat Keluar">
+                        <i class="fa fa-trash"></i>
+                      </button>
 
->
-  <i class="fa fa-print"></i>
-</button>
+                      <!-- ✅ Tambah Tombol Print -->
+                      <button class="print-surat btn btn-sm btn-primary"
+                        data-is_multiple="<?= $row['is_multiple'] ?>"
+                        data-nomor="<?= $row['nomor_surat'] ?>"
+                        data-urut="<?= $row['nomor_urut'] ?>"
+                        data-tanggal="<?= $row['tanggal'] ?>"
+                        data-jenis="<?= $row['nama_jenis'] ?>"
+                        data-kode_klasifikasi="<?= $row['kode_surat'] ?>"
+                        data-perihal="<?= $row['perihal'] ?>"
+                        data-isi="<?= $row['isi_ringkas'] ?>"
+                        data-kepada="<?= $row['kepada'] ?>"
+                        data-pengolah="<?= $row['nama_bidang'] ?>"
+                        data-lampiran="<?= $row['lampiran'] ?>"
+                        data-catatan="<?= $row['catatan'] ?>"
+                        data-noawal="<?= $row['no_awal'] ?>"
+                        data-noakhir="<?= $row['no_akhir'] ?>">
+                        <i class="fa fa-print"></i>
+                      </button>
 
 
 
-                              </td>
-                          </tr>
+                    </td>
+                  </tr>
 
-                      <?php endforeach; ?>
-                      
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                <?php endforeach; ?>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <!-- Modal Tambah Slot -->
+    <div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_input_penomoran") ?>">
+            <div class="modal-body">
+              <div class="row">
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label">Jenis Penomoran</label><br>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="is_multiple" id="single" value="0" checked>
+                    <label class="form-check-label" for="single">Single</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="is_multiple" id="multiple" value="1">
+                    <label class="form-check-label" for="multiple">Multiple</label>
+                  </div>
                 </div>
-            </div>
-        </div>
-<!-- Modal Tambah Slot -->
-<div class="modal fade" id="addSlotModal" tabindex="-1" aria-labelledby="addSlotModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_input_penomoran") ?>">
-    <div class="modal-body">
-    <div class="row">
 
-    <div class="col-md-6 mb-3">
-  <label class="form-control-label">Jenis Penomoran</label><br>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="is_multiple" id="single" value="0" checked>
-    <label class="form-check-label" for="single">Single</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="radio" name="is_multiple" id="multiple" value="1">
-    <label class="form-check-label" for="multiple">Multiple</label>
-  </div>
-</div>
+                <div class="form-group">
+                  <label for="tanggal">Tanggal</label>
+                  <input type="date" max="" class="form-control" id="tanggal" name="tanggal">
+                </div>
 
-    <div class="form-group">
-    <label for="tanggal">Tanggal</label>
-    <input type="date" max="" class="form-control" id="tanggal" name="tanggal">
-</div>
-
-<div id="info-nomor-surat" class="alert custom-alert d-none"></div>
+                <div id="info-nomor-surat" class="alert custom-alert d-none"></div>
 
 
-      <?php 
-     $nama_jenis = $this->db->get('jenis_surat')->result();
-      ?>
+                <?php
+                $nama_jenis = $this->db->get('jenis_surat')->result();
+                ?>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="jenis_surat">Jenis Surat</label>
-        <select name="jenis_surat_id" id="jenis_surat_id" class="form-control select2" style="width: 100%;">
-        <option></option> <!-- Kosongkan dulu untuk placeholder -->
-        <?php foreach ($nama_jenis as $g): ?>
-          <option value="<?= $g->id ?>"><?= $g->nama_jenis ?></option>
-        <?php endforeach; ?>
-      </select>
-      </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="jenis_surat">Jenis Surat</label>
+                  <select name="jenis_surat_id" id="jenis_surat_id" class="form-control select2" style="width: 100%;">
+                    <option></option> <!-- Kosongkan dulu untuk placeholder -->
+                    <?php foreach ($nama_jenis as $g): ?>
+                      <option value="<?= $g->id ?>"><?= $g->nama_jenis ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
 
-      
-      <?php 
-      $bid = $this->db->get('bidang')->result();
-      ?>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="bidang">Bidang</label>
-        <select name="pengolah_id" id="pengolah_id" class="form-control select2" style="width: 100%;">
-        <option></option> <!-- Kosongkan dulu untuk placeholder -->
-        <?php foreach ($bid as $b): ?>
-          <option value="<?= $b->id ?>"><?= $b->kode_bidang ?> - <?= $b->nama_bidang ?></option>
-        <?php endforeach; ?>
-      </select>
-      </div>
+                <?php
+                $bid = $this->db->get('bidang')->result();
+                ?>
 
-      <?php 
-      $kode = $this->db->get('kode_klasifikasi')->result();
-      ?>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="bidang">Bidang</label>
+                  <select name="pengolah_id" id="pengolah_id" class="form-control select2" style="width: 100%;">
+                    <option></option> <!-- Kosongkan dulu untuk placeholder -->
+                    <?php foreach ($bid as $b): ?>
+                      <option value="<?= $b->id ?>"><?= $b->kode_bidang ?> - <?= $b->nama_bidang ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="kode_klasifikasi">Kode Klasifikasi</label>
-        <select name="kode_klasifikasi_id" id="kode_klasifikasi_id" class="form-control select2" style="width: 100%;">
-        <option></option> <!-- Kosongkan dulu untuk placeholder -->
-        <?php foreach ($kode as $k): ?>
-          <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
-        <?php endforeach; ?>
-      </select>
-      </div>
+                <?php
+                $kode = $this->db->get('kode_klasifikasi')->result();
+                ?>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Nomor Urut</label>
-        <input type="text" class="form-control" id="nomor_urut" name="nomor_urut">
-      </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="kode_klasifikasi">Kode Klasifikasi</label>
+                  <select name="kode_klasifikasi_id" id="kode_klasifikasi_id" class="form-control select2" style="width: 100%;">
+                    <option></option> <!-- Kosongkan dulu untuk placeholder -->
+                    <?php foreach ($kode as $k): ?>
+                      <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
+                    <?php endforeach; ?>
+                  </select>
+                </div>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Nomor Awal</label>
-        <input type="text" class="form-control" id="nomor_awal" name="nomor_awal">
-      </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="nomor_surat">Nomor Urut</label>
+                  <input type="text" class="form-control" id="nomor_urut" name="nomor_urut">
+                </div>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Nomor Akhir</label>
-        <input type="text" class="form-control" id="nomor_akhir" name="nomor_akhir">
-      </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="nomor_surat">Nomor Awal</label>
+                  <input type="text" class="form-control" id="nomor_awal" name="nomor_awal">
+                </div>
 
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="nomor_surat">Nomor Surat</label>
-        <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" required>
-      </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="nomor_surat">Nomor Akhir</label>
+                  <input type="text" class="form-control" id="nomor_akhir" name="nomor_akhir">
+                </div>
 
-    
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="perihal">Perihal</label>
-        <input type="text" class="form-control" id="perihal" name="perihal">
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="kepada">Kepada</label>
-        <input type="text" class="form-control" id="kepada" name="kepada">
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="isi_ringkas">Isi Ringkas</label>
-        <textarea class="form-control" id="isi_ringkas" name="isi_ringkas" rows="2"></textarea>
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="catatan">Catatan</label>
-        <textarea class="form-control" id="catatan" name="catatan" rows="2"></textarea>
-      </div>
-
-      <div class="col-md-6 mb-3">
-        <label class="form-control-label" for="lampiran">Lampiran</label>
-        <input type="text" class="form-control" id="lampiran" name="lampiran">
-      </div>
-
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-    <button type="submit" class="btn btn-primary">Simpan</button>
-  </div>
-</form>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="nomor_surat">Nomor Surat</label>
+                  <input type="text" class="form-control" id="nomor_surat" name="nomor_surat" required>
+                </div>
 
 
 
-    </div>
-  </div>
-</div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="perihal">Perihal</label>
+                  <input type="text" class="form-control" id="perihal" name="perihal">
+                </div>
 
-                    <!-- END Modal -->
-      <!-- Modal Edit Penomoran -->
-<div class="modal fade" id="editSlotModal" tabindex="-1" aria-labelledby="editSlotModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_edit_penomoran") ?>">
-        <div class="modal-body">
-          <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="kepada">Kepada</label>
+                  <input type="text" class="form-control" id="kepada" name="kepada">
+                </div>
 
-            <input type="hidden" id="edit_id" name="id">
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="isi_ringkas">Isi Ringkas</label>
+                  <textarea class="form-control" id="isi_ringkas" name="isi_ringkas" rows="2"></textarea>
+                </div>
 
-           
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_perihal">Perihal</label>
-              <input type="text" class="form-control" id="edit_perihal" name="perihal">
-            </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="catatan">Catatan</label>
+                  <textarea class="form-control" id="catatan" name="catatan" rows="2"></textarea>
+                </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_kepada">Kepada</label>
-              <input type="text" class="form-control" id="edit_kepada" name="kepada">
-            </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="lampiran">Lampiran</label>
+                  <input type="text" class="form-control" id="lampiran" name="lampiran">
+                </div>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_isi_ringkas">Isi Ringkas</label>
-              <textarea class="form-control" id="edit_isi_ringkas" name="isi_ringkas" rows="2"></textarea>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_catatan">Catatan</label>
-              <textarea class="form-control" id="edit_catatan" name="catatan" rows="2"></textarea>
-            </div>
-
-            <div class="col-md-6 mb-3">
-              <label class="form-control-label" for="edit_lampiran">Lampiran</label>
-              <input type="text" class="form-control" id="edit_lampiran" name="lampiran">
-            </div>
-
-          </div>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-
-                  </tbody>
-                </table>
               </div>
             </div>
-          </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+          </form>
+
+
+
         </div>
       </div>
     </div>
-      <footer class="footer pt-3  ">
-        <div class="container-fluid">
-          <div class="row align-items-center justify-content-lg-between">
-            <div class="col-lg-6 mb-lg-0 mb-4">
-              <div class="copyright text-center text-sm text-muted text-lg-start">
-                © <script>
-                  document.write(new Date().getFullYear())
-                </script>
-                <!-- made with <i class="fa fa-heart"></i> by -->
-                <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
-                Arsiparis Badan Pendapatan Daerah.by RND
+
+    <!-- END Modal -->
+    <!-- Modal Edit Penomoran -->
+    <div class="modal fade" id="editSlotModal" tabindex="-1" aria-labelledby="editSlotModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form method="POST" action="<?= base_url("index.php/penomoran/Penomoran/do_edit_penomoran") ?>">
+            <div class="modal-body">
+              <div class="row">
+
+                <input type="hidden" id="edit_id" name="id">
+
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="edit_perihal">Perihal</label>
+                  <input type="text" class="form-control" id="edit_perihal" name="perihal">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="edit_kepada">Kepada</label>
+                  <input type="text" class="form-control" id="edit_kepada" name="kepada">
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="edit_isi_ringkas">Isi Ringkas</label>
+                  <textarea class="form-control" id="edit_isi_ringkas" name="isi_ringkas" rows="2"></textarea>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="edit_catatan">Catatan</label>
+                  <textarea class="form-control" id="edit_catatan" name="catatan" rows="2"></textarea>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-control-label" for="edit_lampiran">Lampiran</label>
+                  <input type="text" class="form-control" id="edit_lampiran" name="lampiran">
+                </div>
+
               </div>
             </div>
-            <div class="col-lg-6">
-              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                <li class="nav-item">
-                  <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
-                </li>
-                  <li class="nav-item">
-                  <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
-                </li>
-              </ul>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+              <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    </tbody>
+    </table>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <footer class="footer pt-3  ">
+      <div class="container-fluid">
+        <div class="row align-items-center justify-content-lg-between">
+          <div class="col-lg-6 mb-lg-0 mb-4">
+            <div class="copyright text-center text-sm text-muted text-lg-start">
+              © <script>
+                document.write(new Date().getFullYear())
+              </script>
+              <!-- made with <i class="fa fa-heart"></i> by -->
+              <!-- <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a> -->
+              Arsiparis Badan Pendapatan Daerah.by RND
             </div>
           </div>
+          <div class="col-lg-6">
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+              <li class="nav-item">
+                <a href="https://twitter.com/bapenda_jabar" class="fab fa-twitter-square me-2" target="_blank" style="font-size: 24px; color: #1da1f2;"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.facebook.com/bapenda.jabar/?locale=id_ID" class="fab fa-facebook-square me-2" target="_blank" style="font-size: 24px; color: #3b5998;"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.instagram.com/bapenda.jabar" class="fab fa-instagram-square me-2" target="_blank" style="font-size: 24px; color: #c13584;"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://bapenda.jabarprov.go.id/" class="fas fa-globe me-2" target="_blank" style="font-size: 24px; color: #4CAF50;" title="Website Bapenda Jabar"></a>
+              </li>
+              <li class="nav-item">
+                <a href="https://www.youtube.com/channel/@BapendaJabar" class="fab fa-youtube-square me-2" target="_blank" style="font-size: 24px; color: #ff0000;"></a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </footer>
+      </div>
+    </footer>
     </div>
   </main>
   <div class="fixed-plugin">
@@ -785,106 +790,105 @@ data-noakhir="<?= $row['no_akhir'] ?>"
     </div>
   </div>
   <script>
-$(document).ready(function () {
-  $('.btn-edit').on('click', function () {
-    const modal = $('#editSlotModal');
+    $(document).ready(function() {
+      $('.btn-edit').on('click', function() {
+        const modal = $('#editSlotModal');
 
-    // ambil data
-    const id = $(this).data('id');
-    const tanggal = $(this).data('tanggal');
-    const jenis = $(this).data('jenis');
-    const pengolah = $(this).data('pengolah');
-    const klasifikasi = $(this).data('klasifikasi');
-    const nomorUrut = $(this).data('nomor_urut');
-    const nomorSurat = $(this).data('nomor_surat');
-    const perihal = $(this).data('perihal');
-    const kepada = $(this).data('kepada');
-    const isiRingkas = $(this).data('isi_ringkas');
-    const catatan = $(this).data('catatan');
-    const lampiran = $(this).data('lampiran');
+        // ambil data
+        const id = $(this).data('id');
+        const tanggal = $(this).data('tanggal');
+        const jenis = $(this).data('jenis');
+        const pengolah = $(this).data('pengolah');
+        const klasifikasi = $(this).data('klasifikasi');
+        const nomorUrut = $(this).data('nomor_urut');
+        const nomorSurat = $(this).data('nomor_surat');
+        const perihal = $(this).data('perihal');
+        const kepada = $(this).data('kepada');
+        const isiRingkas = $(this).data('isi_ringkas');
+        const catatan = $(this).data('catatan');
+        const lampiran = $(this).data('lampiran');
 
-    // isi field
-    modal.find('#edit_id').val(id);
-    modal.find('#edit_tanggal').val(tanggal);
-    modal.find('#edit_jenis_surat_id').val(jenis).trigger('change');
-    modal.find('#edit_pengolah_id').val(pengolah).trigger('change');
-    modal.find('#edit_kode_klasifikasi_id').val(klasifikasi).trigger('change');
-    modal.find('#edit_nomor_urut').val(nomorUrut);
-    modal.find('#edit_nomor_surat').val(nomorSurat);
-    modal.find('#edit_perihal').val(perihal);
-    modal.find('#edit_kepada').val(kepada);
-    modal.find('#edit_isi_ringkas').val(isiRingkas);
-    modal.find('#edit_catatan').val(catatan);
-    modal.find('#edit_lampiran').val(lampiran);
+        // isi field
+        modal.find('#edit_id').val(id);
+        modal.find('#edit_tanggal').val(tanggal);
+        modal.find('#edit_jenis_surat_id').val(jenis).trigger('change');
+        modal.find('#edit_pengolah_id').val(pengolah).trigger('change');
+        modal.find('#edit_kode_klasifikasi_id').val(klasifikasi).trigger('change');
+        modal.find('#edit_nomor_urut').val(nomorUrut);
+        modal.find('#edit_nomor_surat').val(nomorSurat);
+        modal.find('#edit_perihal').val(perihal);
+        modal.find('#edit_kepada').val(kepada);
+        modal.find('#edit_isi_ringkas').val(isiRingkas);
+        modal.find('#edit_catatan').val(catatan);
+        modal.find('#edit_lampiran').val(lampiran);
 
-    // tampilkan modal setelah semua field diisi
-    $('#editSlotModal').modal('show'); // untuk Bootstrap 4
-  });
-});
+        // tampilkan modal setelah semua field diisi
+        $('#editSlotModal').modal('show'); // untuk Bootstrap 4
+      });
+    });
+  </script>
 
-</script>
+  <script>
+    function updateNomorSurat() {
+      const awal = document.getElementById('nomor_awal').value.padStart(3, '0');
+      const akhir = document.getElementById('nomor_akhir').value.padStart(3, '0');
+      const klasifikasi = document.getElementById('kode_klasifikasi_id').selectedOptions[0]?.text.split(' - ')[0] || '';
+      const bidang = document.getElementById('pengolah_id').selectedOptions[0].text.split(' - ')[0] || '';
 
-<script>
-function updateNomorSurat() {
-    const awal = document.getElementById('nomor_awal').value.padStart(3, '0');
-    const akhir = document.getElementById('nomor_akhir').value.padStart(3, '0');
-    const klasifikasi = document.getElementById('kode_klasifikasi_id').selectedOptions[0]?.text.split(' - ')[0] || '';
-    const bidang = document.getElementById('pengolah_id').selectedOptions[0].text.split(' - ')[0] || '';
+      let nomor_surat = '';
 
-    let nomor_surat = '';
-
-    if (awal && akhir && awal !== akhir) {
+      if (awal && akhir && awal !== akhir) {
         nomor_surat = `${awal} - ${akhir}/${klasifikasi}/${bidang}`;
-    } else {
+      } else {
         nomor_surat = `${awal}/${klasifikasi}/${bidang}`;
+      }
+
+      document.getElementById('nomor_surat').value = nomor_surat;
     }
 
-    document.getElementById('nomor_surat').value = nomor_surat;
-}
+    function handleMultipleAutoFill() {
+      const awal = parseInt(document.getElementById('nomor_awal').value);
+      const isMultiple = document.querySelector('input[name="is_multiple"]:checked')?.value === '1';
 
-function handleMultipleAutoFill() {
-    const awal = parseInt(document.getElementById('nomor_awal').value);
-    const isMultiple = document.querySelector('input[name="is_multiple"]:checked')?.value === '1';
-
-    if (!isNaN(awal)) {
+      if (!isNaN(awal)) {
         const akhir = isMultiple ? awal + 1 : awal;
         document.getElementById('nomor_akhir').value = akhir.toString().padStart(3, '0');
         updateNomorSurat();
+      }
     }
-}
 
-// Saat halaman selesai dimuat
-window.addEventListener('DOMContentLoaded', function () {
-    const nomorAwalInput = document.getElementById('nomor_awal');
-    const nomorAkhirInput = document.getElementById('nomor_akhir');
+    // Saat halaman selesai dimuat
+    window.addEventListener('DOMContentLoaded', function() {
+      const nomorAwalInput = document.getElementById('nomor_awal');
+      const nomorAkhirInput = document.getElementById('nomor_akhir');
 
-    // Jika nomor_awal sudah terisi (misalnya dari JS lain), langsung proses
-    if (nomorAwalInput.value) {
+      // Jika nomor_awal sudah terisi (misalnya dari JS lain), langsung proses
+      if (nomorAwalInput.value) {
         handleMultipleAutoFill();
-    }
+      }
 
-    // Event saat nomor_awal diubah (manual atau programmatically dengan dispatchEvent)
-    nomorAwalInput.addEventListener('input', handleMultipleAutoFill);
+      // Event saat nomor_awal diubah (manual atau programmatically dengan dispatchEvent)
+      nomorAwalInput.addEventListener('input', handleMultipleAutoFill);
 
-    // Event saat nomor_akhir diubah manual
-    nomorAkhirInput.addEventListener('input', function () {
+      // Event saat nomor_akhir diubah manual
+      nomorAkhirInput.addEventListener('input', function() {
         const awal = parseInt(document.getElementById('nomor_awal').value);
         const akhir = parseInt(this.value);
 
 
         updateNomorSurat();
-    });
+      });
 
-    // Event saat radio multiple/single diubah
-    document.querySelectorAll('input[name="is_multiple"]').forEach(function (radio) {
+      // Event saat radio multiple/single diubah
+      document.querySelectorAll('input[name="is_multiple"]').forEach(function(radio) {
         radio.addEventListener('change', handleMultipleAutoFill);
-    });
+      });
 
-    // Jika klasifikasi atau bidang diubah, update nomor surat juga
-    document.getElementById('kode_klasifikasi_id').addEventListener('change', updateNomorSurat);
-    document.getElementById('pengolah_id').addEventListener('change', updateNomorSurat);
-});
-</script>
+      // Jika klasifikasi atau bidang diubah, update nomor surat juga
+      document.getElementById('kode_klasifikasi_id').addEventListener('change', updateNomorSurat);
+      document.getElementById('pengolah_id').addEventListener('change', updateNomorSurat);
+    });
+  </script>
 
 
 
@@ -898,108 +902,107 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
   <script>
-$(document).ready(function () {
-  function toggleNomorFields() {
-    const isMultiple = $('input[name="is_multiple"]:checked').val() === '1';
+    $(document).ready(function() {
+      function toggleNomorFields() {
+        const isMultiple = $('input[name="is_multiple"]:checked').val() === '1';
 
-    if (isMultiple) {
-      $('#nomor_awal').closest('.mb-3').show();
-      $('#nomor_akhir').closest('.mb-3').show();
-      $('#nomor_urut').closest('.mb-3').hide();
-    } else {
-      $('#nomor_awal').closest('.mb-3').hide();
-      $('#nomor_akhir').closest('.mb-3').hide();
-      $('#nomor_urut').closest('.mb-3').show();
-    }
-  }
+        if (isMultiple) {
+          $('#nomor_awal').closest('.mb-3').show();
+          $('#nomor_akhir').closest('.mb-3').show();
+          $('#nomor_urut').closest('.mb-3').hide();
+        } else {
+          $('#nomor_awal').closest('.mb-3').hide();
+          $('#nomor_akhir').closest('.mb-3').hide();
+          $('#nomor_urut').closest('.mb-3').show();
+        }
+      }
 
-  // Jalankan saat perubahan radio button
-  $('input[name="is_multiple"]').on('change', toggleNomorFields);
+      // Jalankan saat perubahan radio button
+      $('input[name="is_multiple"]').on('change', toggleNomorFields);
 
-  // Jalankan sekali saat halaman dimuat
-  toggleNomorFields();
-});
-
+      // Jalankan sekali saat halaman dimuat
+      toggleNomorFields();
+    });
   </script>
 
- 
+
   <script>
-function generateNomorSurat() {
-  const jenis_surat_id = $('#jenis_surat_id').val();
-  const kode_klasifikasi_id = $('#kode_klasifikasi_id').val();
-  const pengolah_id = $('#pengolah_id').val();
-  const tanggal = $('#tanggal').val();
-  const is_multiple = $('input[name="is_multiple"]:checked').val(); // ambil dari radio button
+    function generateNomorSurat() {
+      const jenis_surat_id = $('#jenis_surat_id').val();
+      const kode_klasifikasi_id = $('#kode_klasifikasi_id').val();
+      const pengolah_id = $('#pengolah_id').val();
+      const tanggal = $('#tanggal').val();
+      const is_multiple = $('input[name="is_multiple"]:checked').val(); // ambil dari radio button
 
-  if (!jenis_surat_id || !kode_klasifikasi_id || !pengolah_id || !tanggal) {
-    $('#info-nomor-surat')
-      .removeClass()
-      .addClass('custom-alert warning')
-      .html('⚠️ Mohon lengkapi semua data untuk generate nomor surat.');
-    return;
-  }
-
-  $('#info-nomor-surat')
-    .removeClass()
-    .addClass('custom-alert loading')
-    .html('⏳ Sedang memproses nomor surat...');
-
-  $.ajax({
-    type: 'POST',
-    url: '<?= base_url('index.php/penomoran/Penomoran/generate_nomor') ?>',
-    data: {
-      jenis_surat_id,
-      kode_klasifikasi_id,
-      pengolah_id,
-      tanggal,
-      is_multiple
-    },
-    dataType: 'json',
-    success: function(res) {
-      if (res.error) {
+      if (!jenis_surat_id || !kode_klasifikasi_id || !pengolah_id || !tanggal) {
         $('#info-nomor-surat')
           .removeClass()
-          .addClass('custom-alert error fade-in')
-          .html('❌ ' + res.error);
+          .addClass('custom-alert warning')
+          .html('⚠️ Mohon lengkapi semua data untuk generate nomor surat.');
         return;
       }
 
-      function formatTanggalIndo(tanggalStr) {
-        const bulanIndo = [
-          "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-          "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-        ];
-        if (!tanggalStr) return '-';
-        const [tahun, bulan, hari] = tanggalStr.split("-");
-        return `${parseInt(hari)} ${bulanIndo[parseInt(bulan) - 1]} ${tahun}`;
-      }
-
-      const tanggalFormatted = formatTanggalIndo(res.tanggal);
-
-      // Set nilai input berdasarkan multiple atau tidak
-      if (is_multiple == '1') {
-        $('#nomor_awal').val(res.nomor_awal);
-        $('#nomor_akhir').val(res.nomor_akhir);
-        $('#nomor_urut').val(''); // clear kalau ada
-        $('#nomor_surat').val(res.nomor_surat);
-      } else {
-        $('#nomor_awal').val('');
-        $('#nomor_akhir').val('');
-        $('#nomor_urut').val(res.nomor_urut);
-        $('#nomor_surat').val(res.nomor_surat);
-      }
-
-      const infoTambahan =
-        res.sisa_slot !== null
-          ? `<br>Sisa Slot <code class="highlight-db">${tanggalFormatted}</code> yaitu <code class="highlight-db">${res.sisa_slot}</code>`
-          : res.info_slot
-          ? `<br><em>${res.info_slot}</em>`
-          : '';
-
       $('#info-nomor-surat')
         .removeClass()
-        .addClass('custom-alert success')
-        .html(`
+        .addClass('custom-alert loading')
+        .html('⏳ Sedang memproses nomor surat...');
+
+      $.ajax({
+        type: 'POST',
+        url: '<?= base_url('index.php/penomoran/Penomoran/generate_nomor') ?>',
+        data: {
+          jenis_surat_id,
+          kode_klasifikasi_id,
+          pengolah_id,
+          tanggal,
+          is_multiple
+        },
+        dataType: 'json',
+        success: function(res) {
+          if (res.error) {
+            $('#info-nomor-surat')
+              .removeClass()
+              .addClass('custom-alert error fade-in')
+              .html('❌ ' + res.error);
+            return;
+          }
+
+          function formatTanggalIndo(tanggalStr) {
+            const bulanIndo = [
+              "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+              "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            if (!tanggalStr) return '-';
+            const [tahun, bulan, hari] = tanggalStr.split("-");
+            return `${parseInt(hari)} ${bulanIndo[parseInt(bulan) - 1]} ${tahun}`;
+          }
+
+          const tanggalFormatted = formatTanggalIndo(res.tanggal);
+
+          // Set nilai input berdasarkan multiple atau tidak
+          if (is_multiple == '1') {
+            $('#nomor_awal').val(res.nomor_awal);
+            $('#nomor_akhir').val(res.nomor_akhir);
+            $('#nomor_urut').val(''); // clear kalau ada
+            $('#nomor_surat').val(res.nomor_surat);
+          } else {
+            $('#nomor_awal').val('');
+            $('#nomor_akhir').val('');
+            $('#nomor_urut').val(res.nomor_urut);
+            $('#nomor_surat').val(res.nomor_surat);
+          }
+
+          const infoTambahan =
+            res.sisa_slot !== null ?
+            `<br>Sisa Slot <code class="highlight-db">${tanggalFormatted}</code> yaitu <code class="highlight-db">${res.sisa_slot}</code>` :
+            res.info_slot ?
+            `<br><em>${res.info_slot}</em>` :
+            '';
+
+          $('#info-nomor-surat')
+            .removeClass()
+            .addClass('custom-alert success')
+            .html(`
           <strong class="text-success font-weight-bold">
           ✅ Nomor surat berhasil dibuat!
           </strong>
@@ -1008,223 +1011,218 @@ function generateNomorSurat() {
           Dibuat pada: <code class="highlight-db">${res.created_at}</code><br>
           Pembuat Sebelumnya: <code class="highlight-db">${res.pembuat}</code><br>${infoTambahan}
         `);
-    },
-    error: function(xhr, status, error) {
-      $('#info-nomor-surat')
-        .removeClass()
-        .addClass('custom-alert error')
-        .html('🚨 Gagal memproses data. Silakan coba lagi.');
-    }
-  });
-}
-
-// Trigger otomatis jika semua input sudah terisi
-$('#jenis_surat_id, #kode_klasifikasi_id, #pengolah_id, #tanggal, input[name="is_multiple"]').on('change', function () {
-  const allFilled =
-    $('#jenis_surat_id').val() &&
-    $('#kode_klasifikasi_id').val() &&
-    $('#pengolah_id').val() &&
-    $('#tanggal').val() &&
-    $('input[name="is_multiple"]:checked').val() !== undefined;
-
-  if (allFilled) {
-    generateNomorSurat();
-  }
-});
-
-// Reset saat modal ditutup
-$('#modalNomorSurat').on('hidden.bs.modal', function () {
-  $('#info-nomor-surat')
-    .removeClass()
-    .addClass('d-none')
-    .html('');
-
-  $('#nomor_urut').val('');
-  $('#nomor_awal').val('');
-  $('#nomor_akhir').val('');
-  $('#nomor_surat').val('');
-});
-
-
-
-  </script>
-
-<script>
-function cekDuplikatNomor() {
-  const nomor_urut = $('#nomor_urut').val();
-  const jenis_surat_id = $('#jenis_surat_id').val();
-  const tanggal = $('#tanggal').val(); // Tambahkan ini jika cek pakai tanggal
-
-  // Jalankan hanya jika semua terisi
-  if (nomor_urut && jenis_surat_id && tanggal) {
-    $.ajax({
-      url: '<?= base_url('index.php/penomoran/Penomoran/cek_duplikat_nomor') ?>',
-      method: 'POST',
-      data: {
-        nomor_urut: nomor_urut,
-        jenis_surat_id: jenis_surat_id,
-        tanggal: tanggal
-      },
-      dataType: 'json',
-      success: function(res) {
-        if (res.exists) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Nomor Duplikat',
-            text: '⚠️ Nomor Urut ini sudah digunakan untuk jenis surat yang sama!',
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            $('#nomor_urut').focus();
-          });
-
-          $('#nomor_urut').addClass('is-invalid');
-        } else {
-          $('#nomor_urut').removeClass('is-invalid');
+        },
+        error: function(xhr, status, error) {
+          $('#info-nomor-surat')
+            .removeClass()
+            .addClass('custom-alert error')
+            .html('🚨 Gagal memproses data. Silakan coba lagi.');
         }
-      },
-      error: function() {
-        Swal.fire({
-          icon: 'error',
-          title: 'Gagal Mengecek',
-          text: 'Terjadi kesalahan saat mengecek nomor urut.'
-        });
+      });
+    }
+
+    // Trigger otomatis jika semua input sudah terisi
+    $('#jenis_surat_id, #kode_klasifikasi_id, #pengolah_id, #tanggal, input[name="is_multiple"]').on('change', function() {
+      const allFilled =
+        $('#jenis_surat_id').val() &&
+        $('#kode_klasifikasi_id').val() &&
+        $('#pengolah_id').val() &&
+        $('#tanggal').val() &&
+        $('input[name="is_multiple"]:checked').val() !== undefined;
+
+      if (allFilled) {
+        generateNomorSurat();
       }
     });
-  }
-}
 
-// Trigger saat input berubah
-$('#nomor_urut, #tanggal, #jenis_surat_id').on('change keyup', cekDuplikatNomor);
+    // Reset saat modal ditutup
+    $('#modalNomorSurat').on('hidden.bs.modal', function() {
+      $('#info-nomor-surat')
+        .removeClass()
+        .addClass('d-none')
+        .html('');
 
-</script>
-
-
-  <script>
-  $('#jenis_surat_id, #kode_klasifikasi_id, #unit_pengolah_id, #tanggal').on('change', function () {
-  // Kirim AJAX ke endpoint
-  $.post('<?= base_url("index.php/penomoran/Penomoran/generate_nomor") ?>', {
-    jenis_surat_id: $('#jenis_surat_id').val(),
-    kode_klasifikasi_id: $('#kode_klasifikasi_id').val(),
-    pengolah_id: $('#pengolah_id').val(),
-    tanggal: $('#tanggal').val()
-  }, function (data) {
-    $('#nomor_urut').val(data.nomor_urut);
-    $('#nomor_surat').val(data.nomor_surat);
-    $('#info_terakhir').html("Terakhir: " + data.nomor_terakhir + " oleh " + data.pembuat);
-    $('#sisa_slot').html("Sisa slot: " + data.sisa_slot);
-  }, 'json');
-});
-
-  </script>
-
-
-
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const today = new Date().toISOString().split('T')[0];
-
-    // Untuk form tambah
-    const tanggal = document.getElementById("tanggal");
-    if (tanggal) {
-      tanggal.setAttribute("max", today);
-    }
-
-   
-  });
-</script> 
-
-
-<?php if ($this->session->flashdata('success_penomoran')): ?>
-<script>
-Swal.fire({
-  icon: 'success',
-  title: 'Berhasil',
-  text: '<?= $this->session->flashdata("success_penomoran") ?>',
-  timer: 2000,
-  showConfirmButton: false
-});
-</script>
-<?php endif; ?>
-
-
-<?php if ($this->session->flashdata('success_edit')): ?>
-  <script>
-    Swal.fire({
-      icon: 'success',
-      title: 'Berhasil',
-      text: '<?= $this->session->flashdata('success_edit'); ?>',
-      showConfirmButton: false,
-      timer: 2000
+      $('#nomor_urut').val('');
+      $('#nomor_awal').val('');
+      $('#nomor_akhir').val('');
+      $('#nomor_surat').val('');
     });
   </script>
-<?php endif; ?>
-<script>
-  $(document).on('click', '.delete-penomoran', function () {
-    const slotId = $(this).data('id');
 
-    Swal.fire({
-      title: 'Yakin ingin menghapus nomor ini?',
-      text: "Data yang dihapus tidak bisa dikembalikan!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Ya, hapus!',
-      cancelButtonText: 'Batal'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // Kirim ke backend
+
+
+
+  <script>
+    $('#jenis_surat_id, #kode_klasifikasi_id, #unit_pengolah_id, #tanggal').on('change', function() {
+      // Kirim AJAX ke endpoint
+      $.post('<?= base_url("index.php/penomoran/Penomoran/generate_nomor") ?>', {
+        jenis_surat_id: $('#jenis_surat_id').val(),
+        kode_klasifikasi_id: $('#kode_klasifikasi_id').val(),
+        pengolah_id: $('#pengolah_id').val(),
+        tanggal: $('#tanggal').val()
+      }, function(data) {
+        $('#nomor_urut').val(data.nomor_urut);
+        $('#nomor_surat').val(data.nomor_surat);
+        $('#info_terakhir').html("Terakhir: " + data.nomor_terakhir + " oleh " + data.pembuat);
+        $('#sisa_slot').html("Sisa slot: " + data.sisa_slot);
+      }, 'json');
+    });
+  </script>
+
+  <script>
+    function cekDuplikatNomor() {
+      const nomor_urut = parseInt($('#nomor_urut').val(), 10);
+      const jenis_surat_id = $('#jenis_surat_id').val();
+
+      // Jalankan hanya jika semua terisi
+      if (nomor_urut && jenis_surat_id) {
         $.ajax({
-          url: '<?= base_url("index.php/penomoran/Penomoran/delete_penomoran") ?>',
+          url: '<?= base_url('index.php/penomoran/Penomoran/cek_duplikat_nomor') ?>',
           method: 'POST',
-          data: { edit_id: slotId },
-          success: function (response) {
-            // Tampilkan notifikasi sukses
-            Swal.fire({
-              title: 'Berhasil!',
-              text: 'Nomor berhasil dihapus.',
-              icon: 'success',
-              timer: 2000,
-              showConfirmButton: false
-            }).then(() => {
-              location.reload(); // refresh halaman
-            });
+          data: {
+            nomor_urut: nomor_urut,
+            jenis_surat_id: jenis_surat_id,
+
           },
-          error: function () {
-            Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus nomor.', 'error');
+          dataType: 'json',
+          success: function(res) {
+            if (res.exists) {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Nomor Duplikat',
+                text: '⚠️ Nomor Urut ini sudah digunakan untuk jenis surat yang sama!',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'OK'
+              }).then(() => {
+                $('#nomor_urut').focus();
+              });
+
+              $('#nomor_urut').addClass('is-invalid');
+            } else {
+              $('#nomor_urut').removeClass('is-invalid');
+            }
+          },
+          error: function() {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal Mengecek',
+              text: 'Terjadi kesalahan saat mengecek nomor urut.'
+            });
           }
         });
       }
+    }
+
+    // Trigger saat input berubah
+    $('#nomor_urut, #jenis_surat_id').on('change keyup', cekDuplikatNomor);
+  </script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const today = new Date().toISOString().split('T')[0];
+
+      // Untuk form tambah
+      const tanggal = document.getElementById("tanggal");
+      if (tanggal) {
+        tanggal.setAttribute("max", today);
+      }
+
+
     });
-  });
-</script>
+  </script>
+
+
+  <?php if ($this->session->flashdata('success_penomoran')): ?>
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '<?= $this->session->flashdata("success_penomoran") ?>',
+        timer: 2000,
+        showConfirmButton: false
+      });
+    </script>
+  <?php endif; ?>
+
+
+  <?php if ($this->session->flashdata('success_edit')): ?>
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '<?= $this->session->flashdata('success_edit'); ?>',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    </script>
+  <?php endif; ?>
+  <script>
+    $(document).on('click', '.delete-penomoran', function() {
+      const slotId = $(this).data('id');
+
+      Swal.fire({
+        title: 'Yakin ingin menghapus nomor ini?',
+        text: "Data yang dihapus tidak bisa dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, hapus!',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Kirim ke backend
+          $.ajax({
+            url: '<?= base_url("index.php/penomoran/Penomoran/delete_penomoran") ?>',
+            method: 'POST',
+            data: {
+              edit_id: slotId
+            },
+            success: function(response) {
+              // Tampilkan notifikasi sukses
+              Swal.fire({
+                title: 'Berhasil!',
+                text: 'Nomor berhasil dihapus.',
+                icon: 'success',
+                timer: 2000,
+                showConfirmButton: false
+              }).then(() => {
+                location.reload(); // refresh halaman
+              });
+            },
+            error: function() {
+              Swal.fire('Gagal', 'Terjadi kesalahan saat menghapus nomor.', 'error');
+            }
+          });
+        }
+      });
+    });
+  </script>
 
 
 
 
   <script>
- $(document).ready(function() {
-  $('#jenis_surat_id').select2({
-    placeholder: "Pilih jenis surat",
-    allowClear: true,
-    dropdownParent: $('#addSlotModal') // Ganti dengan ID modalmu
-  });
+    $(document).ready(function() {
+      $('#jenis_surat_id').select2({
+        placeholder: "Pilih jenis surat",
+        allowClear: true,
+        dropdownParent: $('#addSlotModal') // Ganti dengan ID modalmu
+      });
 
-  $('#kode_klasifikasi_id').select2({
-    placeholder: "Pilih Kode Klasifikasi",
-    allowClear: true,
-    dropdownParent: $('#addSlotModal') // Ganti juga di sini
-  });
+      $('#kode_klasifikasi_id').select2({
+        placeholder: "Pilih Kode Klasifikasi",
+        allowClear: true,
+        dropdownParent: $('#addSlotModal') // Ganti juga di sini
+      });
 
-  $('#pengolah_id').select2({
-    placeholder: "Pilih Unit Pengolah",
-    allowClear: true,
-    dropdownParent: $('#addSlotModal') // Ganti juga di sini
-  });
-});
-
-</script>
+      $('#pengolah_id').select2({
+        placeholder: "Pilih Unit Pengolah",
+        allowClear: true,
+        dropdownParent: $('#addSlotModal') // Ganti juga di sini
+      });
+    });
+  </script>
 
 
   <!-- Github buttons -->
@@ -1232,117 +1230,117 @@ Swal.fire({
 
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
-<!-- 
+  <!-- 
 DataTables + Export Script
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
-<!-- SCRIPT FILTER -->
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("searchInput");
-    const startDateInput = document.getElementById("startDate");
-    const endDateInput = document.getElementById("endDate");
-    const table = document.getElementById("penomoranTable");
-    const rows = table.querySelectorAll("tbody tr");
+  <!-- SCRIPT FILTER -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const searchInput = document.getElementById("searchInput");
+      const startDateInput = document.getElementById("startDate");
+      const endDateInput = document.getElementById("endDate");
+      const table = document.getElementById("penomoranTable");
+      const rows = table.querySelectorAll("tbody tr");
 
-    function filterTable() {
-      const searchValue = searchInput.value.toLowerCase();
-      const startDate = startDateInput.value;
-      const endDate = endDateInput.value;
+      function filterTable() {
+        const searchValue = searchInput.value.toLowerCase();
+        const startDate = startDateInput.value;
+        const endDate = endDateInput.value;
 
-      rows.forEach(row => {
-        const text = row.textContent.toLowerCase();
-        const tanggalCell = row.querySelector(".tanggal-surat");
-        const tanggalSurat = tanggalCell.getAttribute("data-value");
+        rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          const tanggalCell = row.querySelector(".tanggal-surat");
+          const tanggalSurat = tanggalCell.getAttribute("data-value");
 
-        let matchText = text.includes(searchValue);
-        let matchDate = true;
+          let matchText = text.includes(searchValue);
+          let matchDate = true;
 
-        if (startDate && tanggalSurat < startDate) matchDate = false;
-        if (endDate && tanggalSurat > endDate) matchDate = false;
+          if (startDate && tanggalSurat < startDate) matchDate = false;
+          if (endDate && tanggalSurat > endDate) matchDate = false;
 
-        if (matchText && matchDate) {
-          row.style.display = "";
-        } else {
-          row.style.display = "none";
-        }
-      });
-    }
+          if (matchText && matchDate) {
+            row.style.display = "";
+          } else {
+            row.style.display = "none";
+          }
+        });
+      }
 
-    searchInput.addEventListener("input", filterTable);
-    startDateInput.addEventListener("change", filterTable);
-    endDateInput.addEventListener("change", filterTable);
-  });
-</script>
+      searchInput.addEventListener("input", filterTable);
+      startDateInput.addEventListener("change", filterTable);
+      endDateInput.addEventListener("change", filterTable);
+    });
+  </script>
 
 
 
-<script>
-$(document).ready(function () {
-    const table = $('#penomoranTable').DataTable({
-            responsive: true,
-      autoWidth: true,
-      pageLength: 10,
+  <script>
+    $(document).ready(function() {
+      const table = $('#penomoranTable').DataTable({
+        responsive: true,
+        autoWidth: true,
+        pageLength: 10,
         dom: '<"row mb-3"<"col-sm-12 col-md-6"l>>t<"row mt-3"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7 text-end"p>>',
         language: {
-        lengthMenu: "Tampilkan _MENU_ entri",
-        info: "Menampilkan _START_ sampai _END_ dari total _TOTAL_ data",
-        zeroRecords: "⚠️ Tidak ada data ditemukan",
-        paginate: {
-           previous: "⭠ Prev",
-           next: "Next ⭢"
-            }
+          lengthMenu: "Tampilkan _MENU_ entri",
+          info: "Menampilkan _START_ sampai _END_ dari total _TOTAL_ data",
+          zeroRecords: "⚠️ Tidak ada data ditemukan",
+          paginate: {
+            previous: "⭠ Prev",
+            next: "Next ⭢"
+          }
         },
-    });
+      });
 
-    // Search manual
-    $('#searchInput').on('keyup', function () {
+      // Search manual
+      $('#searchInput').on('keyup', function() {
         table.search(this.value).draw();
-    });
+      });
 
-    // Filter tanggal
-    $('#startDate, #endDate').on('change', function () {
+      // Filter tanggal
+      $('#startDate, #endDate').on('change', function() {
         const start = $('#startDate').val();
         const end = $('#endDate').val();
 
-        $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-            const tanggal = $('#penomoranTable tbody tr').eq(dataIndex).find('.tanggal-surat').data('value');
-            if (!tanggal) return false;
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+          const tanggal = $('#penomoranTable tbody tr').eq(dataIndex).find('.tanggal-surat').data('value');
+          if (!tanggal) return false;
 
-            if ((start === "" || tanggal >= start) && (end === "" || tanggal <= end)) {
-                return true;
-            }
-            return false;
+          if ((start === "" || tanggal >= start) && (end === "" || tanggal <= end)) {
+            return true;
+          }
+          return false;
         });
 
         table.draw();
         $.fn.dataTable.ext.search.pop();
+      });
     });
-});
-</script>
+  </script>
 
 
 
 
 
- <script>
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
-  });
-</script>
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+  </script>
 
 
-<!-- PRINT TEMPLATE -->
-<div id="printArea" style="width: 210mm; height: 148mm; display: none;">
-  <div style="width: 100%; height: 100%; display: flex; border: none; background: white; box-sizing: border-box;">
-    
-    <!-- Red Bar -->
-    <div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
-      <div style="
+  <!-- PRINT TEMPLATE -->
+  <div id="printArea" style="width: 210mm; height: 148mm; display: none;">
+    <div style="width: 100%; height: 100%; display: flex; border: none; background: white; box-sizing: border-box;">
+
+      <!-- Red Bar -->
+      <div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
+        <div style="
         position: absolute;
         top: 50%;
         left: 50%;
@@ -1354,174 +1352,182 @@ $(document).ready(function () {
         font-family: 'Times New Roman', serif;
         text-align: center;
         white-space: nowrap;">
-        <div>PEMERINTAH DAERAH PROVINSI JAWA BARAT</div>
-        <div>BADAN PENDAPATAN DAERAH</div>
-        <div>KARTU SURAT KELUAR</div>
-      </div>
-    </div>
-
-    <!-- Content -->
-    <div style="flex: 1; padding: 12px; box-sizing: border-box; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black; display: flex; flex-direction: column; justify-content: space-between;">
-      
-      <!-- Kode & Nomor Urut -->
-      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.75rem;">
-        <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-        </div>
-        <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-        </div>
-        <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-          Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;font-size: 0.9rem; "></strong>
+          <div>PEMERINTAH DAERAH PROVINSI JAWA BARAT</div>
+          <div>BADAN PENDAPATAN DAERAH</div>
+          <div>KARTU SURAT KELUAR</div>
         </div>
       </div>
 
-<!-- PERIHAL -->
-<div style="border-bottom: 1px solid black; margin-bottom: 0.1rem; padding-left: 0.25rem;">
-  <div style="font-size: 0.7rem; margin: 0; line-height: 1;">Perihal:</div>
-  <div style="text-align: left; padding-left: 2rem; ">
-    <strong id="print_perihal" style="font-size: 1.2rem;"></strong>
-  </div>
-</div>
+      <!-- Content -->
+      <div style="flex: 1; padding: 12px; box-sizing: border-box; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black; display: flex; flex-direction: column; justify-content: space-between;">
+
+        <!-- Kode & Nomor Urut -->
+        <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.75rem;">
+          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
+            Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
+          </div>
+          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
+            Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
+          </div>
+          <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
+            Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;font-size: 0.9rem; "></strong>
+          </div>
+        </div>
+
+        <!-- PERIHAL -->
+        <div style="border-bottom: 1px solid black; margin-bottom: 0.1rem; padding-left: 0.25rem;">
+          <div style="font-size: 0.7rem; margin: 0; line-height: 1;">Perihal:</div>
+          <div style="text-align: left; padding-left: 2rem; ">
+            <strong id="print_perihal" style="font-size: 1.2rem;"></strong>
+          </div>
+        </div>
 
 
-<!-- ISI RINGKAS -->
-<!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding: 0.25rem 0 0.25rem 0.25rem; min-height: 4.5rem;">
+        <!-- ISI RINGKAS -->
+        <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding: 0.25rem 0 0.25rem 0.25rem; min-height: 4.5rem;">
   <div style="font-size: 0.7rem;">Isi Ringkas:</div>
   <div><strong id="print_isi_ringkas" style="font-size: 0.9rem;"></strong></div>
 </div> -->
-<div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-  <div style="font-size: 0.7rem;">Isi Ringkas:</div>
-  <div style="text-align: left; padding-left: 2rem;">
-    <strong id="print_isi_ringkas" style="font-size: 1.2rem;"></strong>
-  </div>
-</div>
+        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
+          <div style="font-size: 0.7rem;">Isi Ringkas:</div>
+          <div style="text-align: left; padding-left: 2rem;">
+            <strong id="print_isi_ringkas" style="font-size: 1.2rem;"></strong>
+          </div>
+        </div>
 
-      <!-- Kepada -->
-      <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
+        <!-- Kepada -->
+        <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
         Kepada: <strong id="print_kepada" style="margin-left: 0.25rem; font-size: 1.5rem; "></strong>
       </div> -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-  <div style="font-size: 0.7rem;">Kepada:</div>
-  <div style="text-align: left; padding-left: 2rem;">
-    <strong id="print_kepada" style="font-size: 1.2rem;"></strong>
-  </div>
-</div>
+        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
+          <div style="font-size: 0.7rem;">Kepada:</div>
+          <div style="text-align: left; padding-left: 2rem;">
+            <strong id="print_kepada" style="font-size: 1.2rem;"></strong>
+          </div>
+        </div>
 
 
-      <!-- Pengolah / Tanggal / Lampiran -->
-      <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.5rem;">
-        <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
-          Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem; font-size: 1.2rem; "></strong>
+        <!-- Pengolah / Tanggal / Lampiran -->
+        <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.5rem;">
+          <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
+            Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem; font-size: 1.2rem; "></strong>
+          </div>
+          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
+            Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
+          </div>
+          <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
+            Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
+          </div>
         </div>
-        <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-          Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-        </div>
-        <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-          Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-        </div>
-      </div>
 
-      <!-- Catatan -->
-      <!-- <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
+        <!-- Catatan -->
+        <!-- <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
         Catatan: <strong id="print_catatan" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
       </div> -->
-      <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-  <div style="font-size: 0.7rem;">Catatan:</div>
-  <div style="text-align: left; padding-left: 2rem;">
-    <strong id="print_catatan" style="font-size: 1.2rem;"></strong>
-  </div>
-</div>
+        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
+          <div style="font-size: 0.7rem;">Catatan:</div>
+          <div style="text-align: left; padding-left: 2rem;">
+            <strong id="print_catatan" style="font-size: 1.2rem;"></strong>
+          </div>
+        </div>
 
 
+      </div>
     </div>
   </div>
-</div>
 
 
 
-<!-- JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-$(document).on('click', '.print-surat', function (e) {
-  e.preventDefault();
+  <!-- JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    $(document).on('click', '.print-surat', function(e) {
+      e.preventDefault();
 
-  const nomor = $(this).data('nomor');
-  const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
-  const nomorAwal = $(this).data('noawal') || '';
-  const nomorAkhir = $(this).data('noakhir') || '';
-  const nomorUrut = $(this).data('urut') || '';
+      const nomor = $(this).data('nomor');
+      const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
+      const nomorAwal = $(this).data('noawal') || '';
+      const nomorAkhir = $(this).data('noakhir') || '';
+      const nomorUrut = $(this).data('urut') || '';
 
-  const nomorTampil = isMultiple && nomorAwal && nomorAkhir
-    ? `${nomorAwal} - ${nomorAkhir}`
-    : nomorUrut;
+      const nomorTampil = isMultiple && nomorAwal && nomorAkhir ?
+        `${nomorAwal} - ${nomorAkhir}` :
+        nomorUrut;
 
-  $('#print_nomor_urut').text(nomorTampil);
-  $('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
-  $('#print_tanggal').text($(this).data('tanggal'));
-  $('#print_jenis').text($(this).data('jenis'));
-  $('#print_perihal').text($(this).data('perihal'));
-  $('#print_isi_ringkas').text($(this).data('isi'));
-  $('#print_kepada').text($(this).data('kepada'));
-  $('#print_nama_pengolah').text($(this).data('pengolah'));
-  $('#print_lampiran').text($(this).data('lampiran'));
-  $('#print_catatan').text($(this).data('catatan'));
-  $('#print_noawal').text(nomorAwal);
-  $('#print_noakhir').text(nomorAkhir);
+      $('#print_nomor_urut').text(nomorTampil);
+      $('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
+      $('#print_tanggal').text($(this).data('tanggal'));
+      $('#print_jenis').text($(this).data('jenis'));
+      $('#print_perihal').text($(this).data('perihal'));
+      $('#print_isi_ringkas').text($(this).data('isi'));
+      $('#print_kepada').text($(this).data('kepada'));
+      $('#print_nama_pengolah').text($(this).data('pengolah'));
+      $('#print_lampiran').text($(this).data('lampiran'));
+      $('#print_catatan').text($(this).data('catatan'));
+      $('#print_noawal').text(nomorAwal);
+      $('#print_noakhir').text(nomorAkhir);
 
-  const printElement = document.getElementById('printArea');
-  printElement.style.display = 'block';
+      const printElement = document.getElementById('printArea');
+      printElement.style.display = 'block';
 
-  html2canvas(printElement, { scale: 2, useCORS: true }).then(canvas => {
-    const imgData = canvas.toDataURL('image/png');
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a5' });
+      html2canvas(printElement, {
+        scale: 2,
+        useCORS: true
+      }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const {
+          jsPDF
+        } = window.jspdf;
+        const pdf = new jsPDF({
+          orientation: 'landscape',
+          unit: 'mm',
+          format: 'a5'
+        });
 
-    pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
-    pdf.save(`Surat_${nomor}.pdf`);
+        pdf.addImage(imgData, 'PNG', 0, 0, 210, 148);
+        pdf.save(`Surat_${nomor}.pdf`);
 
-    printElement.style.display = 'none';
-  });
-});
-
-</script>
-
+        printElement.style.display = 'none';
+      });
+    });
+  </script>
 
 
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const btn = document.getElementById('toggleSidebar');
-  const sidebar = document.getElementById('sidenav-main');
 
-  btn.addEventListener('click', function(e) {
-    e.stopPropagation(); // cegah event merembet
-    document.body.classList.toggle('g-sidenav-pinned');
-    document.body.classList.toggle('g-sidenav-hidden');
-  });
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const btn = document.getElementById('toggleSidebar');
+      const sidebar = document.getElementById('sidenav-main');
 
-  // Klik di luar sidebar akan menutupnya
-  document.addEventListener('click', function(e) {
-    const isMobile = window.innerWidth < 992;
-    if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
-      // Jika klik bukan di sidebar dan bukan di hamburger
-      if (!sidebar.contains(e.target) && e.target !== btn) {
-        document.body.classList.remove('g-sidenav-pinned');
-        document.body.classList.add('g-sidenav-hidden');
-      }
-    }
-  });
+      btn.addEventListener('click', function(e) {
+        e.stopPropagation(); // cegah event merembet
+        document.body.classList.toggle('g-sidenav-pinned');
+        document.body.classList.toggle('g-sidenav-hidden');
+      });
 
-  // Jika layar di-resize ke desktop, pastikan sidebar tampil default
-  window.addEventListener('resize', function() {
-    if (window.innerWidth >= 992) {
-      document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
-    }
-  });
-});
-</script>
+      // Klik di luar sidebar akan menutupnya
+      document.addEventListener('click', function(e) {
+        const isMobile = window.innerWidth < 992;
+        if (isMobile && document.body.classList.contains('g-sidenav-pinned')) {
+          // Jika klik bukan di sidebar dan bukan di hamburger
+          if (!sidebar.contains(e.target) && e.target !== btn) {
+            document.body.classList.remove('g-sidenav-pinned');
+            document.body.classList.add('g-sidenav-hidden');
+          }
+        }
+      });
+
+      // Jika layar di-resize ke desktop, pastikan sidebar tampil default
+      window.addEventListener('resize', function() {
+        if (window.innerWidth >= 992) {
+          document.body.classList.remove('g-sidenav-hidden', 'g-sidenav-pinned');
+        }
+      });
+    });
+  </script>
 
 
 </body>
