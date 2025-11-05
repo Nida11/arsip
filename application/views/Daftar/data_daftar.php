@@ -39,6 +39,89 @@
   <!-- DataTables -->
   <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
+  <style>
+    /* === 🔹 TABEL UTAMA === */
+    .table,
+    .table th,
+    .table td,
+    .table thead th,
+    .table tbody td,
+    .dataTables_wrapper,
+    .dataTables_wrapper .dataTables_info,
+    .dataTables_wrapper .dataTables_length label,
+    .dataTables_wrapper .dataTables_filter label,
+    .dataTables_wrapper .dataTables_paginate {
+      color: #000 !important;
+    }
+
+    /* 🔹 Header tabel — agar tebal & kontras */
+    .table thead th {
+      background-color: #f8f9fa !important;
+      color: #111 !important;
+      font-weight: 700 !important;
+      /* dibuat lebih tebal */
+      text-transform: uppercase;
+      /* opsional: bikin huruf besar semua */
+      border: 1px solid #dee2e6 !important;
+    }
+
+    /* 🔹 Sel isi tabel */
+    .table tbody td {
+      border: 1px solid #dee2e6 !important;
+      background-color: #fff !important;
+    }
+
+    /* 🔹 Baris bergantian */
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: #fdfdfd !important;
+    }
+
+    /* 🔹 Hover */
+    .table-hover tbody tr:hover {
+      background-color: #f2f2f2 !important;
+    }
+
+    /* 🔹 Link di tabel */
+    .table a {
+      color: #000 !important;
+      text-decoration: underline !important;
+    }
+
+    /* 🔹 Pagination DataTables */
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      color: #000 !important;
+      border: 1px solid #ccc !important;
+      background: #fff !important;
+      border-radius: 4px !important;
+      margin: 0 2px !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background: #e9ecef !important;
+      color: #000 !important;
+      border-color: #999 !important;
+    }
+  </style>
+
+  <style>
+    /* 🔹 Pastikan ikon di tombol hapus berwarna putih */
+    .btn-danger i,
+    .btn-hapus i,
+    button.btn-danger i {
+      color: #fff !important;
+    }
+
+    /* 🔹 Kalau tombol hapus pakai <a> */
+    a.btn-danger i {
+      color: #fff !important;
+    }
+
+    /* 🔹 (Opsional) hover efek agar makin bagus */
+    .btn-danger:hover i {
+      color: #fff !important;
+      opacity: 0.9;
+    }
+  </style>
 
 
 
@@ -304,6 +387,25 @@
       /* agar tombol sejajar dengan input */
     }
   </style>
+  <style>
+    .btn-cari,
+    .btn-export {
+      margin-bottom: 0 !important;
+    }
+
+    .table {
+      margin-top: 2px !important;
+    }
+
+    .table-bordered {
+      border: 2px solid #dee2e6 !important;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+      border: 1px solid #dee2e6 !important;
+    }
+  </style>
 
 </head>
 
@@ -461,7 +563,7 @@
 
 
                 <!-- Tombol Cari dan Export -->
-                <div class="d-flex justify-content-center gap-2 my-2">
+                <div class="d-flex justify-content-center gap-2 mb-0">
                   <button type="submit" class="btn btn-cari">
                     <i class="fa fa-search"></i> Cari
                   </button>
