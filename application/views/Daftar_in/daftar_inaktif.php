@@ -481,6 +481,8 @@
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Box</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Rak</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tingkat Perkembangan</th>
+
               <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
             </tr>
           </thead>
@@ -499,6 +501,8 @@
                 <td class="text-center"><?= htmlspecialchars($row['nomor_box']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['nomor_rak']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['keterangan']) ?></td>
+                                <td class="text-center"><?= htmlspecialchars($row['tk']) ?></td>
+
                 <td class="text-center">
 <button class="btn btn-sm btn-warning"
   data-bs-toggle="modal"
@@ -514,7 +518,11 @@
   data-nomor_sampul="<?= htmlspecialchars($row['nomor_sampul']); ?>"
   data-nomor_box="<?= htmlspecialchars($row['nomor_box']); ?>"
   data-nomor_rak="<?= htmlspecialchars($row['nomor_rak']); ?>"
-  data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
+  data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>"
+    data-tk="<?= htmlspecialchars($row['tk']); ?>"
+
+  >
+
   <i class="fa fa-edit"></i> Edit
 </button>
 
@@ -603,6 +611,12 @@
                         <label for="keterangan" class="form-control-label">Keterangan</label>
                         <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
                       </div>
+
+                       <div class="col-md-12 mb-3">
+                        <label for="keterangan" class="form-control-label">Tingkat Perkembangan</label>
+                        <textarea class="form-control" id="tk" name="tk" rows="3"></textarea>
+                      </div>
+
 
                     </div>
 
@@ -710,12 +724,19 @@
                         <input type="text" class="form-control" id="edit_nomor_rak" name="nomor_rak">
                       </div>
 
+                      <div class="col-md-4 mb-3">
+                        <label class="form-label">Tingkat Perkembangan</label>
+                        <input type="text" class="form-control" id="edit-tk" name="tk">
+                      </div>
+
                       <div class="col-md-12 mb-3">
                         <label class="form-label">Keterangan</label>
                         <textarea class="form-control" id="edit_keterangan" name="keterangan" rows="2"></textarea>
                       </div>
                     </div>
                   </div>
+
+                 
 
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -1398,6 +1419,8 @@ DataTables + Export Script
       document.getElementById('edit_nomor_box').value = button.getAttribute('data-nomor_box');
       document.getElementById('edit_nomor_rak').value = button.getAttribute('data-nomor_rak');
       document.getElementById('edit_keterangan').value = button.getAttribute('data-keterangan');
+            document.getElementById('edit_keterangan').value = button.getAttribute('data-tk');
+
     });
   </script>
   <script>
@@ -1582,6 +1605,8 @@ $(document).ready(function() {
     $('#edit_nomor_box').val(button.data('nomor_box'));
     $('#edit_nomor_rak').val(button.data('nomor_rak'));
     $('#edit_keterangan').val(button.data('keterangan'));
+        $('#edit_tk').val(button.data('tk'));
+
     $('#edit_kode_klasifikasi_lama').val(button.data('kode_klasifikasi_text')); // ✅ MODIFIED: tampilkan kode lama
     $('#edit_kode_arsip_id').val('').trigger('change'); // reset dropdown baru
   });

@@ -50,7 +50,8 @@ class Daftar extends CI_Controller
             a.nomor_sampul,
             a.nomor_box,
             a.nomor_rak,
-            a.keterangan
+            a.keterangan,
+            a.tk
         FROM daftar_arsip_inaktif a
         LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
         JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
@@ -93,7 +94,8 @@ class Daftar extends CI_Controller
             a.nomor_sampul,
             a.nomor_box,
             a.nomor_rak,
-            a.keterangan
+            a.keterangan,
+            a.tk
         FROM daftar_arsip_inaktif a
         LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
         JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
@@ -120,7 +122,8 @@ class Daftar extends CI_Controller
             'Nomor Sampul',
             'Nomor Box',
             'Nomor Rak',
-            'Keterangan'
+            'Keterangan',
+            'Tingkat Perkembangan'
         ];
 
         $col = 'A';
@@ -192,7 +195,9 @@ class Daftar extends CI_Controller
             'nomor_sampul' => $this->input->post('nomor_sampul'),
             'nomor_box' => $this->input->post('nomor_box'),
             'nomor_rak' => $this->input->post('nomor_rak'),
-            'keterangan' => $this->input->post('keterangan')
+            'keterangan' => $this->input->post('keterangan'),
+             'tk' => $this->input->post('tk')
+
         ];
 
         $this->db->where('id', $id);
@@ -222,7 +227,9 @@ class Daftar extends CI_Controller
             'nomor_sampul'     => $this->input->post('nomor_sampul'),
             'nomor_box'        => $this->input->post('nomor_box'),
             'nomor_rak'        => $this->input->post('nomor_rak'),
-            'keterangan'       => $this->input->post('keterangan')
+            'keterangan'       => $this->input->post('keterangan'),
+            'tk'        => $this->input->post('tk'),
+
         ];
 
         // Simpan ke tabel utama
