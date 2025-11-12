@@ -37,7 +37,7 @@
       position: absolute;
       width: 150px;
       opacity: 0.85;
-      filter: drop-shadow(0 0 7px rgba(4, 131, 17, 0.81)) brightness(1.3) contrast(1.5);
+      filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.81)) brightness(1.3) contrast(1.5);
     }
 
     @keyframes floatRotateRight {
@@ -194,13 +194,13 @@
     $positions = [
       ['5%', '5%'],
       ['-5%', '30%'],
-      ['10%', '80%'],
-      ['20%', '50%'],
+      ['1%', '85%'],
+      ['5%', '55%'],
       ['45%', '-1%'],
-      ['35%', '65%'],
+      // ['3%', '65%'],
       ['45%', '30%'],
       ['50%', '80%'],
-      ['60%', '25%'],
+      ['70%', '95%'],
       ['70%', '60%'],
       ['80%', '15%'],
       ['90%', '45%']
@@ -208,7 +208,7 @@
     foreach ($positions as $pos):
       $rotateClass = rand(0, 1) ? 'rotate-left' : 'rotate-right';
     ?>
-      <img src="<?= base_url('assets/img/bapenda1.png') ?>" alt="floating-logo"
+      <img src="<?= base_url('assets/img/logosemar.png') ?>" alt="floating-logo"
         class="<?= $rotateClass ?>" style="top: <?= $pos[0] ?>; left: <?= $pos[1] ?>;">
     <?php endforeach; ?>
   </div>
