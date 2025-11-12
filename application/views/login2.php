@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/bapenda.png') ?>">
-  <title>Login - Sistem Penomoran Digital</title>
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/logosemar.png') ?>">
+  <title>Sistem Elektronik Manajemen Arsip</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
@@ -215,7 +215,7 @@
 
   <div class="login-container">
     <div class="login-left">
-      <img src="<?= base_url('assets/img/ilustrasi.png') ?>" alt="Ilustrasi Login">
+      <img src="<?= base_url('assets/img/semar.png') ?>" alt="Ilustrasi Login">
     </div>
 
     <div class="login-right">

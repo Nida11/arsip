@@ -5,9 +5,9 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/triarsip.png') ?>">
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/logosemar.png') ?>">
   <title>
-    TRIARSIP / DAFTAR ARSIP INAKTIF
+  DAFTAR ARSIP INAKTIF
   </title>
   <!-- Fonts and icons -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -308,8 +308,8 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://9a06-114-10-45-240.ngrok-free.app/arsip/index.php/Guest/beranda_admin" target="_blank">
-        <img src="<?= base_url('assets/img/bapenda.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
-        <span class="ms-1 font-weight-bold">Bapenda Jabar</span>
+        <img src="<?= base_url('assets/img/logosemar.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
+        <span class="ms-1 font-weight-bold">SEMAR Jabar</span>
       </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -480,8 +480,9 @@
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Sampul</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Box</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Nomor Rak</th>
+              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tk. Perkembangan</th>
               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Keterangan</th>
-                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Tingkat Perkembangan</th>
+                          
 
               <th class="no-export text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Aksi</th>
             </tr>
@@ -494,14 +495,17 @@
                 <td class="text-center"><?= htmlspecialchars(formatTanggalIndo($row['tgl_isi'])) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['unit_kerja']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['kode_klasifikasi']) ?></td>
-                <td class="text-center"><?= htmlspecialchars($row['uraian_masalah']) ?></td>
+                <td class="text-start"><?= nl2br(htmlspecialchars($row['uraian_masalah'])) ?></td>
+
+
                 <td class="text-center"><?= htmlspecialchars($row['tahun']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['jumlah']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['nomor_sampul']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['nomor_box']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['nomor_rak']) ?></td>
+                <td class="text-center"><?= htmlspecialchars($row['tk']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['keterangan']) ?></td>
-                                <td class="text-center"><?= htmlspecialchars($row['tk']) ?></td>
+                                
 
                 <td class="text-center">
 <button class="btn btn-sm btn-warning"
@@ -518,10 +522,8 @@
   data-nomor_sampul="<?= htmlspecialchars($row['nomor_sampul']); ?>"
   data-nomor_box="<?= htmlspecialchars($row['nomor_box']); ?>"
   data-nomor_rak="<?= htmlspecialchars($row['nomor_rak']); ?>"
-  data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>"
-    data-tk="<?= htmlspecialchars($row['tk']); ?>"
-
-  >
+  data-tk="<?= htmlspecialchars($row['tk']); ?>"
+  data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
 
   <i class="fa fa-edit"></i> Edit
 </button>
@@ -576,11 +578,11 @@
                           <?php endforeach; ?>
                         </select>
                       </div>
+<div class="col-md-12 mb-3">
+  <label for="uraian_masalah" class="form-control-label">Uraian Masalah</label>
+  <textarea class="form-control" id="uraian_masalah" name="uraian_masalah" rows="3" required></textarea>
+</div>
 
-                      <div class="col-md-12 mb-3">
-                        <label for="uraian_masalah" class="form-control-label">Uraian Masalah</label>
-                        <input type="text" class="form-control" id="uraian_masalah" name="uraian_masalah" required>
-                      </div>
 
                       <div class="col-md-6 mb-3">
                         <label for="tahun" class="form-control-label">Tahun</label>
@@ -602,20 +604,28 @@
                         <input type="text" class="form-control" id="nomor_box" name="nomor_box">
                       </div>
 
-                      <div class="col-md-6 mb-3">
-                        <label for="nomor_rak" class="form-control-label">Nomor Rak</label>
-                        <input type="text" class="form-control" id="nomor_rak" name="nomor_rak">
-                      </div>
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label for="nomor_rak" class="form-control-label">Nomor Rak</label>
+    <input type="text" class="form-control" id="nomor_rak" name="nomor_rak" required>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label for="tk" class="form-control-label">Tk. Perkembangan</label>
+    <select class="form-control" id="tk" name="tk" required>
+      <option value="">-- Pilih Tingkat Perkembangan --</option>
+      <option value="Asli">Asli</option>
+    </select>
+  </div>
+</div>
+
+
 
                       <div class="col-md-12 mb-3">
                         <label for="keterangan" class="form-control-label">Keterangan</label>
                         <textarea class="form-control" id="keterangan" name="keterangan" rows="3"></textarea>
                       </div>
 
-                       <div class="col-md-12 mb-3">
-                        <label for="keterangan" class="form-control-label">Tingkat Perkembangan</label>
-                        <textarea class="form-control" id="tk" name="tk" rows="3"></textarea>
-                      </div>
 
 
                     </div>
@@ -694,10 +704,11 @@
 
 
 
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label">Uraian Masalah</label>
-                        <textarea class="form-control" id="edit_uraian_masalah" name="uraian_masalah" rows="2"></textarea>
-                      </div>
+<div class="col-md-12 mb-3">
+  <label for="edit_uraian_masalah" class="form-control-label">Uraian Masalah</label>
+  <textarea class="form-control" id="edit_uraian_masalah" name="uraian_masalah" rows="3" required></textarea>
+</div>
+
 
                       <div class="col-md-4 mb-3">
                         <label class="form-label">Tahun</label>
@@ -719,15 +730,21 @@
                         <input type="text" class="form-control" id="edit_nomor_box" name="nomor_box">
                       </div>
 
-                      <div class="col-md-4 mb-3">
-                        <label class="form-label">Nomor Rak</label>
-                        <input type="text" class="form-control" id="edit_nomor_rak" name="nomor_rak">
-                      </div>
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <label class="form-label">Nomor Rak</label>
+    <input type="text" class="form-control" id="edit_nomor_rak" name="nomor_rak">
+  </div>
 
-                      <div class="col-md-4 mb-3">
-                        <label class="form-label">Tingkat Perkembangan</label>
-                        <input type="text" class="form-control" id="edit-tk" name="tk">
-                      </div>
+  <div class="col-md-4 mb-3">
+    <label class="form-label">Tk. Perkembangan</label>
+    <select class="form-control" id="edit_tk" name="tk" required>
+      <option value="">-- Pilih Tingkat Perkembangan --</option>
+      <option value="Asli">Asli</option>
+    </select>
+  </div>
+</div>
+
 
                       <div class="col-md-12 mb-3">
                         <label class="form-label">Keterangan</label>
@@ -1419,7 +1436,7 @@ DataTables + Export Script
       document.getElementById('edit_nomor_box').value = button.getAttribute('data-nomor_box');
       document.getElementById('edit_nomor_rak').value = button.getAttribute('data-nomor_rak');
       document.getElementById('edit_keterangan').value = button.getAttribute('data-keterangan');
-            document.getElementById('edit_keterangan').value = button.getAttribute('data-tk');
+            document.getElementById('edit_tk').value = button.getAttribute('data-tk');
 
     });
   </script>
@@ -1628,6 +1645,68 @@ $(document).ready(function() {
   });
 });
 </script>
+<!-- <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const uraian = document.getElementById("uraian_masalah");
+
+  uraian.addEventListener("keydown", function(e) {
+    if (e.key === "Enter") {
+      e.preventDefault(); // mencegah enter default
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+      const value = this.value;
+
+      // Tambahkan baris baru dengan bullet "• "
+      this.value = value.substring(0, start) + "\n• " + value.substring(end);
+      this.selectionStart = this.selectionEnd = start + 3;
+    }
+  });
+
+  // Saat pertama kali fokus, tambahkan bullet otomatis kalau belum ada
+  uraian.addEventListener("focus", function() {
+    if (this.value.trim() === "") {
+      this.value = "• ";
+    }
+  });
+});
+</script> -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  // Fungsi untuk menambahkan bullet otomatis
+  function enableBulletInput(textareaId) {
+    const textarea = document.getElementById(textareaId);
+    if (!textarea) return;
+
+    // Saat fokus pertama kali
+    textarea.addEventListener("focus", function() {
+      if (this.value.trim() === "") {
+        this.value = "• ";
+      }
+    });
+
+    // Saat tekan Enter
+    textarea.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault(); // cegah default newline
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        const value = this.value;
+        this.value = value.substring(0, start) + "\n• " + value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 3;
+      }
+    });
+  }
+
+  // Aktifkan untuk textarea tambah & edit
+  enableBulletInput("uraian_masalah");
+  enableBulletInput("edit_uraian_masalah");
+
+});
+</script>
+
+
 </body>
 
 </html>
