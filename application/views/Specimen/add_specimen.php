@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-    <link rel="icon" type="image/png" href="<?= base_url('assets/img/triarsip.png') ?>">
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/logoarsip.png') ?>">
     <title>
-       TRIARSIP
+       TAMBAH SPECIMEN
     </title>
     <!-- Fonts and icons -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -66,8 +66,8 @@
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href=" https://39ed-123-231-234-58.ngrok-free.app/arsip/index.php/Guest/beranda_admin " target="_blank">
-                <img src="<?= base_url('assets/img/bapenda.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
-                <span class="ms-1 font-weight-bold">Bapenda Jabar</span>
+                <img src="<?= base_url('assets/img/semar.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
+                <span class="ms-1 font-weight-bold">SEMAR Jabar</span>
             </a>
         </div>
         <hr class="horizontal dark mt-0">
