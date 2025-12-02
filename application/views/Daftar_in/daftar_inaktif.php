@@ -495,7 +495,16 @@
                 <td class="text-center"><?= htmlspecialchars(formatTanggalIndo($row['tgl_isi'])) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['unit_kerja']) ?></td>
                 <td class="text-center"><?= htmlspecialchars($row['kode_klasifikasi']) ?></td>
-                <td class="text-start"><?= nl2br(htmlspecialchars($row['uraian_masalah'])) ?></td>
+<?php 
+$items = explode('||', $row['jenis_arsip']);
+?>
+<td>
+    <ul class="mb-0">
+        <?php foreach ($items as $i): ?>
+            <li><?= htmlspecialchars($i) ?></li>
+        <?php endforeach; ?>
+    </ul>
+</td>
 
 
                 <td class="text-center"><?= htmlspecialchars($row['tahun']) ?></td>
@@ -508,6 +517,11 @@
                                 
 
                 <td class="text-center">
+ <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/download_label/' . $row['id']) ?>" 
+   class="btn btn-success btn-sm">
+   Download Label
+</a>
+
 <button class="btn btn-sm btn-warning"
   data-bs-toggle="modal"
   data-bs-target="#editArsipModal"
@@ -578,11 +592,37 @@
                           <?php endforeach; ?>
                         </select>
                       </div>
-<div class="col-md-12 mb-3">
+<!-- <div class="col-md-12 mb-3">
   <label for="uraian_masalah" class="form-control-label">Uraian Masalah</label>
   <textarea class="form-control" id="uraian_masalah" name="uraian_masalah" rows="3" required></textarea>
-</div>
+</div> -->
 
+<div class="col-md-12 mb-3">
+                            <label class="form-control-label d-block">Uraian Masalah</label>
+
+                            <!-- container untuk dynamic field -->
+                            <div id="series-container">
+                              <div class="card mb-2 shadow-sm position-relative">
+                                <div class="card-body p-2">
+                                  <textarea
+                                    class="form-control border-0 series-textarea mb-2"
+                                    name="arsip[]"
+                                    rows="3"
+                                    placeholder="Ada arsip apaa aja yaa..."></textarea>
+                                  <!-- tombol hapus -->
+                                  <button type="button"
+                                    class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">
+                                    ✕
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                            <!-- tombol tambah -->
+                            <button type="button" id="add-series" class="btn btn-primary btn-sm mt-2">
+                              + Add
+                            </button>
+                          </div>
 
                       <div class="col-md-6 mb-3">
                         <label for="tahun" class="form-control-label">Tahun</label>
@@ -639,9 +679,7 @@
             </div>
           </div>
 
-          <!-- END Modal -->
-          <!-- Modal Edit Penomoran -->
-          <!-- Modal Edit Arsip -->
+         
           <!-- Modal Edit Arsip -->
           <div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -921,67 +959,7 @@
     });
   </script>
 
-  <script>
-    function updateNomorSurat() {
-      const awal = document.getElementById('nomor_awal').value.padStart(3, '0');
-      const akhir = document.getElementById('nomor_akhir').value.padStart(3, '0');
-      const klasifikasi = document.getElementById('kode_klasifikasi_id').selectedOptions[0]?.text.split(' - ')[0] || '';
-      const bidang = document.getElementById('pengolah_id').selectedOptions[0].text.split(' - ')[0] || '';
-
-      let nomor_surat = '';
-
-      if (awal && akhir && awal !== akhir) {
-        nomor_surat = `${awal} - ${akhir}/${klasifikasi}/${bidang}`;
-      } else {
-        nomor_surat = `${awal}/${klasifikasi}/${bidang}`;
-      }
-
-      document.getElementById('nomor_surat').value = nomor_surat;
-    }
-
-    function handleMultipleAutoFill() {
-      const awal = parseInt(document.getElementById('nomor_awal').value);
-      const isMultiple = document.querySelector('input[name="is_multiple"]:checked')?.value === '1';
-
-      if (!isNaN(awal)) {
-        const akhir = isMultiple ? awal + 1 : awal;
-        document.getElementById('nomor_akhir').value = akhir.toString().padStart(3, '0');
-        updateNomorSurat();
-      }
-    }
-
-    // Saat halaman selesai dimuat
-    window.addEventListener('DOMContentLoaded', function() {
-      const nomorAwalInput = document.getElementById('nomor_awal');
-      const nomorAkhirInput = document.getElementById('nomor_akhir');
-
-      // Jika nomor_awal sudah terisi (misalnya dari JS lain), langsung proses
-      if (nomorAwalInput.value) {
-        handleMultipleAutoFill();
-      }
-
-      // Event saat nomor_awal diubah (manual atau programmatically dengan dispatchEvent)
-      nomorAwalInput.addEventListener('input', handleMultipleAutoFill);
-
-      // Event saat nomor_akhir diubah manual
-      nomorAkhirInput.addEventListener('input', function() {
-        const awal = parseInt(document.getElementById('nomor_awal').value);
-        const akhir = parseInt(this.value);
-
-
-        updateNomorSurat();
-      });
-
-      // Event saat radio multiple/single diubah
-      document.querySelectorAll('input[name="is_multiple"]').forEach(function(radio) {
-        radio.addEventListener('change', handleMultipleAutoFill);
-      });
-
-      // Jika klasifikasi atau bidang diubah, update nomor surat juga
-      document.getElementById('kode_klasifikasi_id').addEventListener('change', updateNomorSurat);
-      document.getElementById('pengolah_id').addEventListener('change', updateNomorSurat);
-    });
-  </script>
+  
 
 
 
@@ -1102,14 +1080,7 @@
 
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="<?= base_url('assets/js/argon-dashboard.min.js?v=2.1.0') ?>"></script>
-  <!-- 
-DataTables + Export Script
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> -->
-  <!-- SCRIPT FILTER -->
+
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       const searchInput = document.getElementById("searchInput");
@@ -1206,108 +1177,6 @@ DataTables + Export Script
   </script>
 
 
-  <!-- PRINT TEMPLATE -->
-  <div id="printArea" style="width: 210mm; height: 148mm; display: none;">
-    <div style="width: 100%; height: 100%; display: flex; border: none; background: white; box-sizing: border-box;">
-
-      <!-- Red Bar -->
-      <div style="background-color: #d32f2f; width: 100px; position: relative; flex-shrink: 0;">
-        <div style="
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) rotate(-90deg);
-        color: white;
-        font-weight: bold;
-        font-size: 1rem;
-        line-height: 1.5;
-        font-family: 'Times New Roman', serif;
-        text-align: center;
-        white-space: nowrap;">
-          <div>PEMERINTAH DAERAH PROVINSI JAWA BARAT</div>
-          <div>BADAN PENDAPATAN DAERAH</div>
-          <div>KARTU SURAT KELUAR</div>
-        </div>
-      </div>
-
-      <!-- Content -->
-      <div style="flex: 1; padding: 12px; box-sizing: border-box; font-family: 'Times New Roman', serif; font-size: 0.75rem; color: black; display: flex; flex-direction: column; justify-content: space-between;">
-
-        <!-- Kode & Nomor Urut -->
-        <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.75rem;">
-          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-            Jenis Surat: <strong id="print_jenis" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-            Kode: <strong id="print_kode_klasifikasi" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-          <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-            Nomor Urut: <strong id="print_nomor_urut" style="margin-left: 0.25rem;font-size: 0.9rem; "></strong>
-          </div>
-        </div>
-
-        <!-- PERIHAL -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.1rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem; margin: 0; line-height: 1;">Perihal:</div>
-          <div style="text-align: left; padding-left: 2rem; ">
-            <strong id="print_perihal" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-
-        <!-- ISI RINGKAS -->
-        <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding: 0.25rem 0 0.25rem 0.25rem; min-height: 4.5rem;">
-  <div style="font-size: 0.7rem;">Isi Ringkas:</div>
-  <div><strong id="print_isi_ringkas" style="font-size: 0.9rem;"></strong></div>
-</div> -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem;">Isi Ringkas:</div>
-          <div style="text-align: left; padding-left: 2rem;">
-            <strong id="print_isi_ringkas" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-        <!-- Kepada -->
-        <!-- <div style="border-bottom: 1px solid black; margin-bottom: 1rem; padding-left: 0.25rem; min-height: 4.5rem; display: flex; align-items: center;">
-        Kepada: <strong id="print_kepada" style="margin-left: 0.25rem; font-size: 1.5rem; "></strong>
-      </div> -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem;">Kepada:</div>
-          <div style="text-align: left; padding-left: 2rem;">
-            <strong id="print_kepada" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-
-        <!-- Pengolah / Tanggal / Lampiran -->
-        <div style="display: flex; border-bottom: 1px solid black; margin-bottom: 0.25rem; min-height: 2.5rem;">
-          <div style="flex: 1; border-right: 1px solid black; padding-right: 0.5rem; display: flex; align-items: center;">
-            Pengolah: <strong id="print_nama_pengolah" style="margin-left: 0.25rem; font-size: 1.2rem; "></strong>
-          </div>
-          <div style="flex: 1; border-right: 1px solid black; padding: 0 0.5rem; display: flex; align-items: center;">
-            Tanggal Surat: <strong id="print_tanggal" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-          <div style="flex: 1; padding-left: 0.5rem; display: flex; align-items: center;">
-            Lampiran: <strong id="print_lampiran" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-          </div>
-        </div>
-
-        <!-- Catatan -->
-        <!-- <div style="padding-left: 0.25rem; min-height: 2.5rem; display: flex; align-items: center;">
-        Catatan: <strong id="print_catatan" style="margin-left: 0.25rem; font-size: 0.9rem; "></strong>
-      </div> -->
-        <div style="border-bottom: 1px solid black; margin-bottom: 0.25rem; padding-left: 0.25rem;">
-          <div style="font-size: 0.7rem;">Catatan:</div>
-          <div style="text-align: left; padding-left: 2rem;">
-            <strong id="print_catatan" style="font-size: 1.2rem;"></strong>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-  </div>
-
 
 
   <!-- JS -->
@@ -1344,81 +1213,7 @@ DataTables + Export Script
       });
     });
   </script>
-  <script>
-    // --- fungsi utama ---
-    // aktifkan Ctrl+Enter (baris baru + tab)
-    function enableCtrlEnter(textarea) {
-      textarea.addEventListener('keydown', function(e) {
-        if (e.ctrlKey && e.key === 'Enter') {
-          e.preventDefault();
 
-          const start = this.selectionStart;
-          const end = this.selectionEnd;
-          const text = this.value;
-
-          // sisipkan newline + tab
-          const insertText = "\n\t";
-
-          this.value = text.substring(0, start) + insertText + text.substring(end);
-
-          // pindah kursor setelah teks baru
-          this.selectionStart = this.selectionEnd = start + insertText.length;
-        }
-      });
-    }
-
-    // tambah kolom baru
-    function addSeriesField() {
-      const container = document.getElementById('series-container');
-
-      // wrapper card
-      const wrapper = document.createElement('div');
-      wrapper.className = 'card mb-2 shadow-sm position-relative';
-
-      // body card
-      const body = document.createElement('div');
-      body.className = 'card-body p-2';
-
-      // textarea
-      const textarea = document.createElement('textarea');
-      textarea.className = 'form-control border-0 series-textarea';
-      textarea.name = 'jenis_arsip[]';
-      textarea.rows = 3;
-      textarea.placeholder = "Tulis jenis atau series arsip di sini...";
-
-      // aktifkan ctrl+enter
-      enableCtrlEnter(textarea);
-
-      // tombol hapus
-      const removeBtn = document.createElement('button');
-      removeBtn.type = 'button';
-      removeBtn.className = 'btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series';
-      removeBtn.textContent = '✕';
-      removeBtn.addEventListener('click', function() {
-        wrapper.remove();
-      });
-
-      // susun
-      body.appendChild(textarea);
-      wrapper.appendChild(body);
-      wrapper.appendChild(removeBtn);
-      container.appendChild(wrapper);
-    }
-
-    // --- init ---
-    // tombol tambah
-    document.getElementById('add-series').addEventListener('click', addSeriesField);
-
-    // aktifkan Ctrl+Enter di textarea awal
-    document.querySelectorAll('.series-textarea').forEach(enableCtrlEnter);
-
-    // tombol hapus default
-    document.querySelectorAll('.remove-series').forEach(btn => {
-      btn.addEventListener('click', function() {
-        this.closest('.card').remove();
-      });
-    });
-  </script>
 
   <script>
     var editModal = document.getElementById('editArsipModal');
@@ -1452,117 +1247,38 @@ DataTables + Export Script
     });
   </script>
 
-  <!-- ✅ START EXPORT EXCEL SCRIPT -->
-  <!-- Tambahkan di bawah file, sebelum </body> -->
-  <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.bootstrap5.min.css"> -->
-
-  <!-- <script>
-    $(document).ready(function() {
-      const table = $('#penomoranTable').DataTable({
-        // konfigurasi lama kamu tetap di sini...
-        dom: '<"d-flex justify-content-between align-items-center mb-3"Bf>tip',
-        buttons: [{
-          extend: 'excelHtml5',
-          text: '📊 Export Excel',
-          className: 'd-none', // disembunyikan (karena kita pakai tombol manual)
-          exportOptions: {
-            columns: ':not(.no-export)'
-          }
-        }]
-
-
-      });
-      // Hubungkan tombol export manual
-      $('#exportBtn').on('click', function() {
-        table.button('.buttons-excel').trigger();
-      });
-
-
+  <script>
+    // event tambah form baru
+    document.getElementById("add-series").addEventListener("click", function() {
+      const container = document.getElementById("series-container");
+      const newCard = document.createElement("div");
+      newCard.classList.add("card", "mb-2", "shadow-sm", "position-relative");
+      newCard.innerHTML = `
+    <div class="card-body p-2">
+      <textarea
+        class="form-control border-0 series-textarea mb-2"
+        name="arsip[]"
+        rows="3"
+        placeholder="Ada arsip apa aja yaa ?? ..."></textarea>
+      <button type="button"
+        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">
+        ✕
+      </button>
+    </div>
+  `;
+      container.appendChild(newCard);
     });
 
-    // Hubungkan dengan input pencarian custom
-    $('#searchInput').on('keyup', function() {
-      table.search(this.value).draw();
+    // event hapus form
+    document.addEventListener("click", function(e) {
+      if (e.target.classList.contains("remove-series")) {
+        e.target.closest(".card").remove();
+      }
     });
+  </script>
 
-    // Hubungkan tombol manual Export Excel di atas
-    $('#exportBtn').on('click', function() {
-    table.button('.buttons-excel').trigger();
-    });
 
-  </script> -->
-  <!-- ✅ END EXPORT EXCEL SCRIPT -->
-
-<!-- <script>
-$(document).ready(function () {
-  // Aktifkan Select2
-  $('#edit_kode_arsip_id').select2({
-    placeholder: 'Pilih kode klasifikasi baru...',
-    allowClear: true,
-    width: '100%',
-    dropdownParent: $('#editArsipModal')
-  });
-
-  // Saat modal edit dibuka
-  $('#editArsipModal').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-
-    // Ambil data dari tombol
-    var id = button.data('id');
-    var tgl_isi = button.data('tgl_isi');
-    var unit_kerja = button.data('unit_kerja');
-    var kode_arsip_id = button.data('kode_arsip_id');
-    var uraian_masalah = button.data('uraian_masalah');
-    var tahun = button.data('tahun');
-    var jumlah = button.data('jumlah');
-    var nomor_sampul = button.data('nomor_sampul');
-    var nomor_box = button.data('nomor_box');
-    var nomor_rak = button.data('nomor_rak');
-    var keterangan = button.data('keterangan');
-    var kode_klasifikasi_text = button.data('kode_klasifikasi_text'); // teks kode lama
-
-    // Isi field ke form
-    $('#edit_id').val(id);
-    $('#edit_tgl_isi').val(tgl_isi);
-    $('#edit_unit_kerja').val(unit_kerja);
-    $('#edit_uraian_masalah').val(uraian_masalah);
-    $('#edit_tahun').val(tahun);
-    $('#edit_jumlah').val(jumlah);
-    $('#edit_nomor_sampul').val(nomor_sampul);
-    $('#edit_nomor_box').val(nomor_box);
-    $('#edit_nomor_rak').val(nomor_rak);
-    $('#edit_keterangan').val(keterangan);
-
-    // ✅ tampilkan kode klasifikasi lama
-    $('#edit_kode_klasifikasi_lama').val(kode_klasifikasi_text);
-
-    // kosongkan dropdown baru dulu
-    $('#edit_kode_arsip_id').val('').trigger('change');
-  });
-
-  // Saat form dikirim
-  $('#formEditArsip').on('submit', function () {
-    // Kalau user tidak pilih kode baru → kirim kode lama
-    if (!$('#edit_kode_arsip_id').val()) {
-      $('<input>').attr({
-        type: 'hidden',
-        name: 'kode_arsip_id',
-        value: $('#edit_kode_klasifikasi_lama').val()
-      }).appendTo('#formEditArsip');
-    }
-  });
-});
-</script> -->
+ 
 
 
 

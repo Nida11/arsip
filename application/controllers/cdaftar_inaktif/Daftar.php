@@ -39,22 +39,23 @@ class Daftar extends CI_Controller
 
         $sql = "
         SELECT 
-            a.id,
-            a.tgl_isi,
-            a.unit_kerja,
-            e.kode_surat AS kode_klasifikasi,
-            GROUP_CONCAT(d.jenis_arsip SEPARATOR ', ') AS jenis_arsip,
-            a.uraian_masalah,
-            a.tahun,
-            a.jumlah,
-            a.nomor_sampul,
-            a.nomor_box,
-            a.nomor_rak,
-            a.keterangan,
-            a.tk
-        FROM daftar_arsip_inaktif a
-        LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
-        JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
+    a.id,
+    a.tgl_isi,
+    a.unit_kerja,
+    e.kode_surat AS kode_klasifikasi,
+    GROUP_CONCAT(DISTINCT d.arsip ORDER BY d.id SEPARATOR '||') AS jenis_arsip,
+    a.uraian_masalah,
+    a.tahun,
+    a.jumlah,
+    a.nomor_sampul,
+    a.nomor_box,
+    a.nomor_rak,
+    a.keterangan,
+    a.tk
+FROM daftar_arsip_inaktif a
+LEFT JOIN daftar_arsip_inaktif_detail d ON a.id = d.daftar_inaktif_id
+JOIN kode_klasifikasi e ON e.id = a.kode_arsip_id
+
         $where_sql
         GROUP BY a.id
         ORDER BY a.tgl_isi DESC
@@ -214,43 +215,260 @@ class Daftar extends CI_Controller
         redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
     }
 
-    public function do_input_inaktif()
-    {
-        // Ambil data utama dari form
-        $data_inaktif = [
-            'tgl_isi'          => $this->input->post('tgl_isi'),
-            'unit_kerja'       => $this->input->post('unit_kerja'),
-            'kode_arsip_id'    => $this->input->post('kode_arsip_id'),
-            'uraian_masalah'   => $this->input->post('uraian_masalah'),
-            'tahun'            => $this->input->post('tahun'),
-            'jumlah'           => $this->input->post('jumlah'),
-            'nomor_sampul'     => $this->input->post('nomor_sampul'),
-            'nomor_box'        => $this->input->post('nomor_box'),
-            'nomor_rak'        => $this->input->post('nomor_rak'),
-            'keterangan'       => $this->input->post('keterangan'),
-            'tk'        => $this->input->post('tk'),
 
-        ];
+public function do_input_inaktif1()
+{
+    // Ambil data utama dari form
+    $data_inaktif = [
+        'tgl_isi'        => $this->input->post('tgl_isi'),
+        'unit_kerja'     => $this->input->post('unit_kerja'),
+        'kode_arsip_id'  => $this->input->post('kode_arsip_id'),
+        'tahun'          => $this->input->post('tahun'),
+        'jumlah'         => $this->input->post('jumlah'),
+        'nomor_sampul'   => $this->input->post('nomor_sampul'),
+        'nomor_box'      => $this->input->post('nomor_box'),
+        'nomor_rak'      => $this->input->post('nomor_rak'),
+        'keterangan'     => $this->input->post('keterangan'),
+        'tk'             => $this->input->post('tk'),
+    ];
 
-        // Simpan ke tabel utama
-        $this->db->insert('daftar_arsip_inaktif', $data_inaktif);
-        $inaktif_id = $this->db->insert_id();
+    // Simpan ke tabel utama
+    $this->db->insert('daftar_arsip_inaktif', $data_inaktif);
+    $inaktif_id = $this->db->insert_id();
 
-        // Simpan ke tabel detail jika ada jenis arsip
-        if ($inaktif_id) {
-            $jenis_list = $this->input->post('jenis_arsip');
-            if (!empty($jenis_list)) {
-                foreach ($jenis_list as $jenis) {
-                    $data_detail = [
-                        'daftar_inaktif_id' => $inaktif_id,
-                        'jenis_arsip'       => $jenis
-                    ];
-                    $this->db->insert('daftar_arsip_inaktif_detail', $data_detail);
-                }
+    if ($inaktif_id) {
+
+        // Simpan detail jenis arsip
+        $jenis_list = $this->input->post('arsip');
+        if (!empty($jenis_list)) {
+            foreach ($jenis_list as $jenis) {
+                $this->db->insert('daftar_arsip_inaktif_detail', [
+                    'daftar_inaktif_id' => $inaktif_id,
+                    'arsip'             => $jenis
+                ]);
             }
-
-            $this->session->set_flashdata('success_msg', 'Data arsip inaktif berhasil ditambahkan!');
-            redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
         }
+
+        // ============================
+        // 1. AMBIL DATA UTAMA
+        // ============================
+        $data_main = $this->db->get_where('daftar_arsip_inaktif', [
+            'id' => $inaktif_id
+        ])->row();
+
+        // ============================
+        // 2. AMBIL LIST JENIS ARSIP
+        // ============================
+        $jenis = $this->db
+            ->select("GROUP_CONCAT(arsip SEPARATOR '\n') AS list")
+            ->from('daftar_arsip_inaktif_detail')
+            ->where('daftar_inaktif_id', $inaktif_id)
+            ->get()->row();
+
+        // ============================
+        // 3. SUSUN TEXT QR
+        // ============================
+        $qr_text =
+            "ARSIP ID : $inaktif_id\n" .
+            "Tanggal Isi : " . $data_main->tgl_isi . "\n" .
+            "Unit Kerja : " . $data_main->unit_kerja . "\n" .
+            "Kode Arsip : " . $data_main->kode_arsip_id . "\n" .
+            "Tahun : " . $data_main->tahun . "\n" .
+            "Jumlah : " . $data_main->jumlah . "\n" .
+            "Nomor Sampul : " . $data_main->nomor_sampul . "\n" .
+            "Nomor Box : " . $data_main->nomor_box . "\n" .
+            "Nomor Rak : " . $data_main->nomor_rak . "\n" .
+            "Keterangan : " . $data_main->keterangan . "\n" .
+            "TK : " . $data_main->tk . "\n\n" .
+            "DAFTAR ARSIP:\n" . $jenis->list;
+
+        // ============================
+        // 4. GENERATE QR CODE
+        // ============================
+        $this->load->library('qr');
+
+        $qr_filename = "qr_" . $inaktif_id . ".png";
+        $qr_fullpath = $this->qr->generate($qr_filename, $qr_text);
+
+        // ============================
+        // 5. GENERATE PDF LABEL (QR SAJA)
+        // ============================
+        $pdf_filename = "label_" . $inaktif_id . ".pdf";
+        $pdf_path = FCPATH . "uploads/label/" . $pdf_filename;
+
+        if (!is_dir(FCPATH . "uploads/label/")) {
+            mkdir(FCPATH . "uploads/label/", 0777, true);
+        }
+
+        // generate_pdf_label($qr_image, $output_file)
+        $this->qr->generate_pdf_label($qr_fullpath, $pdf_path);
+
+        // ============================
+        // 6. UPDATE DB
+        // ============================
+        $this->db->where('id', $inaktif_id);
+        $this->db->update('daftar_arsip_inaktif', [
+            'qr_code'  => $qr_filename,
+            'pdf_label' => $pdf_filename
+        ]);
+
+        $this->session->set_flashdata('success_msg', 'Data arsip inaktif + QR berhasil dibuat!');
+        redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
     }
+}
+
+
+
+public function do_input_inaktif()
+{
+    // Ambil data utama dari form
+    $data_inaktif = [
+        'tgl_isi'        => $this->input->post('tgl_isi'),
+        'unit_kerja'     => $this->input->post('unit_kerja'),
+        'kode_arsip_id'  => $this->input->post('kode_arsip_id'),
+        'tahun'          => $this->input->post('tahun'),
+        'jumlah'         => $this->input->post('jumlah'),
+        'nomor_sampul'   => $this->input->post('nomor_sampul'),
+        'nomor_box'      => $this->input->post('nomor_box'),
+        'nomor_rak'      => $this->input->post('nomor_rak'),
+        'keterangan'     => $this->input->post('keterangan'),
+        'tk'             => $this->input->post('tk'),
+    ];
+
+    // Simpan ke tabel utama
+    $this->db->insert('daftar_arsip_inaktif', $data_inaktif);
+    $inaktif_id = $this->db->insert_id();
+
+    if ($inaktif_id) {
+
+        // Simpan detail jenis arsip
+        $jenis_list = $this->input->post('arsip');
+        if (!empty($jenis_list)) {
+            foreach ($jenis_list as $jenis) {
+                $this->db->insert('daftar_arsip_inaktif_detail', [
+                    'daftar_inaktif_id' => $inaktif_id,
+                    'arsip'             => $jenis
+                ]);
+            }
+        }
+
+        // ============================
+        // 1. AMBIL DATA UTAMA
+        // ============================
+        $data_main = $this->db->get_where('daftar_arsip_inaktif', [
+            'id' => $inaktif_id
+        ])->row();
+
+        // ============================
+        // 2. AMBIL LIST JENIS ARSIP
+        // ============================
+        $jenis = $this->db
+            ->select("GROUP_CONCAT(arsip SEPARATOR '\n') AS list")
+            ->from('daftar_arsip_inaktif_detail')
+            ->where('daftar_inaktif_id', $inaktif_id)
+            ->get()->row();
+
+        // ============================
+        // 3. SUSUN TEXT QR
+        // ============================
+$qr_text = rtrim(base_url(), '/') . "/index.php/cdaftar_inaktif/Daftar/scan/" . $inaktif_id;
+
+        // ============================
+        // 4. GENERATE QR CODE
+        // ============================
+        $this->load->library('qr');
+
+        $qr_filename = "qr_" . $inaktif_id . ".png";
+        $qr_fullpath = $this->qr->generate($qr_filename, $qr_text);
+
+        // ============================
+        // 5. GENERATE PDF LABEL (QR SAJA)
+        // ============================
+        $pdf_filename = "label_" . $inaktif_id . ".pdf";
+        $pdf_path = FCPATH . "uploads/label/" . $pdf_filename;
+
+        if (!is_dir(FCPATH . "uploads/label/")) {
+            mkdir(FCPATH . "uploads/label/", 0777, true);
+        }
+
+        // generate_pdf_label($qr_image, $output_file)
+        $this->qr->generate_pdf_label($qr_fullpath, $pdf_path);
+
+        // ============================
+        // 6. UPDATE DB
+        // ============================
+        $this->db->where('id', $inaktif_id);
+        $this->db->update('daftar_arsip_inaktif', [
+            'qr_code'  => $qr_filename,
+            'pdf_label' => $pdf_filename
+        ]);
+
+        $this->session->set_flashdata('success_msg', 'Data arsip inaktif + QR berhasil dibuat!');
+        redirect('index.php/cdaftar_inaktif/Daftar/daftar_inaktif');
+    }
+}
+
+public function scan($id)
+{
+    // Ambil data utama
+    $d['main'] = $this->db->get_where('daftar_arsip_inaktif', [
+        'id' => $id
+    ])->row();
+
+    if (!$d['main']) {
+        show_404();
+    }
+
+    // Ambil list arsip detail
+    $d['detail'] = $this->db
+        ->get_where('daftar_arsip_inaktif_detail', [
+            'daftar_inaktif_id' => $id
+        ])->result();
+
+    // Load view
+    $this->load->view('Daftar_in/scan', $d);
+}
+
+
+
+public function download_label($id)
+{
+    // Ambil data dari DB
+    $data = $this->db->get_where('daftar_arsip_inaktif', ['id' => $id])->row();
+
+    if (!$data || !$data->pdf_label) {
+        show_404();
+    }
+
+    $file_path = FCPATH . "uploads/label/" . $data->pdf_label;
+
+    if (!file_exists($file_path)) {
+        show_404();
+    }
+
+    // Force Download
+    $this->load->helper('download');
+    force_download($file_path, NULL);
+}
+
+
+public function test_tcpdf()
+{
+    require_once APPPATH.'third_party/tcpdf/tcpdf.php';
+
+    $pdf = new TCPDF();
+    $pdf->AddPage();
+    $pdf->SetFont('helvetica', '', 12);
+    $pdf->Write(0, 'TCPDF berhasil dipasang!');
+    $pdf->Output('test.pdf', 'I');
+}
+
+public function testqr()
+{
+    $this->load->library('qr');
+    $this->qr->generate("test.png", "TEST QR");
+    echo "QR OK";
+}
+
+
 }

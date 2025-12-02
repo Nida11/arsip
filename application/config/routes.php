@@ -52,6 +52,4 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $route['default_controller'] = 'Guest';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
-$route['Walikelas/add_honor'] = 'Walikelas/add_honor';
-$route['Walikelas/get_sesi_by_guru/(:num)'] = 'Walikelas/get_sesi_by_guru/$1';
-$route['Walikelas/simpan_honor_tutor'] = 'Walikelas/simpan_honor_tutor';
+$route['scan/(:num)'] = 'cdaftar_inaktif/Daftar/scan/$1';
