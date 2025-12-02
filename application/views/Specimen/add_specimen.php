@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-    <link rel="icon" type="image/png" href="<?= base_url('assets/img/logosemar.png') ?>">
+    <link rel="icon" type="image/png" href="<?= base_url('assets/img/sisemar.png') ?>">
     <title>
        TAMBAH SPECIMEN
     </title>
@@ -66,7 +66,7 @@
         <div class="sidenav-header">
             <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
             <a class="navbar-brand m-0" href=" https://39ed-123-231-234-58.ngrok-free.app/arsip/index.php/Guest/beranda_admin " target="_blank">
-                <img src="<?= base_url('assets/img/logosemar.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
+                <img src="<?= base_url('assets/img/sisemar.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
                 <span class="ms-1 font-weight-bold">SEMAR Jabar</span>
             </a>
         </div>
@@ -126,7 +126,7 @@
         </li>
                 <!-- Billing -->
                 <li class="nav-item">
-                    <a class="nav-lin activek" href="<?= base_url('/index.php/specimen/Specimen/data_specimen') ?>">
+                    <a class="nav-link active" href="<?= base_url('/index.php/specimen/Specimen/data_specimen') ?>">
                         <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="ni ni-credit-card text-dark text-sm opacity-10"></i>
                         </div>

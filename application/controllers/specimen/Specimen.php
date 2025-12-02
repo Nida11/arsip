@@ -131,16 +131,16 @@ class  Specimen extends CI_Controller
             $filepath  = $output_dir . $filename;
 
             if (stripos($instansi, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT') === false) {
-                imagettftext($image, 70, 0, 977, 340, $black, $font_path, $jabatan);
-                imagettftext($image, 70, 0, 977, 440, $black, $font_path, $instansi);
-                imagettftext($image, 70, 0, 977, 970, $black, $font_path, $nama);
-                imagettftext($image, 70, 0, 977, 1070, $black, $font_path, $pangkat);
-                imagettftext($image, 70, 0, 977, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+                imagettftext($image, 90, 0, 977, 340, $black, $font_path, $jabatan);
+                imagettftext($image, 90, 0, 977, 440, $black, $font_path, $instansi);
+                imagettftext($image, 90, 0, 977, 970, $black, $font_path, $nama);
+                imagettftext($image, 90, 0, 977, 1070, $black, $font_path, $pangkat);
+                imagettftext($image, 90, 0, 977, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
             } else {
-                imagettftext($image, 70, 0, 977, 340, $black, $font_path, $jabatan);
-                imagettftext($image, 70, 0, 977, 440, $black, $font_path, $instansi);
-                imagettftext($image, 70, 0, 977, 970, $black, $font_path, $nama);
-                imagettftext($image, 70, 0, 977, 1070, $black, $font_path, $pangkat);
+                imagettftext($image, 90, 0, 977, 340, $black, $font_path, $jabatan);
+                imagettftext($image, 90, 0, 977, 440, $black, $font_path, $instansi);
+                imagettftext($image, 90, 0, 977, 970, $black, $font_path, $nama);
+                imagettftext($image, 90, 0, 977, 1070, $black, $font_path, $pangkat);
             }
 
 
@@ -297,16 +297,16 @@ class  Specimen extends CI_Controller
 
 
         if (stripos($instansi, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT') === false) {
-            imagettftext($image, 70, 0, 977, 340, $black, $font_path, $jabatan);
-            imagettftext($image, 70, 0, 977, 440, $black, $font_path, $instansi);
-            imagettftext($image, 70, 0, 977, 970, $black, $font_path, $nama);
-            imagettftext($image, 70, 0, 977, 1070, $black, $font_path, $pangkat);
-            imagettftext($image, 70, 0, 977, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
+            imagettftext($image, 90, 0, 977, 340, $black, $font_path, $jabatan);
+            imagettftext($image, 90, 0, 977, 440, $black, $font_path, $instansi);
+            imagettftext($image, 90, 0, 977, 970, $black, $font_path, $nama);
+            imagettftext($image, 90, 0, 977, 1070, $black, $font_path, $pangkat);
+            imagettftext($image, 90, 0, 977, 540, $black, $font_path, 'BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT');
         } else {
-            imagettftext($image, 70, 0, 977, 340, $black, $font_path, $jabatan);
-            imagettftext($image, 70, 0, 977, 440, $black, $font_path, $instansi);
-            imagettftext($image, 70, 0, 977, 970, $black, $font_path, $nama);
-            imagettftext($image, 70, 0, 977, 1070, $black, $font_path, $pangkat);
+            imagettftext($image, 90, 0, 977, 340, $black, $font_path, $jabatan);
+            imagettftext($image, 90, 0, 977, 440, $black, $font_path, $instansi);
+            imagettftext($image, 90, 0, 977, 970, $black, $font_path, $nama);
+            imagettftext($image, 90, 0, 977, 1070, $black, $font_path, $pangkat);
         }
 
         // Nama file download

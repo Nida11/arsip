@@ -5,13 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/logosemar.png') ?>">
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/sisemar.png') ?>">
   <title>Sistem Elektronik Manajemen Arsip</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
+    
     body {
       font-family: 'Poppins', sans-serif;
       background: rgba(63, 157, 244, 0.33);
@@ -37,7 +38,7 @@
       position: absolute;
       width: 150px;
       opacity: 0.85;
-      filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.81)) brightness(1.3) contrast(1.5);
+     
     }
 
     @keyframes floatRotateRight {
@@ -90,11 +91,12 @@
     .login-left {
       background: transparent;
       color: white;
-      padding: 40px;
-      width: 50%;
+      padding: -10px;
+      width: 65%;
       display: flex;
       align-items: center;
       justify-content: center;
+      
     }
 
     .login-left img {
@@ -186,6 +188,14 @@
       }
     }
   </style>
+  <style>
+    .login-left img {
+  max-width: 100%;
+  height: auto; 
+  object-fit: contain; 
+}
+
+  </style>
 </head>
 
 <body>
@@ -195,9 +205,9 @@
       ['5%', '5%'],
       ['-5%', '30%'],
       ['1%', '85%'],
-      ['5%', '55%'],
+      ['-10%', '55%'],
       ['45%', '-1%'],
-      // ['3%', '65%'],
+      ['30%', '65%'],
       ['45%', '30%'],
       ['50%', '80%'],
       ['70%', '95%'],
@@ -208,14 +218,14 @@
     foreach ($positions as $pos):
       $rotateClass = rand(0, 1) ? 'rotate-left' : 'rotate-right';
     ?>
-      <img src="<?= base_url('assets/img/logosemar.png') ?>" alt="floating-logo"
+      <img src="<?= base_url('assets/img/sisemar.png') ?>" alt="floating-logo"
         class="<?= $rotateClass ?>" style="top: <?= $pos[0] ?>; left: <?= $pos[1] ?>;">
     <?php endforeach; ?>
   </div>
 
   <div class="login-container">
     <div class="login-left">
-      <img src="<?= base_url('assets/img/semar.png') ?>" alt="Ilustrasi Login">
+      <img src="<?= base_url('assets/img/semar_logo.png') ?>" alt="Ilustrasi Login">
     </div>
 
     <div class="login-right">
