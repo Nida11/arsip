@@ -292,13 +292,28 @@
       <div class="row">
         <div class="col-12">
           <div class="card mb-4">
-            <div class="card-header pb-0 d-flex justify-content-between align-items-center">
-              <h6 class="mb-5">Daftar Specimen</h6>
-              <a class="btn mb-0 text-white" style="background-color:rgb(42, 116, 201);"
-                href="<?php echo base_url() . 'index.php/specimen/Specimen/add_specimen/'; ?>">
-                <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah Specimen
-              </a>
-            </div>
+<div class="card-header pb-0 d-flex justify-content-between align-items-center">
+  <h6 class="mb-5">Daftar Specimen</h6>
+
+  <div class="d-flex align-items-center">
+
+    <!-- Tombol Download Template Excel -->
+    <a class="btn mb-0 me-2 text-white" 
+       style="background-color:#28a745;"
+       href="<?php echo base_url('assets/template/template_specimen.xlsx'); ?>">
+      <i class="fas fa-file-excel"></i>&nbsp;&nbsp;Download Format
+    </a>
+
+    <!-- Tombol Tambah Specimen -->
+    <a class="btn mb-0 text-white" 
+       style="background-color:rgb(42, 116, 201);"
+       href="<?php echo base_url() . 'index.php/specimen/Specimen/add_specimen/'; ?>">
+      <i class="fas fa-plus"></i>&nbsp;&nbsp;Tambah Specimen
+    </a>
+
+  </div>
+</div>
+
 
             <div class="card-body px-4 pt-0 pb-4">
               <div class="table-responsive ">

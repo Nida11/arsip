@@ -212,6 +212,7 @@
                         <li class="breadcrumb-item text-sm text-white active" aria-current="page">Specimen</li>
                     </ol>
                     <h6 class="font-weight-bolder text-white mb-0">Tambah Daftar Specimen</h6>
+                    
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -275,7 +276,7 @@
                                                 <div class="col-md-6 d-flex align-items-end">
                                                     <label>Instansi:</label>
                                                     <div class="d-flex w-100">
-                                                        <input type="text" name="instansi[]" class="form-control" value="BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT,">
+                                                        <input type="text" name="instansi[]" class="form-control" value="">
                                                         <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry" style="display: none;">X</button>
                                                     </div>
                                                 </div>
@@ -430,7 +431,7 @@
             <div class="col-md-6 d-flex align-items-end">
                 <label>Instansi:</label>
                 <div class="d-flex w-100">
-                    <input type="text" name="instansi[]" class="form-control" value="BADAN PENDAPATAN DAERAH PROVINSI JAWA BARAT,">
+                    <input type="text" name="instansi[]" class="form-control" value="">
                     <button type="button" class="btn btn-danger btn-sm ms-2 remove-entry">X</button>
                 </div>
             </div>
@@ -549,7 +550,9 @@
         });
     </script>
 
-
+<script>
+    
+</script>
 </body>
 
 </html>
