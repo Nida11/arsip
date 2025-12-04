@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="<?= base_url('assets/img/apple-icon.png') ?>">
-  <link rel="icon" type="image/png" href="<?= base_url('assets/img/logosemar.png') ?>">
+  <link rel="icon" type="image/png" href="<?= base_url('assets/img/sisemar.png') ?>">
   <title>
   DAFTAR ARSIP INAKTIF
   </title>
@@ -308,7 +308,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://9a06-114-10-45-240.ngrok-free.app/arsip/index.php/Guest/beranda_admin" target="_blank">
-        <img src="<?= base_url('assets/img/logosemar.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="<?= base_url('assets/img/sisemar.png') ?>" width="26px" height="26px" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold">SEMAR Jabar</span>
       </a>
     </div>
@@ -376,14 +376,14 @@
         </li>
 
 
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="<?= base_url('/index.php/Guest/') ?>">
             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
               <i class="ni ni-app text-dark text-sm opacity-10"></i>
             </div>
             <span class="nav-link-text ms-1">Virtual Barcode</span>
           </a>
-        </li>
+        </li> -->
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
         </li>
