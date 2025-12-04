@@ -66,7 +66,7 @@
         <!-- Tombol hanya memproses baris yang "Baru" karena session berisi semua baris dengan flag -->
         <a href="<?= site_url('index.php/specimen/Specimen/download_all_images') ?>" class="btn btn-success mt-3" target="_blank">Download & Buat Specimen (Hanya yg Baru)</a>
         <form method="post" action="<?= site_url('index.php/specimen/Specimen/simpan_dari_excel') ?>" class="d-inline">
-            <button type="submit" class="btn btn-primary mt-3">Simpan ke Database (Hanya yg Baru)</button>
+            <!-- <button type="submit" class="btn btn-primary mt-3">Simpan ke Database (Hanya yg Baru)</button> -->
         </form>
 
     <?php else: ?>

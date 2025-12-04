@@ -327,6 +327,7 @@
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10 ps-2">Nama</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Jabatan</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Pangkat</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Instansi</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-10">Specimen</th>
                       <th class="text-secondary opacity-7"></th>
                     </tr>
@@ -363,6 +364,15 @@
                           <?php endforeach; ?>
                         </select>
                       </th>
+<th>
+<select name="filter_instansi" id="filter_instansi" class="form-control select2">
+    <option value="">Pilih Instansi</option>
+    <?php foreach (array_unique(array_map(fn($r) => $r->instansi, $specimen)) as $instansi): ?>
+        <option value="<?= $instansi ?>"><?= $instansi ?></option>
+    <?php endforeach; ?>
+</select>
+</th>
+
 
                       <th></th>
                       <th></th>
@@ -385,6 +395,11 @@
                           <p class="text-xs font-weight-bold mb-0"><?php echo $d['jabatan'] ?></p>
                         </td>
                         <td class="align-middle text-center"><span class="text-secondary text-xs font-weight-bold"><?php echo $d['pangkat'] ?></span></td>
+<td class="align-middle text-center">
+  <p class="text-xs font-weight-bold mb-0">
+     <?= $d['instansi'] ?>   <!-- ⬅️ DITAMBAHKAN -->
+  </p>
+</td>
 
                         <td class="align-middle text-center">
                           <a href="<?= base_url('index.php/specimen/Specimen/download_by_id/' . $d['id']) ?>">
@@ -400,6 +415,7 @@
    data-nama="<?= htmlspecialchars($d['nama']) ?>" 
    data-jabatan="<?= htmlspecialchars($d['jabatan']) ?>" 
    data-pangkat="<?= htmlspecialchars($d['pangkat']) ?>" 
+   data-instansi="<?= htmlspecialchars($d['instansi']) ?>"
    data-bs-toggle="modal" 
    data-bs-target="#editSpecimenModal">
    Edit
@@ -439,6 +455,10 @@
                             <label for="editPangkat" class="form-label">Pangkat</label>
                             <input type="text" class="form-control" name="pangkat" id="editPangkat" required>
                           </div>
+    <div class="mb-3"> <!-- ⭐ DITAMBAHKAN -->
+        <label for="editInstansi" class="form-label">Instansi</label>
+        <input type="text" class="form-control" name="instansi" id="editInstansi" required>
+    </div>
                         </div>
                         <div class="modal-footer">
                           <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
@@ -567,6 +587,10 @@
       let filterPangkat = document.getElementById("filter_pangkat").value.toUpperCase();
       let searchPangkat = document.getElementById("search_pangkat").value.toUpperCase();
 
+      let filterInstansi = document.getElementById("filter_instansi").value.toUpperCase();
+      let searchInstansi = document.getElementById("search_instansi").value.toUpperCase();
+
+
       let table = document.getElementById("specimenTable");
       let tr = table.getElementsByTagName("tr");
 
@@ -574,17 +598,21 @@
         let tdNama = tr[i].getElementsByTagName("td")[1];
         let tdJabatan = tr[i].getElementsByTagName("td")[2];
         let tdPangkat = tr[i].getElementsByTagName("td")[3];
+        let tdInstansi = tr[i].getElementsByTagName("td")[4];
 
         if (tdNama && tdJabatan && tdPangkat) {
           let nama = tdNama.textContent.toUpperCase();
           let jabatan = tdJabatan.textContent.toUpperCase();
           let pangkat = tdPangkat.textContent.toUpperCase();
+          let instansi = tdInstansi.textContent.toUpperCase()
 
           let cocokNama = nama.includes(filterNama) && nama.includes(searchNama);
           let cocokJabatan = jabatan.includes(filterJabatan) && jabatan.includes(searchJabatan);
           let cocokPangkat = pangkat.includes(filterPangkat) && pangkat.includes(searchPangkat);
+          let cocokInstansi = instansi.includes(filterInstansi) && instansi.includes(searchInstansi);
 
-          if (cocokNama && cocokJabatan && cocokPangkat) {
+
+          if (cocokNama && cocokJabatan && cocokPangkat && cocokInstansi) {
             tr[i].style.display = "";
           } else {
             tr[i].style.display = "none";
@@ -648,6 +676,9 @@
       $('#filter_pangkat').on('change', function() {
         table.column(3).search(this.value).draw();
       });
+            $('#filter_instansi').on('change', function() {
+        table.column(4).search(this.value).draw();
+      });
     });
   </script>
 
@@ -661,6 +692,7 @@
           document.getElementById("editNama").value = this.dataset.nama;
           document.getElementById("editJabatan").value = this.dataset.jabatan;
           document.getElementById("editPangkat").value = this.dataset.pangkat;
+          document.getElementById("editInstansi").value = this.dataset.instansi;
         });
       });
     });

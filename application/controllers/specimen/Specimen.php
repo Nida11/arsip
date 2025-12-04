@@ -583,7 +583,8 @@ public function simpan_dari_excel()
         $data = [
             'nama' => $this->input->post('nama'),
             'jabatan' => $this->input->post('jabatan'),
-            'pangkat' => $this->input->post('pangkat')
+            'pangkat' => $this->input->post('pangkat'),
+            'instansi' => $this->input->post('instansi')
         ];
 
         $this->db->where('id', $id);
