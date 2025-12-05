@@ -528,26 +528,25 @@ $items = explode('||', $row['jenis_arsip']);
   data-id="<?= $row['id']; ?>"
   data-tgl_isi="<?= $row['tgl_isi']; ?>"
   data-unit_kerja="<?= htmlspecialchars($row['unit_kerja']); ?>"
-  data-kode_arsip_id="<?= $row['kode_arsip_id']; ?>"
-  data-kode_klasifikasi_text="<?= htmlspecialchars($row['kode_klasifikasi']); ?>" 
-  data-uraian_masalah="<?= htmlspecialchars($row['uraian_masalah']); ?>"
-  data-tahun="<?= $row['tahun']; ?>"
+  data-kode_arsip_id="<?= $row['kode_arsip_id']; ?>"   
+    data-tahun="<?= $row['tahun']; ?>"
   data-jumlah="<?= $row['jumlah']; ?>"
   data-nomor_sampul="<?= htmlspecialchars($row['nomor_sampul']); ?>"
   data-nomor_box="<?= htmlspecialchars($row['nomor_box']); ?>"
   data-nomor_rak="<?= htmlspecialchars($row['nomor_rak']); ?>"
   data-tk="<?= htmlspecialchars($row['tk']); ?>"
   data-keterangan="<?= htmlspecialchars($row['keterangan']); ?>">
-
   <i class="fa fa-edit"></i> Edit
 </button>
 
+
                       <!-- Tombol Hapus -->
-                      <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_delete_arsip/' . $row['id']); ?>"
-                        class="btn btn-sm btn-danger"
-                        onclick="return confirm('Yakin ingin menghapus data ini? Data detailnya juga akan terhapus!')">
-                        <i class="fa fa-trash"></i> Hapus
-                      </a>
+                     <a href="<?= base_url('index.php/cdaftar_inaktif/Daftar/delete_inaktif/'.$row['id']); ?>"
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Yakin ingin menghapus data ini? QR & PDF juga akan terhapus.');">
+   <i class="fa fa-trash"></i> Hapus
+</a>
+
 
 
                     </td>
@@ -684,7 +683,7 @@ $items = explode('||', $row['jenis_arsip']);
           <div class="modal fade" id="editArsipModal" tabindex="-1" aria-labelledby="editArsipModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
-                <form method="POST" action="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_edit_arsip'); ?>">
+                <form method="POST" action="<?= base_url('index.php/cdaftar_inaktif/Daftar/do_update_inaktif'); ?>">
 
 
 
@@ -697,55 +696,42 @@ $items = explode('||', $row['jenis_arsip']);
                     <input type="hidden" id="edit_id" name="id">
 
                     <div class="row">
-                      <div class="col-md-6 mb-3">
-                        <label class="form-label">Tanggal Isi</label>
-                        <input type="datetime-local"
-                          class="form-control"
-                          id="edit_tgl_isi"
-                          name="tgl_isi"
-                          value="<?= date('Y-m-d\TH:i') ?>"
-                          required>
-
-                      </div>
+                      
 
                       <div class="col-md-6 mb-3">
                         <label class="form-label">Unit Kerja</label>
                         <input type="text" class="form-control" id="edit_unit_kerja" name="unit_kerja" required>
                       </div>
 
-                      <!-- <?php $kode = $this->db->get('kode_klasifikasi')->result();
-                      $selected_kode_id = isset($data_arsip['kode_arsip_id']) ? $data_arsip['kode_arsip_id'] : ''; ?>
-                      <div class="col-md-6 mb-3"> <label for="kode_arsip_id" class="form-control-label">Kode Klasifikasi</label>
-                        <select name="kode_arsip_id" id="kode_arsip_id" class="form-control select2" required>
-                          <option value="">-- Pilih Kode Klasifikasi --</option>
-                          <?php foreach ($kode as $k): ?> <option value="<?= $k->id ?>" <?= ($k->id == $selected_kode_id) ? 'selected' : '' ?>>
-                              <?= $k->kode_surat ?> - <?= $k->ket ?> </option> <?php endforeach; ?>
-                        </select>
-                      </div> -->
-          <!-- ✅ Tambahan Kode Klasifikasi Lama dan Baru -->
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Kode Klasifikasi (Saat Ini)</label>
-              <input type="text" class="form-control" id="edit_kode_klasifikasi_lama" name="kode_klasifikasi_lama" readonly>
-            </div>
+                     <?php
+                      $kode = $this->db->get('kode_klasifikasi')->result();
+                      ?>
 
-            <div class="col-md-6 mb-3">
-              <label class="form-label">Ganti Kode Klasifikasi (Opsional)</label>
-              <select class="form-control select2" id="edit_kode_arsip_id" name="kode_arsip_id">
-                <option value="">-- Pilih Kode Klasifikasi Baru (jika ingin ganti) --</option>
-                <?php foreach ($kode as $k): ?>
-                  <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
+                      <div class="col-md-16 mb-3">
+                        <label class="form-control-label" for="edit_kode_arsip_id">Kode Arsip</label>
+                        <select name="kode_arsip_id" id="edit_kode_arsip_id" class="form-control select2" style="width: 100%;">
+  <option value="">-- Pilih --</option>
+  <?php foreach ($kode as $k): ?>
+    <option value="<?= $k->id ?>"><?= $k->kode_surat ?> - <?= $k->ket ?></option>
+  <?php endforeach; ?>
+</select>
 
-
+                      </div>
 
 
 
 <div class="col-md-12 mb-3">
-  <label for="edit_uraian_masalah" class="form-control-label">Uraian Masalah</label>
-  <textarea class="form-control" id="edit_uraian_masalah" name="uraian_masalah" rows="3" required></textarea>
+  <label class="form-control-label d-block fw-bold">Uraian Masalah</label>
+
+  <div id="edit-series-container"></div>
+
+  <button type="button" id="edit-add-series" class="btn btn-primary btn-sm mt-2">
+    + Add
+  </button>
 </div>
+
+
+
 
 
                       <div class="col-md-4 mb-3">
@@ -920,49 +906,8 @@ $items = explode('||', $row['jenis_arsip']);
       </div>
     </div>
   </div>
-  <script>
-    $(document).ready(function() {
-      $('.btn-edit').on('click', function() {
-        const modal = $('#editSlotModal');
-
-        // ambil data
-        const id = $(this).data('id');
-        const tanggal = $(this).data('tanggal');
-        const jenis = $(this).data('jenis');
-        const pengolah = $(this).data('pengolah');
-        const klasifikasi = $(this).data('klasifikasi');
-        const nomorUrut = $(this).data('nomor_urut');
-        const nomorSurat = $(this).data('nomor_surat');
-        const perihal = $(this).data('perihal');
-        const kepada = $(this).data('kepada');
-        const isiRingkas = $(this).data('isi_ringkas');
-        const catatan = $(this).data('catatan');
-        const lampiran = $(this).data('lampiran');
-
-        // isi field
-        modal.find('#edit_id').val(id);
-        modal.find('#edit_tanggal').val(tanggal);
-        modal.find('#edit_jenis_surat_id').val(jenis).trigger('change');
-        modal.find('#edit_pengolah_id').val(pengolah).trigger('change');
-        modal.find('#edit_kode_klasifikasi_id').val(klasifikasi).trigger('change');
-        modal.find('#edit_nomor_urut').val(nomorUrut);
-        modal.find('#edit_nomor_surat').val(nomorSurat);
-        modal.find('#edit_perihal').val(perihal);
-        modal.find('#edit_kepada').val(kepada);
-        modal.find('#edit_isi_ringkas').val(isiRingkas);
-        modal.find('#edit_catatan').val(catatan);
-        modal.find('#edit_lampiran').val(lampiran);
-
-        // tampilkan modal setelah semua field diisi
-        $('#editSlotModal').modal('show'); // untuk Bootstrap 4
-      });
-    });
-  </script>
-
+ 
   
-
-
-
 
   <!--   Core JS Files   -->
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -971,6 +916,13 @@ $items = explode('||', $row['jenis_arsip']);
   <script src="<?= base_url('assets/js/plugins/perfect-scrollbar.min.js') ?>"></script>
   <script src="<?= base_url('assets/js/plugins/smooth-scrollbar.min.js') ?>"></script>
 
+  <script>
+$('#edit_kode_arsip_id').select2({
+  dropdownParent: $('#editArsipModal'),
+  width: '100%'
+});
+
+    </script>
 
 
 
@@ -1216,38 +1168,6 @@ $items = explode('||', $row['jenis_arsip']);
 
 
   <script>
-    var editModal = document.getElementById('editArsipModal');
-    editModal.addEventListener('show.bs.modal', function(event) {
-      var button = event.relatedTarget;
-
-      document.getElementById('edit_id').value = button.getAttribute('data-id');
-      document.getElementById('edit_tgl_isi').value = button.getAttribute('data-tgl_isi');
-      document.getElementById('edit_unit_kerja').value = button.getAttribute('data-unit_kerja');
-      document.getElementById('edit_kode_arsip_id').value = button.getAttribute('data-kode_arsip_id');
-      document.getElementById('edit_uraian_masalah').value = button.getAttribute('data-uraian_masalah');
-      document.getElementById('edit_tahun').value = button.getAttribute('data-tahun');
-      document.getElementById('edit_jumlah').value = button.getAttribute('data-jumlah');
-      document.getElementById('edit_nomor_sampul').value = button.getAttribute('data-nomor_sampul');
-      document.getElementById('edit_nomor_box').value = button.getAttribute('data-nomor_box');
-      document.getElementById('edit_nomor_rak').value = button.getAttribute('data-nomor_rak');
-      document.getElementById('edit_keterangan').value = button.getAttribute('data-keterangan');
-            document.getElementById('edit_tk').value = button.getAttribute('data-tk');
-
-    });
-  </script>
-  <script>
-    document.addEventListener('shown.bs.modal', function(event) {
-      if (event.target.id === 'editArsipModal') {
-        const inputTanggal = document.getElementById('edit_tgl_isi');
-        const now = new Date();
-        const local = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
-          .toISOString().slice(0, 16);
-        inputTanggal.value = local;
-      }
-    });
-  </script>
-
-  <script>
     // event tambah form baru
     document.getElementById("add-series").addEventListener("click", function() {
       const container = document.getElementById("series-container");
@@ -1286,106 +1206,86 @@ $items = explode('||', $row['jenis_arsip']);
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 
-<!-- <script>
-$(document).ready(function() {
-    // Modal edit bisa digeser lewat header
-    $('#editArsipModal .modal-dialog').draggable({
-        handle: ".modal-header"
-    });
-});
-</script> -->
 <script>
-$(document).ready(function() {
-  // ✅ MODIFIED: Safe DataTable initialization
-  if (! $.fn.DataTable.isDataTable('#penomoranTable') ) {
-    const table = $('#penomoranTable').DataTable({
-      dom: '<"d-flex justify-content-between align-items-center mb-3"Bf>tip',
-      buttons: [{
-        extend: 'excelHtml5',
-        text: '📊 Export Excel',
-        className: 'd-none',
-        exportOptions: { columns: ':not(.no-export)' }
-      }]
-    });
+// INIT Select2
+$('#edit_kode_arsip_id').select2({
+  dropdownParent: $('#editArsipModal'),
+  width: '100%'
+});
 
-    $('#exportBtn').on('click', function() {
-      table.button('.buttons-excel').trigger();
-    });
+// Generate series card
+function generateSeriesCard(value = "") {
+  return `
+  <div class="card mb-2 shadow-sm position-relative series-card">
+    <div class="card-body p-2">
+      <textarea class="form-control border-0 mb-2 series-textarea" name="arsip[]" rows="3">${value}</textarea>
+      <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 remove-series">✕</button>
+    </div>
+  </div>`;
+}
 
-    $('#searchInput').on('keyup', function() {
-      table.search(this.value).draw();
-    });
+// Remove card
+$(document).on('click', '.remove-series', function () {
+  $(this).closest('.series-card').remove();
+});
+
+// Add card
+$("#edit-add-series").on("click", function () {
+  $("#edit-series-container").append(generateSeriesCard());
+});
+
+// OPEN MODAL EDIT
+$('#editArsipModal').on('show.bs.modal', function (event) {
+  let button = $(event.relatedTarget);
+
+
+
+  $("#edit_id").val(button.data("id"));
+  $("#edit_tgl_isi").val(button.data("tgl_isi"));
+  $("#edit_unit_kerja").val(button.data("unit_kerja"));
+  $("#edit_tahun").val(button.data("tahun"));
+  $("#edit_jumlah").val(button.data("jumlah"));
+  $("#edit_nomor_sampul").val(button.data("nomor_sampul"));
+  $("#edit_nomor_box").val(button.data("nomor_box"));
+  $("#edit_nomor_rak").val(button.data("nomor_rak"));
+  $("#edit_tk").val(button.data("tk"));
+  $("#edit_keterangan").val(button.data("keterangan"));
+
+  // =========================
+  // FIX Select2 KODE ARSIP
+  // =========================
+  let kodeArsipId = button.data("kode_arsip_id");
+
+  $("#edit_kode_arsip_id").val(""); // reset dulu
+
+  if (kodeArsipId !== null && kodeArsipId !== "" && kodeArsipId !== undefined) {
+    $("#edit_kode_arsip_id")
+      .val(kodeArsipId.toString())   // pastikan match string/integer
+      .trigger("change.select2");    // trigger wajib untuk Select2
   }
+  // =========================
 
-  // ✅ ADDED: Select2 in modal
-  $('#edit_kode_arsip_id').select2({
-    placeholder: 'Pilih kode klasifikasi baru...',
-    allowClear: true,
-    width: '100%',
-    dropdownParent: $('#editArsipModal')
-  });
+  // Load detail
+  $("#edit-series-container").html(`<div class="text-muted p-1">Loading...</div>`);
 
-  // ✅ MODIFIED: modal show event
-  $('#editArsipModal').on('show.bs.modal', function(event) {
-    var button = $(event.relatedTarget);
-    $('#edit_id').val(button.data('id'));
-    $('#edit_tgl_isi').val(button.data('tgl_isi'));
-    $('#edit_unit_kerja').val(button.data('unit_kerja'));
-    $('#edit_uraian_masalah').val(button.data('uraian_masalah'));
-    $('#edit_tahun').val(button.data('tahun'));
-    $('#edit_jumlah').val(button.data('jumlah'));
-    $('#edit_nomor_sampul').val(button.data('nomor_sampul'));
-    $('#edit_nomor_box').val(button.data('nomor_box'));
-    $('#edit_nomor_rak').val(button.data('nomor_rak'));
-    $('#edit_keterangan').val(button.data('keterangan'));
-        $('#edit_tk').val(button.data('tk'));
-
-    $('#edit_kode_klasifikasi_lama').val(button.data('kode_klasifikasi_text')); // ✅ MODIFIED: tampilkan kode lama
-    $('#edit_kode_arsip_id').val('').trigger('change'); // reset dropdown baru
-  });
-
-  // ✅ MODIFIED: form submit jika kode baru kosong, kirim kode lama
-  $('#formEditArsip').on('submit', function () {
-    if (!$('#edit_kode_arsip_id').val()) {
-      $('<input>').attr({
-        type: 'hidden',
-        name: 'kode_arsip_id',
-        value: $('#edit_kode_klasifikasi_lama').val()
-      }).appendTo('#formEditArsip');
+  $.ajax({
+    url: "<?= base_url('index.php/cdaftar_inaktif/Daftar/get_detail_series'); ?>",
+    type: "POST",
+    data: { id: button.data("id") },
+    dataType: "json",
+    success: function (res) {
+      $("#edit-series-container").empty();
+      if (res.length === 0) {
+        $("#edit-series-container").append(generateSeriesCard());
+      } else {
+        res.forEach(item => $("#edit-series-container").append(generateSeriesCard(item.arsip)));
+      }
     }
   });
-
-  // ✅ ADDED: modal draggable
-  $('#editArsipModal .modal-dialog').draggable({
-    handle: ".modal-header"
-  });
 });
+  
 </script>
-<!-- <script>
-document.addEventListener("DOMContentLoaded", function() {
-  const uraian = document.getElementById("uraian_masalah");
 
-  uraian.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") {
-      e.preventDefault(); // mencegah enter default
-      const start = this.selectionStart;
-      const end = this.selectionEnd;
-      const value = this.value;
-
-      // Tambahkan baris baru dengan bullet "• "
-      this.value = value.substring(0, start) + "\n• " + value.substring(end);
-      this.selectionStart = this.selectionEnd = start + 3;
-    }
-  });
-
-  // Saat pertama kali fokus, tambahkan bullet otomatis kalau belum ada
-  uraian.addEventListener("focus", function() {
-    if (this.value.trim() === "") {
-      this.value = "• ";
-    }
-  });
-});
-</script> -->
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
