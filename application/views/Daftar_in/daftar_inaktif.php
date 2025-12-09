@@ -41,7 +41,91 @@
 
 
 
+<style>
+/* ⭐⭐⭐ Tambahan Responsif untuk Modal ⭐⭐⭐ */
+@media (max-width: 576px) {
 
+  /* Modal melebar penuh layar */
+  .modal-dialog {
+    width: 100% !important;                /* ⭐ Tambahan */
+    max-width: 100% !important;            /* ⭐ Tambahan */
+    margin: 10px !important;
+  }
+
+  .modal-content {
+    border-radius: 8px;
+  }
+}
+
+/* ⭐⭐⭐ Responsif Form Tambah Arsip di HP ⭐⭐⭐ */
+@media (max-width: 576px) {
+
+  /* Form menyesuaikan layar */
+  .form-container, 
+  form, 
+  .modal-body, 
+  .card-body {
+    padding: 10px !important;
+  }
+
+  /* Semua input full width */
+  .form-control {
+    width: 100% !important;
+  }
+
+  /* Select2 wajib dipaksa full width */
+  .select2-container {
+    width: 100% !important;
+    min-width: 100% !important;          /* ⭐ Tambahan */
+  }
+
+  /* Label aman di layar kecil */
+  label {
+    font-size: 14px;
+    display: block;
+  }
+
+  /* Grid 2 kolom menjadi 1 kolom */
+  .row > [class*="col-"] {
+    width: 100% !important;
+    flex: 0 0 100% !important;           /* ⭐ Tambahan */
+    max-width: 100% !important;          /* ⭐ Tambahan */
+  }
+
+  /* Tombol full width */
+  .btn {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+
+  /* Table agar bisa digeser horizontal */
+  .table-responsive {
+    overflow-x: auto;
+  }
+  /* ⭐ Tombol X kecil & tidak menutup input */
+.remove-series {
+  width: 24px !important;
+  height: 24px !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  line-height: 24px !important;
+  border-radius: 50% !important;
+  text-align: center;
+}
+@media (max-width: 576px) {
+  .remove-series {
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 12px !important;
+    line-height: 20px !important;
+    margin: 4px !important;
+  }
+}
+
+}
+
+
+</style>
   <style>
     /* Highlight nav-link aktif */
 .nav-link.active {
