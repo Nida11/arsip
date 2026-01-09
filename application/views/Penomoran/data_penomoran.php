@@ -1446,16 +1446,41 @@ DataTables + Export Script
       e.preventDefault();
 
       const nomor = $(this).data('nomor');
-      const isMultiple = String($(this).data('is_multiple')).toLowerCase() === 1 || String($(this).data('is_multiple')).toLowerCase() === 't';
-      const nomorAwal = $(this).data('noawal') || '';
-      const nomorAkhir = $(this).data('noakhir') || '';
-      const nomorUrut = $(this).data('urut') || '';
+const isMultiple = String($(this).data('is_multiple')) === '1';
 
-      const nomorTampil = isMultiple && nomorAwal && nomorAkhir ?
-        `${nomorAwal} - ${nomorAkhir}` :
-        nomorUrut;
+const nomorAwal  = $(this).data('noawal')  || '';
+const nomorAkhir = $(this).data('noakhir') || '';
+const nomorUrut  = $(this).data('urut')    || '';
+const nomorSurat = $(this).data('nomor')   || '';
 
-      $('#print_nomor_urut').text(nomorTampil);
+let nomorTampil = '';
+
+// ✅ PRIORITAS 1: MULTIPLE dari no_awal & no_akhir
+if (isMultiple && nomorAwal && nomorAkhir) {
+  nomorTampil = `${nomorAwal} - ${nomorAkhir}`;
+}
+
+// ✅ PRIORITAS 2: MULTIPLE tapi no_awal/no_akhir kosong → ambil dari nomor surat
+else if (isMultiple && nomorSurat) {
+  // contoh: 023-025/HM.01/SEKRE
+  const match = nomorSurat.match(/^(\d+)\s*-\s*(\d+)/);
+  if (match) {
+    nomorTampil = `${match[1]} - ${match[2]}`;
+  }
+}
+
+// ✅ SINGLE
+else if (nomorUrut) {
+  nomorTampil = nomorUrut;
+}
+
+// ❌ fallback
+else {
+  nomorTampil = '-';
+}
+
+$('#print_nomor_urut').text(nomorTampil);
+
       $('#print_kode_klasifikasi').text($(this).data('kode_klasifikasi'));
       $('#print_tanggal').text($(this).data('tanggal'));
       $('#print_jenis').text($(this).data('jenis'));
